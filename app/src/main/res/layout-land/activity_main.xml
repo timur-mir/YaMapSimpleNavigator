@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/custom_snackbar_container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.yandex.mapkit.mapview.MapView
+        android:id="@+id/mapview"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+    </com.yandex.mapkit.mapview.MapView>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/location_current_add_marker"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="6dp"
+        android:backgroundTint="#15C81C"
+        android:enabled="false"
+        android:src="@drawable/us_m2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/zoombtndec" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/zoombtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#686BB4"
+        android:layout_marginTop="6dp"
+        android:enabled="false"
+        android:src="@drawable/zoom_out"
+        android:tag="0"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/location_current_add_marker" />
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/sendLocation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#F4BF71"
+        android:layout_marginTop="6dp"
+        android:enabled="false"
+        android:src="@drawable/user_mark"
+        android:tag="0"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/zoombtn" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/zoombtndec"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#C578D2"
+        android:layout_marginTop="6dp"
+        android:enabled="false"
+        android:src="@drawable/zoom_in"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/geo_position_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="22dp"
+        android:src="@drawable/geolocation"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/prob" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/prob"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="22dp"
+        android:enabled="false"
+        android:backgroundTint="#D17666"
+        android:src="@drawable/traffic_jams"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <EditText
+        android:id="@+id/search_field"
+        android:layout_width="260dp"
+        android:layout_height="31dp"
+        android:layout_marginLeft="248dp"
+        android:layout_marginBottom="36dp"
+        android:background="@drawable/template"
+        android:enabled="false"
+        android:hint=" Поиск места, дома, кафе..."
+        android:imeOptions="actionSearch"
+        android:inputType="text"
+        android:maxLines="1"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/geo_position_btn"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
