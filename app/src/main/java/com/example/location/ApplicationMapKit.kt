@@ -3,6 +3,8 @@ package com.example.location
 import android.app.Application
 import android.content.Context
 import com.yandex.mapkit.MapKitFactory
+import com.yandex.mapkit.geometry.Point
+import com.yandex.mapkit.location.Location
 
 class ApplicationMapKit: Application(){
     init {
@@ -21,5 +23,14 @@ class ApplicationMapKit: Application(){
         super.onCreate()
         val appContext: Context = ApplicationMapKit.applicationContext()
         MapKitFactory.setApiKey("b8ef48ad-5b72-4c3d-8f28-9256d0692cd4")
+        MapKitFactory.initialize(this)
+        MapKitFactory.getInstance().onStart()
+    }
+    object LocalHelp {
+        var myLocation: Point? = null
+        var loc: Location? = null
+        var offOn=false
+        var markAdd=false
+        var locMark: Location? = null
     }
 }

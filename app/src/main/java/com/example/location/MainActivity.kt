@@ -17,10 +17,11 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
-import com.example.location.App.LocalHelp.loc
-import com.example.location.App.LocalHelp.locMark
-import com.example.location.App.LocalHelp.markAdd
-import com.example.location.App.LocalHelp.offOn
+import com.example.location.ApplicationMapKit.LocalHelp.loc
+import com.example.location.ApplicationMapKit.LocalHelp.locMark
+import com.example.location.ApplicationMapKit.LocalHelp.markAdd
+import com.example.location.ApplicationMapKit.LocalHelp.myLocation
+import com.example.location.ApplicationMapKit.LocalHelp.offOn
 import com.example.location.R.id.location_current_add_marker
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
@@ -50,11 +51,13 @@ import com.yandex.runtime.image.ImageProvider
 import com.yandex.runtime.network.NetworkError
 import com.yandex.runtime.network.NotFoundError
 import com.yandex.runtime.network.RemoteError
+
 private const val KEY_LAT = "lat"
 private const val KEY_LON = "lon"
 private const val KEY_AZIMUTH = "azimuth"
 private const val KEY_TILT = "tilt"
 private const val KEY_ZOOM = "zoom"
+
 class MainActivity : AppCompatActivity(),
     com.yandex.mapkit.search.Session.SearchListener, CameraListener {
     var lat: Double = 0.0
@@ -74,12 +77,12 @@ class MainActivity : AppCompatActivity(),
     lateinit var searchSession: com.yandex.mapkit.search.Session
     lateinit var searchManager: SearchManager
     lateinit var locationManager: LocationManager
-    var myLocation: Point? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         supportActionBar?.hide()
-        MapKitFactory.initialize(this)
+
         setContentView(R.layout.activity_main);
         mapview = findViewById<MapView>(R.id.mapview)
         probbt = findViewById(R.id.prob)
@@ -89,9 +92,8 @@ class MainActivity : AppCompatActivity(),
         sendLocation = findViewById(R.id.sendLocation)
         currentLocationAddMarker = findViewById<FloatingActionButton>(location_current_add_marker)
         searchField = findViewById(R.id.search_field)
-        mapview.map.isRotateGesturesEnabled = true
-        mapview.map.isScrollGesturesEnabled = true
-        mapview.map.addInputListener(inputListenerOnMap())
+
+
         requestLocationPermission()
         val mapKit: MapKit = MapKitFactory.getInstance()
         val probki = mapKit.createTrafficLayer(mapview.mapWindow)
@@ -100,9 +102,9 @@ class MainActivity : AppCompatActivity(),
         //Для добавления кода при повороте
         when (resources.configuration.orientation) {
             Configuration.ORIENTATION_PORTRAIT -> {
-                if(locMark!=null) {
+                if (locMark != null) {
 
-                    if(markAdd==true){
+                    if (markAdd == true) {
                         mapview.map.mapObjects.addPlacemark(
                             locMark!!.position,
                             ImageProvider.fromResource(this, R.drawable.us_m2)
@@ -111,10 +113,11 @@ class MainActivity : AppCompatActivity(),
                     }
                 }
             }
+
             Configuration.ORIENTATION_LANDSCAPE -> {
-                if(locMark!=null) {
+                if (locMark != null) {
 
-                    if(markAdd==true){
+                    if (markAdd == true) {
                         mapview.map.mapObjects.addPlacemark(
                             locMark!!.position,
                             ImageProvider.fromResource(this, R.drawable.us_m2)
@@ -123,12 +126,13 @@ class MainActivity : AppCompatActivity(),
                     }
                 }
             }
+
             else -> {
             }
         }
         Toast.makeText(
             this@MainActivity,
-           "Загрузка карт...Определяется местоположение по местности...",
+            "Загрузка карт...Определяется местоположение по местности...",
             Toast.LENGTH_LONG
         ).show()
         zoombuton.setOnClickListener {
@@ -167,8 +171,8 @@ class MainActivity : AppCompatActivity(),
                 var constraintLayout =
                     findViewById<ConstraintLayout>(R.id.custom_snackbar_container)
                 if (!markAdd) {
-                    locMark=location
-                    markAdd=true
+                    locMark = location
+                    markAdd = true
                     val snackbar = Snackbar.make(
                         constraintLayout,
                         "Маркер на карту",
@@ -185,8 +189,8 @@ class MainActivity : AppCompatActivity(),
                     snackbar.setBackgroundTint((Color.BLUE))
 
                         .show()
-                } else if(markAdd) {
-                    markAdd=false
+                } else if (markAdd) {
+                    markAdd = false
                     val snackbar = Snackbar.make(
                         constraintLayout,
                         "Убрать c карты",
@@ -206,18 +210,17 @@ class MainActivity : AppCompatActivity(),
         }
 
         probbt.setOnClickListener {
-            if(offOn==false) {
+            if (offOn == false) {
                 probki.isTrafficVisible = true
-                offOn=true
-            }
-            else
-            {
+                offOn = true
+            } else {
                 probki.isTrafficVisible = false
             }
 
         }
         geoPosition.setOnClickListener {
-          getLocation()
+            getLocation()
+
         }
         SearchFactory.initialize(this)
         searchManager =
@@ -239,16 +242,18 @@ class MainActivity : AppCompatActivity(),
 
         } ?: setLocation()
     }
+
     private fun turnButtons() {
         if (loc != null) {
             zoombuton.isEnabled = true
             zoombutondec.isEnabled = true
             currentLocationAddMarker.isEnabled = true
             sendLocation.isEnabled = true
-            searchField.isEnabled=true
-            probbt.isEnabled=true
+            searchField.isEnabled = true
+            probbt.isEnabled = true
         }
     }
+
     override fun onResume() {
         super.onResume()
         Handler().postDelayed({
@@ -263,44 +268,45 @@ class MainActivity : AppCompatActivity(),
                     zoombutondec.isEnabled = true
                     currentLocationAddMarker.isEnabled = true
                     sendLocation.isEnabled = true
-                    searchField.isEnabled=true
-                    probbt.isEnabled=true
+                    searchField.isEnabled = true
+                    probbt.isEnabled = true
+
                 }
             }
         }, 32000)
     }
+
     private fun inputListenerOnMap(): InputListener {
         val inputListener: InputListener = object : InputListener {
             override fun onMapTap(p0: Map, p1: Point) {
-                Toast.makeText(
-                    this@MainActivity,
-                  getString(R.string.indicated)+":${p1.latitude},${p1.longitude}",
-                    Toast.LENGTH_LONG
-                ).show()
                 val i = Intent(this@MainActivity, PanoramaActivity::class.java)
                 i.putExtra("lat", p1.latitude)
                 i.putExtra("long", p1.longitude)
                 startActivity(i)
             }
+
             override fun onMapLongTap(p0: com.yandex.mapkit.map.Map, p1: Point) {
             }
         }
         return inputListener
     }
+
     override fun onStop() {
         mapview.onStop()
-        MapKitFactory.getInstance().onStop()
         super.onStop()
     }
+
     override fun onStart() {
         super.onStart()
-        MapKitFactory.getInstance().onStart()
+        mapview.map.addInputListener(inputListenerOnMap())
+        mapview.map.isRotateGesturesEnabled = true
+        mapview.map.isScrollGesturesEnabled = true
         mapview.onStart()
-
         if (loc == null) {
             getLocation()
         }
     }
+
     override fun onSaveInstanceState(bundle: Bundle) {
         if (mapview.map.isValid) {
             bundle.putDouble(KEY_LAT, mapview.map.cameraPosition.target.latitude)
@@ -311,35 +317,40 @@ class MainActivity : AppCompatActivity(),
             super.onSaveInstanceState(bundle)
         }
     }
+
     private fun localListener(): LocationListener {
         return object : LocationListener {
             override fun onLocationUpdated(location: Location) {
                 loc = location
                 Toast.makeText(
                     this@MainActivity,
-                    getString(R.string.yourCoordinates)+": ${location.position.latitude} и ${location.position.longitude}",
+                    getString(R.string.yourCoordinates) + ": ${location.position.latitude} и ${location.position.longitude}",
                     Toast.LENGTH_LONG
                 ).show()
                 myLocation = location.position
-                if (myLocation!=null) {
+                if (myLocation != null) {
                     turnButtons()
                 }
             }
+
             override fun onLocationStatusUpdated(p0: LocationStatus) {
             }
         }
     }
+
     private fun getLocation() {
         locationManager.requestSingleUpdate(
             localListener()
         )
     }
-        private fun setLocation() {
+
+    private fun setLocation() {
         mapview.map.move(
             CameraPosition(Point(55.751574, 37.573856), 13.0f, 0.0f, 0.0f),
             Animation(Animation.Type.SMOOTH, 0.0f), null
         )
     }
+
     private fun setLocationAfterRotate(
         lat: Double,
         lon: Double,
@@ -352,6 +363,7 @@ class MainActivity : AppCompatActivity(),
             Animation(Animation.Type.SMOOTH, 0.0f), null
         )
     }
+
     private fun queryPlace(query: String) {
         searchSession = searchManager.submit(
             query,
@@ -360,6 +372,7 @@ class MainActivity : AppCompatActivity(),
             this
         )
     }
+
     private fun zoom(sender: Int, point: Point) {
         val zoomStep: Float = if (sender == 0) -1f else 1f
         val position = CameraPosition(point, mapview.map.cameraPosition.zoom + zoomStep, 0F, 0F)
@@ -368,6 +381,7 @@ class MainActivity : AppCompatActivity(),
             null
         )
     }
+
     private fun requestLocationPermission() {
         if (ActivityCompat.checkSelfPermission(
                 this,
@@ -385,6 +399,7 @@ class MainActivity : AppCompatActivity(),
             )
         return
     }
+
     override fun onCameraPositionChanged(
         map: Map,
         cameraPosition: CameraPosition,
@@ -396,6 +411,7 @@ class MainActivity : AppCompatActivity(),
                 queryPlace(searchField.text.toString())
         }
     }
+
     override fun onSearchResponse(response: Response) {
         if (searchField.text.isNotEmpty()) {
             val mapObjects = mapview.map.mapObjects
@@ -411,23 +427,19 @@ class MainActivity : AppCompatActivity(),
             }
         }
     }
+
     override fun onSearchError(error: Error) {
         var errorMessage = "";
         if (error is NotFoundError) {
             errorMessage = getString(R.string.notFoundError)
         } else if (error is RemoteError) {
-            errorMessage =  getString(R.string.remoteError)
+            errorMessage = getString(R.string.remoteError)
         } else if (error is NetworkError) {
-            errorMessage =  getString(R.string.networkError)
+            errorMessage = getString(R.string.networkError)
         }
         Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show()
     }
-//    object LocalHelp {
-//        var loc: Location? = null
-//        var offOn=false
-//        var markAdd=false
-//        var locMark: Location? = null
-//    }
+
 
 }
 
