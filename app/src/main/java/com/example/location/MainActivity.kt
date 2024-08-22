@@ -215,6 +215,7 @@ class MainActivity : AppCompatActivity(),
                 offOn = true
             } else {
                 probki.isTrafficVisible = false
+		offOn = false
             }
 
         }
