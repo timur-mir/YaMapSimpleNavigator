@@ -51,15 +51,19 @@ import com.yandex.runtime.image.ImageProvider
 import com.yandex.runtime.network.NetworkError
 import com.yandex.runtime.network.NotFoundError
 import com.yandex.runtime.network.RemoteError
+import com.google.android.play.core.splitinstall.SplitInstallManager
+import com.google.android.play.core.splitinstall.SplitInstallManagerFactory
+import com.google.android.play.core.splitinstall.SplitInstallRequest
 
 private const val KEY_LAT = "lat"
 private const val KEY_LON = "lon"
 private const val KEY_AZIMUTH = "azimuth"
 private const val KEY_TILT = "tilt"
 private const val KEY_ZOOM = "zoom"
-
+lateinit var splitInstallManager: SplitInstallManager
 class MainActivity : AppCompatActivity(),
     com.yandex.mapkit.search.Session.SearchListener, CameraListener {
+
     var lat: Double = 0.0
     var lon: Double = 0.0
     var azimuth: Float = 0.0f
@@ -82,7 +86,7 @@ class MainActivity : AppCompatActivity(),
         super.onCreate(savedInstanceState)
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         supportActionBar?.hide()
-
+        splitInstallManager = SplitInstallManagerFactory.create(this)
         setContentView(R.layout.activity_main);
         mapview = findViewById<MapView>(R.id.mapview)
         probbt = findViewById(R.id.prob)
@@ -215,7 +219,7 @@ class MainActivity : AppCompatActivity(),
                 offOn = true
             } else {
                 probki.isTrafficVisible = false
-		offOn = false
+                offOn=false
             }
 
         }
@@ -280,10 +284,17 @@ class MainActivity : AppCompatActivity(),
     private fun inputListenerOnMap(): InputListener {
         val inputListener: InputListener = object : InputListener {
             override fun onMapTap(p0: Map, p1: Point) {
-                val i = Intent(this@MainActivity, PanoramaActivity::class.java)
-                i.putExtra("lat", p1.latitude)
-                i.putExtra("long", p1.longitude)
-                startActivity(i)
+                val request = SplitInstallRequest.newBuilder()
+                    .addModule("panoramafeature")
+                    .build()
+                splitInstallManager.startInstall(request)
+                    .addOnSuccessListener {
+                        val intent = Intent().setClassName(this@MainActivity,"home.howework.panoramafeature.PanoramaActivityF")
+                        intent.putExtra("lat", p1.latitude)
+                        intent.putExtra("long", p1.longitude)
+                startActivity(intent)
+                    }
+
             }
 
             override fun onMapLongTap(p0: com.yandex.mapkit.map.Map, p1: Point) {

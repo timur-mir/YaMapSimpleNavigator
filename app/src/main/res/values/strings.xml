@@ -11,4 +11,5 @@
     <string name="indicated">Вы указали на регион со следующими координатами</string>
     <string name="yourCoordinates">Ваши координаты местоположения</string>
     <string name="myLocation">Моя локация</string>
+    <string name="title_panoramafeature">Module Title</string>
 </resources>
