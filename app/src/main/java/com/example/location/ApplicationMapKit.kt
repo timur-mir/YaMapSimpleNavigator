@@ -30,7 +30,10 @@ class ApplicationMapKit: Application(){
         var myLocation: Point? = null
         var loc: Location? = null
         var offOn=false
+        var offOnUserLayer=false
         var markAdd=false
         var locMark: Location? = null
+        var latitudeActitvity=55.751574
+        var longitudeActivity=37.573856
     }
 }

@@ -3,6 +3,7 @@ package home.howework.panoramafeature
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
+
 import com.yandex.mapkit.MapKitFactory
 import com.yandex.mapkit.geometry.Point
 import com.yandex.mapkit.places.PlacesFactory
@@ -12,22 +13,24 @@ import com.yandex.runtime.Error
 import com.yandex.runtime.network.NetworkError
 import com.yandex.runtime.network.NotFoundError
 import com.yandex.runtime.network.RemoteError
+import home.howework.panoramafeature.databinding.ActivityfPanoramaBinding
 
 class PanoramaActivityF : AppCompatActivity(), PanoramaService.SearchListener {
     lateinit var SEARCH_LOCATION: Point
-    lateinit var panoramaView: PanoramaView
     lateinit var panoramaService: PanoramaService
     lateinit var searchSession: PanoramaService.SearchSession
+    private var _binding: ActivityfPanoramaBinding? = null
+    private val binding get() = _binding!!
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         PlacesFactory.initialize(this)
-        setContentView(R.layout.activityf_panorama)
+        _binding = ActivityfPanoramaBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         val extras: Bundle? = intent.extras;
         if (extras != null) {
             var lat: Double = extras.getDouble("lat");
             var long: Double = extras.getDouble("long");
             SEARCH_LOCATION = Point(lat, long)
-            panoramaView = findViewById(home.howework.panoramafeature.R.id.panorama_viewf);
             panoramaService = PlacesFactory.getInstance().createPanoramaService();
             searchSession = panoramaService.findNearest(SEARCH_LOCATION, this);
         }
@@ -35,32 +38,32 @@ class PanoramaActivityF : AppCompatActivity(), PanoramaService.SearchListener {
     override fun onStart() {
         super.onStart();
         MapKitFactory.getInstance().onStart();
-        panoramaView.onStart();
+        binding.panoramaViewf.onStart();
         super.onStart()
     }
     override fun onStop() {
-        panoramaView.onStop();
+        binding.panoramaViewf.onStop();
         MapKitFactory.getInstance().onStop();
         super.onStop()
     }
 
 
     override fun onPanoramaSearchResult(panoramaId: String) {
-        panoramaView.player?.openPanorama(panoramaId);
-        panoramaView.player?.enableMove();
-        panoramaView.player?.enableRotation();
-        panoramaView.player?.enableZoom();
-        panoramaView.player?.enableMarkers();
+        binding.panoramaViewf.player?.openPanorama(panoramaId);
+        binding.panoramaViewf.player?.enableMove();
+        binding.panoramaViewf.player?.enableRotation();
+        binding.panoramaViewf.player?.enableZoom();
+        binding.panoramaViewf.player?.enableMarkers();
     }
 
     override fun onPanoramaSearchError(error: Error) {
         var errorMessage = "";
         if (error is NotFoundError) {
-            errorMessage = getString(com.example.location.R.string.notFoundError)
+            errorMessage = getString(R.string.notFoundError2)
         } else if (error is RemoteError) {
-            errorMessage =  getString(com.example.location.R.string.remoteError)
+            errorMessage =  getString(R.string.remoteError2)
         } else if (error is NetworkError) {
-            errorMessage =  getString(com.example.location.R.string.networkError)
+            errorMessage =  getString(R.string.networkError2)
         }
 
         Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show();

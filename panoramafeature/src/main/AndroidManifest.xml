@@ -16,6 +16,7 @@
         <activity
             android:name=".PanoramaActivityF"
             android:launchMode="singleTask"
+            android:screenOrientation="portrait"
             android:exported="true" />
     </application>
 
