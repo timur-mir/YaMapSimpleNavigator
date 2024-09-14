@@ -83,26 +83,23 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
         val probki = mapKit.createTrafficLayer(binding.mapview.mapWindow)
         locationManager = MapKitFactory.getInstance().createLocationManager()
         getLocation()
-        binding.userlocation!!.setOnClickListener{
-            if(ApplicationMapKit.LocalHelp.offOnUserLayer) {
-                if(::locationmapkit.isInitialized){
+        binding.userlocation!!.setOnClickListener {
+            if (ApplicationMapKit.LocalHelp.offOnUserLayer) {
+                if (::locationmapkit.isInitialized) {
                     locationmapkit!!.isVisible = true
                     locationmapkit!!.setObjectListener(this)
-                    ApplicationMapKit.LocalHelp.offOnUserLayer=false
-                }
-                else {
+                    ApplicationMapKit.LocalHelp.offOnUserLayer = false
+                } else {
                     locationmapkit = mapKit.createUserLocationLayer(binding.mapview.mapWindow)
                     locationmapkit!!.isVisible = true
                     locationmapkit!!.setObjectListener(this)
                     ApplicationMapKit.LocalHelp.offOnUserLayer = false
 
                 }
-            }
-            else
-            {
-                locationmapkit.isVisible=false
+            } else {
+                locationmapkit.isVisible = false
                 locationmapkit.setObjectListener(null)
-                ApplicationMapKit.LocalHelp.offOnUserLayer=true
+                ApplicationMapKit.LocalHelp.offOnUserLayer = true
             }
 
         }
@@ -268,11 +265,12 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
                     binding.sendLocation.isEnabled = true
                     binding.searchField.isEnabled = true
                     binding.prob.isEnabled = true
-
+                    binding.userlocation.isEnabled = true
                 }
             }
         }, 32000)
     }
+
     private fun inputListenerOnMap(): InputListener {
         val inputListener: InputListener = object : InputListener {
             override fun onMapTap(p0: Map, p1: Point) {
@@ -282,11 +280,14 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
                 splitInstallManager = SplitInstallManagerFactory.create(context);
                 splitInstallManager.startInstall(request)
                     .addOnSuccessListener {
-                        val intent = Intent().setClassName(requireContext(),"home.howework.panoramafeature.PanoramaActivityF")
+                        val intent = Intent().setClassName(
+                            requireContext(),
+                            "home.howework.panoramafeature.PanoramaActivityF"
+                        )
                         intent.putExtra("lat", p1.latitude)
                         intent.putExtra("long", p1.longitude)
                         startActivity(intent)
-                       // activity?.finish()
+                        // activity?.finish()
                     }
 
             }
@@ -296,6 +297,7 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
         }
         return inputListener
     }
+
     override fun onStop() {
         binding.mapview.onStop()
         super.onStop()
@@ -311,13 +313,14 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
             getLocation()
         }
     }
+
     override fun onSaveInstanceState(bundle: Bundle) {
-        if ( binding.mapview.map.isValid) {
-            bundle.putDouble(KEY_LAT,  binding.mapview.map.cameraPosition.target.latitude)
-            bundle.putDouble(KEY_LON,  binding.mapview.map.cameraPosition.target.longitude)
-            bundle.putFloat(KEY_AZIMUTH,  binding.mapview.map.cameraPosition.azimuth)
-            bundle.putFloat(KEY_TILT,  binding.mapview.map.cameraPosition.tilt)
-            bundle.putFloat(KEY_ZOOM,  binding.mapview.map.cameraPosition.zoom)
+        if (binding.mapview.map.isValid) {
+            bundle.putDouble(KEY_LAT, binding.mapview.map.cameraPosition.target.latitude)
+            bundle.putDouble(KEY_LON, binding.mapview.map.cameraPosition.target.longitude)
+            bundle.putFloat(KEY_AZIMUTH, binding.mapview.map.cameraPosition.azimuth)
+            bundle.putFloat(KEY_TILT, binding.mapview.map.cameraPosition.tilt)
+            bundle.putFloat(KEY_ZOOM, binding.mapview.map.cameraPosition.zoom)
             super.onSaveInstanceState(bundle)
         }
     }
@@ -376,8 +379,8 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
 
                 myLocation = location.position
                 if (myLocation != null) {
-                    ApplicationMapKit.LocalHelp.latitudeActitvity=location.position.latitude
-                    ApplicationMapKit.LocalHelp.longitudeActivity=location.position.longitude
+                    ApplicationMapKit.LocalHelp.latitudeActitvity = location.position.latitude
+                    ApplicationMapKit.LocalHelp.longitudeActivity = location.position.longitude
                     turnButtons()
                 }
             }
@@ -395,8 +398,8 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
             binding.sendLocation.isEnabled = true
             binding.searchField.isEnabled = true
             binding.prob.isEnabled = true
-            binding.userlocation!!.isEnabled=true
-            ApplicationMapKit.LocalHelp.offOnUserLayer=true
+            binding.userlocation!!.isEnabled = true
+            ApplicationMapKit.LocalHelp.offOnUserLayer = true
         }
     }
 
@@ -455,14 +458,22 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
         private const val KEY_ZOOM = "zoom"
     }
 
-    override fun onObjectAdded(userLocationView:UserLocationView) {
+    override fun onObjectAdded(userLocationView: UserLocationView) {
         locationmapkit?.setAnchor(
-            PointF((binding.mapview.width() * 0.5).toFloat(), binding.mapview.height() * 0.5.toFloat()),
+            PointF(
+                (binding.mapview.width() * 0.5).toFloat(),
+                binding.mapview.height() * 0.5.toFloat()
+            ),
             PointF(
                 (binding.mapview.width() * 0.5).toFloat(), binding.mapview.height() * 0.83.toFloat()
             )
         )
-        userLocationView.arrow.setIcon(ImageProvider.fromResource(requireContext(), R.drawable.user_arrow_alt2))
+        userLocationView.arrow.setIcon(
+            ImageProvider.fromResource(
+                requireContext(),
+                R.drawable.user_arrow_alt2
+            )
+        )
         val picIcon = userLocationView.pin.useCompositeIcon()
         picIcon.setIcon(
             "Icon", ImageProvider.fromResource(requireContext(), R.drawable.search_result),
