@@ -12,12 +12,19 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.example.location.ApplicationMapKit.LocalHelp.loc
 import com.example.location.ApplicationMapKit.LocalHelp.locMark
 import com.example.location.ApplicationMapKit.LocalHelp.markAdd
 import com.example.location.ApplicationMapKit.LocalHelp.myLocation
 import com.example.location.ApplicationMapKit.LocalHelp.offOn
 import com.example.location.databinding.MainFragmentBinding
+import com.example.location.domain.Mark
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.play.core.splitinstall.SplitInstallManager
 import com.google.android.play.core.splitinstall.SplitInstallManagerFactory
@@ -52,6 +59,9 @@ import com.yandex.runtime.image.ImageProvider
 import com.yandex.runtime.network.NetworkError
 import com.yandex.runtime.network.NotFoundError
 import com.yandex.runtime.network.RemoteError
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener, CameraListener,
     UserLocationObjectListener {
@@ -68,6 +78,14 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
     var azimuth: Float = 0.0f
     var tilt: Float = 0.0f
     var zoom: Float = 0.0f
+    private val marksViewModel by viewModels<MarksViewModel>
+    {
+        object : ViewModelProvider.Factory {
+            override fun <T : ViewModel> create(modelClass: Class<T>): T =
+                MarksViewModel() as T
+        }
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -167,13 +185,43 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
             }
         }
 
+        binding.delallmarks.setOnClickListener {
+            val mapObjects = binding.mapview.map.mapObjects
+            viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
+                marksViewModel.deleteMarks()
+            }
+                viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
+                    mapObjects.clear()
 
+                }
+
+            viewLifecycleOwner.lifecycleScope.launch {
+                    delay(300)
+                marksViewModel.marks.collect { marks ->
+                    if (marks != null) {
+                        marks.forEach {
+                            mapObjects.addPlacemark(
+                                Point(it.coordinateLat, it.coordinateLong),
+                                ImageProvider.fromResource(
+                                    requireContext(),
+                                    R.drawable.us_m2
+                                )
+                            )
+                        }
+
+                    }
+                }
+            }
+
+
+        }
         binding.locationCurrentAddMarker.setOnClickListener {
             if (loc == null) {
                 getLocation()
             }
             loc?.let { location ->
                 val mapObjects = binding.mapview.map.mapObjects
+
 
                 if (!markAdd) {
                     locMark = location
@@ -184,9 +232,18 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
                         Snackbar.LENGTH_INDEFINITE
                     )
                         .setAction(getString(R.string.addMark)) {
+                            viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
+                                marksViewModel.addMark(
+                                    Mark(
+                                        0,
+                                        locMark!!.position.longitude,
+                                        locMark!!.position.latitude
+                                    )
+                                )
+                            }
                             mapObjects.addPlacemark(
                                 locMark!!.position,
-                                ImageProvider.fromResource(requireContext(), R.drawable.us_m2)
+                                ImageProvider.fromResource(requireContext(), R.drawable.us_m22)
                             )
                             binding.locationCurrentAddMarker.setImageResource(R.drawable.delete)
                         }
@@ -205,6 +262,31 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
                             mapObjects.clear()
                             binding.locationCurrentAddMarker.setImageResource(R.drawable.us_m2)
                         }
+                    viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
+                        marksViewModel.deleteMark(
+                            Mark(
+                                0,
+                                locMark!!.position.longitude,
+                                locMark!!.position.latitude
+                            )
+                        )
+                    }
+                    viewLifecycleOwner.lifecycleScope.launch {
+                        marksViewModel.marks.collect { marks ->
+                            if (marks != null) {
+                                marks.forEach {
+                                    mapObjects.addPlacemark(
+                                        Point(it.coordinateLat, it.coordinateLong),
+                                        ImageProvider.fromResource(
+                                            requireContext(),
+                                            R.drawable.us_m2
+                                        )
+                                    )
+                                }
+
+                            }
+                        }
+                    }
                     snackbar.setActionTextColor(Color.WHITE)
                     snackbar.setBackgroundTint((Color.RED))
 
@@ -251,6 +333,7 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
 
     override fun onResume() {
         super.onResume()
+        val mapObjects = binding.mapview.map.mapObjects
         Handler().postDelayed({
             if (loc == null) {
                 getLocation()
@@ -266,9 +349,23 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
                     binding.searchField.isEnabled = true
                     binding.prob.isEnabled = true
                     binding.userlocation.isEnabled = true
+                    binding.delallmarks.isEnabled = true
                 }
             }
         }, 32000)
+        viewLifecycleOwner.lifecycleScope.launch {
+            marksViewModel.marks.collect { marks ->
+                if (marks != null) {
+                    marks.forEach {
+                        mapObjects.addPlacemark(
+                            Point(it.coordinateLat, it.coordinateLong),
+                            ImageProvider.fromResource(requireContext(), R.drawable.us_m2)
+                        )
+                    }
+
+                }
+            }
+        }
     }
 
     private fun inputListenerOnMap(): InputListener {
@@ -382,6 +479,7 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
                     ApplicationMapKit.LocalHelp.latitudeActitvity = location.position.latitude
                     ApplicationMapKit.LocalHelp.longitudeActivity = location.position.longitude
                     turnButtons()
+
                 }
             }
 
@@ -399,6 +497,7 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
             binding.searchField.isEnabled = true
             binding.prob.isEnabled = true
             binding.userlocation!!.isEnabled = true
+            binding.delallmarks.isEnabled=true
             ApplicationMapKit.LocalHelp.offOnUserLayer = true
         }
     }
