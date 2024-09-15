@@ -11,7 +11,7 @@ fun MarkEntity.mapToMark()=
         )
 fun Mark.mapToMarkEntity()=
     MarkEntity(
-        id,
+        id = id,
         coordinateLong,
         coordinateLat
     )

@@ -16,6 +16,9 @@ class MarksViewModel:ViewModel() {
     private val _marks: MutableStateFlow<List<Mark>?> = MutableStateFlow(emptyList())
     val marks: StateFlow<List<Mark>?>
         get() = _marks.asStateFlow()
+    private val _marks2: MutableStateFlow<List<Mark>?> = MutableStateFlow(emptyList())
+    val marks2: StateFlow<List<Mark>?>
+        get() = _marks2.asStateFlow()
     init {
         viewModelScope.launch {
             marksRepo.getMarks().collect {
@@ -31,13 +34,13 @@ class MarksViewModel:ViewModel() {
          fun getAllMarks() {
             viewModelScope.launch {
                 marksRepo.getMarks().collect {
-                    _marks.value = it
+                    _marks2.value = it
                 }
             }
         }
-         fun deleteMark(mark: Mark){
+         fun deleteMark(id:Int){
              viewModelScope.launch {
-                 marksRepo.deleteMark(mark.mapToMarkEntity())
+                 marksRepo.deleteMark(id)
              }
          }
     fun deleteMarks(){

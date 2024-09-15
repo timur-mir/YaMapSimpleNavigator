@@ -18,9 +18,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.example.location.ApplicationMapKit.LocalHelp.lastIdValue
 import com.example.location.ApplicationMapKit.LocalHelp.loc
 import com.example.location.ApplicationMapKit.LocalHelp.locMark
 import com.example.location.ApplicationMapKit.LocalHelp.markAdd
+import com.example.location.ApplicationMapKit.LocalHelp.marksSize
 import com.example.location.ApplicationMapKit.LocalHelp.myLocation
 import com.example.location.ApplicationMapKit.LocalHelp.offOn
 import com.example.location.databinding.MainFragmentBinding
@@ -131,7 +133,7 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
                             locMark!!.position,
                             ImageProvider.fromResource(requireContext(), R.drawable.us_m2)
                         )
-                        binding.locationCurrentAddMarker.setImageResource(R.drawable.delete)
+//                        binding.locationCurrentAddMarker.setImageResource(R.drawable.delete)
                     }
                 }
             }
@@ -144,7 +146,7 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
                             locMark!!.position,
                             ImageProvider.fromResource(requireContext(), R.drawable.us_m2)
                         )
-                        binding.locationCurrentAddMarker.setImageResource(R.drawable.delete)
+//                        binding.locationCurrentAddMarker.setImageResource(R.drawable.delete)
                     }
                 }
             }
@@ -221,11 +223,7 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
             }
             loc?.let { location ->
                 val mapObjects = binding.mapview.map.mapObjects
-
-
-                if (!markAdd) {
                     locMark = location
-                    markAdd = true
                     val snackbar = Snackbar.make(
                         binding.root,
                         "Маркер на карту",
@@ -235,65 +233,76 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
                             viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
                                 marksViewModel.addMark(
                                     Mark(
-                                        0,
+                                        marksSize+1,
                                         locMark!!.position.longitude,
                                         locMark!!.position.latitude
                                     )
                                 )
+                                marksSize+=1
                             }
                             mapObjects.addPlacemark(
                                 locMark!!.position,
                                 ImageProvider.fromResource(requireContext(), R.drawable.us_m22)
                             )
-                            binding.locationCurrentAddMarker.setImageResource(R.drawable.delete)
+
                         }
                     snackbar.setActionTextColor(Color.WHITE)
                     snackbar.setBackgroundTint((Color.BLUE))
 
                         .show()
-                } else if (markAdd) {
-                    markAdd = false
-                    val snackbar = Snackbar.make(
-                        binding.root,
-                        "Убрать c карты",
-                        Snackbar.LENGTH_INDEFINITE
-                    )
-                        .setAction(getString(R.string.cancelMarkOnMap)) {
-                            mapObjects.clear()
-                            binding.locationCurrentAddMarker.setImageResource(R.drawable.us_m2)
-                        }
+
+
+
+            }
+        }
+        binding.locationCurrentDeleteMarker.setOnClickListener{
+            val mapObjects = binding.mapview.map.mapObjects
+            if (marksSize>0) {
+
+            val snackbar = Snackbar.make(
+                binding.root,
+                "Убрать c карты",
+                Snackbar.LENGTH_INDEFINITE
+            )
+                .setAction(getString(R.string.cancelMarkOnMap)) {
+                    mapObjects.clear()
+
                     viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
                         marksViewModel.deleteMark(
-                            Mark(
-                                0,
-                                locMark!!.position.longitude,
-                                locMark!!.position.latitude
-                            )
+                                marksSize,
                         )
-                    }
-                    viewLifecycleOwner.lifecycleScope.launch {
-                        marksViewModel.marks.collect { marks ->
-                            if (marks != null) {
-                                marks.forEach {
-                                    mapObjects.addPlacemark(
-                                        Point(it.coordinateLat, it.coordinateLong),
-                                        ImageProvider.fromResource(
-                                            requireContext(),
-                                            R.drawable.us_m2
-                                        )
-                                    )
-                                }
-
-                            }
+                        if(marksSize>0) {
+                            marksSize -= 1
                         }
                     }
-                    snackbar.setActionTextColor(Color.WHITE)
-                    snackbar.setBackgroundTint((Color.RED))
+                }
 
-                        .show()
 
+            viewLifecycleOwner.lifecycleScope.launch {
+                marksViewModel.getAllMarks()
+                delay(300)
+                marksViewModel.marks2.collect { marks ->
+                    val mapObjectsInner = binding.mapview.map.mapObjects
+                    if (marks != null) {
+                        marks.forEach {
+                            mapObjectsInner.addPlacemark(
+                                Point(it.coordinateLat, it.coordinateLong),
+                                ImageProvider.fromResource(
+                                    requireContext(),
+                                    R.drawable.us_m2
+                                )
+                            )
+                        }
+
+                    }
                 }
             }
+            snackbar.setActionTextColor(Color.WHITE)
+            snackbar.setBackgroundTint((Color.RED))
+
+                .show()
+
+        }
         }
         binding.prob.setOnClickListener {
             if (offOn == false) {
@@ -350,12 +359,15 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
                     binding.prob.isEnabled = true
                     binding.userlocation.isEnabled = true
                     binding.delallmarks.isEnabled = true
+                    binding.locationCurrentDeleteMarker.isEnabled=true
                 }
             }
         }, 32000)
         viewLifecycleOwner.lifecycleScope.launch {
             marksViewModel.marks.collect { marks ->
                 if (marks != null) {
+                    marksSize=marks.size
+                  //  lastIdValue=marks.lastIndexOf(marks[marksSize])
                     marks.forEach {
                         mapObjects.addPlacemark(
                             Point(it.coordinateLat, it.coordinateLong),
@@ -499,6 +511,7 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
             binding.userlocation!!.isEnabled = true
             binding.delallmarks.isEnabled=true
             ApplicationMapKit.LocalHelp.offOnUserLayer = true
+            binding.locationCurrentDeleteMarker.isEnabled=true
         }
     }
 

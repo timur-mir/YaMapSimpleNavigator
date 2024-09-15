@@ -15,8 +15,8 @@ interface MarksDao {
     @Query("SELECT * FROM marksTable ")
     fun getAllMarks(): Flow<List<MarkEntity>>
 
-    @Delete
-    suspend fun deleteMark(mark: MarkEntity)
+    @Query("DELETE FROM marksTable WHERE id=:id")
+    suspend fun deleteMark(id: Int)
 
     @Query("DELETE FROM marksTable")
     suspend fun removeAllMarks()

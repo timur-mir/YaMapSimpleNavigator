@@ -17,8 +17,8 @@ class MarksRepository {
     suspend fun insertMark(mark:Mark){
         marksDao.insertMark(mark.mapToMarkEntity())
     }
-    suspend fun deleteMark(mark:MarkEntity){
-        marksDao.deleteMark(mark)
+    suspend fun deleteMark(id:Int){
+        marksDao.deleteMark(id)
     }
     suspend fun deleteMarks(){
         marksDao.removeAllMarks()

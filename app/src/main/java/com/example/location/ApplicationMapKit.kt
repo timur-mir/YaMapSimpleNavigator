@@ -37,5 +37,7 @@ class ApplicationMapKit: Application(){
         var locMark: Location? = null
         var latitudeActitvity=55.751574
         var longitudeActivity=37.573856
+        var marksSize=0
+        var lastIdValue=0
     }
 }

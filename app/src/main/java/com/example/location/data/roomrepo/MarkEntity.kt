@@ -5,7 +5,7 @@ import androidx.room.PrimaryKey
 import com.yandex.mapkit.geometry.Point
 @Entity(tableName ="marksTable")
 data class MarkEntity (
-    @PrimaryKey(autoGenerate = true)
+ @PrimaryKey
     var id:Int,
     var coordinateLong:Double,
     var coordinateLat:Double
