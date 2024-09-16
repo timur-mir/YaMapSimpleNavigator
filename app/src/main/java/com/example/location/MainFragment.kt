@@ -104,6 +104,7 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
         locationManager = MapKitFactory.getInstance().createLocationManager()
         getLocation()
         binding.userlocation!!.setOnClickListener {
+            getLocation()
             if (ApplicationMapKit.LocalHelp.offOnUserLayer) {
                 if (::locationmapkit.isInitialized) {
                     locationmapkit!!.isVisible = true
@@ -133,7 +134,7 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
                             locMark!!.position,
                             ImageProvider.fromResource(requireContext(), R.drawable.us_m2)
                         )
-//                        binding.locationCurrentAddMarker.setImageResource(R.drawable.delete)
+
                     }
                 }
             }
@@ -146,7 +147,6 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
                             locMark!!.position,
                             ImageProvider.fromResource(requireContext(), R.drawable.us_m2)
                         )
-//                        binding.locationCurrentAddMarker.setImageResource(R.drawable.delete)
                     }
                 }
             }
@@ -218,9 +218,7 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
 
         }
         binding.locationCurrentAddMarker.setOnClickListener {
-            if (loc == null) {
                 getLocation()
-            }
             loc?.let { location ->
                 val mapObjects = binding.mapview.map.mapObjects
                     locMark = location
