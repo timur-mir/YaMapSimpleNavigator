@@ -19,9 +19,22 @@
         app:layout_constraintRight_toRightOf="parent"
         app:navGraph="@navigation/app_nav_graph" />
 
+    <FrameLayout
+        android:id="@+id/small_navHostFragment"
+        android:layout_width="280dp"
+        android:layout_height="104dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="440dp"
+        android:background="#4548"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+<!--        app:navGraph="@navigation/small_fragment_graph">-->
+
+    </FrameLayout>
+
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/panel_navigation_main"
-        android:background="#D8B10B43"
+        android:background="@color/bottom1"
         android:layout_width="match_parent"
         android:layout_height="70dp"
         android:layout_gravity="bottom"

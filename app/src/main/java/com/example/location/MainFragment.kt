@@ -1,5 +1,6 @@
 package com.example.location
 
+import android.animation.ObjectAnimator
 import android.content.Intent
 import android.content.res.Configuration
 import android.graphics.Color
@@ -9,15 +10,18 @@ import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.inputmethod.EditorInfo
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentTransaction
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.findNavController
 import com.example.location.ApplicationMapKit.LocalHelp.lastIdValue
 import com.example.location.ApplicationMapKit.LocalHelp.loc
 import com.example.location.ApplicationMapKit.LocalHelp.locMark
@@ -27,6 +31,7 @@ import com.example.location.ApplicationMapKit.LocalHelp.myLocation
 import com.example.location.ApplicationMapKit.LocalHelp.offOn
 import com.example.location.databinding.MainFragmentBinding
 import com.example.location.domain.Mark
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.play.core.splitinstall.SplitInstallManager
 import com.google.android.play.core.splitinstall.SplitInstallManagerFactory
@@ -61,12 +66,19 @@ import com.yandex.runtime.image.ImageProvider
 import com.yandex.runtime.network.NetworkError
 import com.yandex.runtime.network.NotFoundError
 import com.yandex.runtime.network.RemoteError
+import com.example.location.PanoramaPlaceFragment
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import androidx.navigation.Navigation.findNavController
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
+import com.example.location.ApplicationMapKit.LocalHelp.activityClose
 
 class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener, CameraListener,
-    UserLocationObjectListener {
+    UserLocationObjectListener,Transaction {
 
     private var _binding: MainFragmentBinding? = null
     val binding get() = _binding!!
@@ -75,6 +87,7 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
     lateinit var locationManager: LocationManager
     lateinit var splitInstallManager: SplitInstallManager
     lateinit var locationmapkit: UserLocationLayer
+    lateinit var  panoramaPlaceFragment:PanoramaPlaceFragment
     var lat: Double = 0.0
     var lon: Double = 0.0
     var azimuth: Float = 0.0f
@@ -99,6 +112,7 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         val mapKit: MapKit = MapKitFactory.getInstance()
         val probki = mapKit.createTrafficLayer(binding.mapview.mapWindow)
         locationManager = MapKitFactory.getInstance().createLocationManager()
@@ -345,7 +359,7 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
             if (loc == null) {
                 getLocation()
             }
-        }, 30000)
+        }, 5000)
         Handler().postDelayed({
             if (loc != null) {
                 activity?.runOnUiThread {
@@ -360,7 +374,7 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
                     binding.locationCurrentDeleteMarker.isEnabled=true
                 }
             }
-        }, 32000)
+        }, 6000)
         viewLifecycleOwner.lifecycleScope.launch {
             marksViewModel.marks.collect { marks ->
                 if (marks != null) {
@@ -387,6 +401,7 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
                 splitInstallManager = SplitInstallManagerFactory.create(context);
                 splitInstallManager.startInstall(request)
                     .addOnSuccessListener {
+                        activityClose=true
                         val intent = Intent().setClassName(
                             requireContext(),
                             "home.howework.panoramafeature.PanoramaActivityF"
@@ -394,7 +409,7 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
                         intent.putExtra("lat", p1.latitude)
                         intent.putExtra("long", p1.longitude)
                         startActivity(intent)
-                        // activity?.finish()
+//                        activity?.finish()
                     }
 
             }
@@ -406,6 +421,7 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
     }
 
     override fun onStop() {
+        binding.searchField.setText("")
         binding.mapview.onStop()
         super.onStop()
     }
@@ -486,7 +502,7 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
 
                 myLocation = location.position
                 if (myLocation != null) {
-                    ApplicationMapKit.LocalHelp.latitudeActitvity = location.position.latitude
+                    ApplicationMapKit.LocalHelp.latitudeActivity = location.position.latitude
                     ApplicationMapKit.LocalHelp.longitudeActivity = location.position.longitude
                     turnButtons()
 
@@ -521,9 +537,39 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
 
 
     override fun onSearchResponse(response: Response) {
+        val args = Bundle()
+        var needCoordinatesPointer=0
         if (binding.searchField.text.isNotEmpty()) {
             val mapObjects = binding.mapview.map.mapObjects
             mapObjects.clear()
+            if(response.collection.children.size>1&&response.collection.children.size%2==0){
+                needCoordinatesPointer=response.collection.children.size/2
+              val menuItem=  requireActivity().findViewById<BottomNavigationView>(R.id.panel_navigation_main).menu.getItem(0)
+               menuItem.title=resources.getString(R.string.panorama_look)
+                requireActivity().findViewById<BottomNavigationView>(R.id.panel_navigation_main).setBackgroundColor(resources.getColor(R.color.bottom2))
+                ApplicationMapKit.LocalHelp.latitudeActivity = response.collection.children[needCoordinatesPointer].obj!!.geometry[0].point!!.latitude
+                ApplicationMapKit.LocalHelp.longitudeActivity = response.collection.children[needCoordinatesPointer].obj!!.geometry[0].point!!.longitude
+                panoramaPlaceFragment=PanoramaPlaceFragment.newInstance(  ApplicationMapKit.LocalHelp.latitudeActivity,  ApplicationMapKit.LocalHelp.longitudeActivity )
+                (activity as Transaction).navigateTo(panoramaPlaceFragment)
+            }
+            else if(response.collection.children.size==1){
+                val menuItem=  requireActivity().findViewById<BottomNavigationView>(R.id.panel_navigation_main).menu.getItem(0)
+                menuItem.title=resources.getString(R.string.panorama_look)
+                requireActivity().findViewById<BottomNavigationView>(R.id.panel_navigation_main).setBackgroundColor(resources.getColor(R.color.bottom2))
+                ApplicationMapKit.LocalHelp.latitudeActivity = response.collection.children[0].obj!!.geometry[0].point!!.latitude
+                ApplicationMapKit.LocalHelp.longitudeActivity = response.collection.children[0].obj!!.geometry[0].point!!.longitude
+                panoramaPlaceFragment=PanoramaPlaceFragment.newInstance(  ApplicationMapKit.LocalHelp.latitudeActivity,  ApplicationMapKit.LocalHelp.longitudeActivity )
+                (activity as Transaction).navigateTo(panoramaPlaceFragment)
+            }
+            else if(response.collection.children.size>2){
+                val menuItem=  requireActivity().findViewById<BottomNavigationView>(R.id.panel_navigation_main).menu.getItem(0)
+                menuItem.title=resources.getString(R.string.panorama_look)
+                requireActivity().findViewById<BottomNavigationView>(R.id.panel_navigation_main).setBackgroundColor(resources.getColor(R.color.bottom2))
+                ApplicationMapKit.LocalHelp.latitudeActivity = response.collection.children[2].obj!!.geometry[0].point!!.latitude
+                ApplicationMapKit.LocalHelp.longitudeActivity = response.collection.children[2].obj!!.geometry[0].point!!.longitude
+                panoramaPlaceFragment=PanoramaPlaceFragment.newInstance(  ApplicationMapKit.LocalHelp.latitudeActivity,  ApplicationMapKit.LocalHelp.longitudeActivity )
+                (activity as Transaction).navigateTo(panoramaPlaceFragment)
+            }
             for (searchResult in response.collection.children) {
                 val resultLocation = searchResult.obj!!.geometry[0].point!!
                 if (response != null) {
@@ -604,6 +650,10 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
     }
 
     override fun onObjectUpdated(p0: UserLocationView, p1: ObjectEvent) {
+    }
+
+    override fun navigateTo(fragment: Fragment) {
+        TODO("Not yet implemented")
     }
 
 }

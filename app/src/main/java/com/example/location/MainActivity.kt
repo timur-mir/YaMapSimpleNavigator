@@ -1,81 +1,45 @@
 package com.example.location
 
 import android.Manifest
-import android.content.Intent
 import android.content.pm.PackageManager
-import android.content.res.Configuration
-import android.graphics.Bitmap
-import android.graphics.Color
 import android.os.Bundle
-import android.os.Handler
-import android.util.Log
-import android.view.View
+import android.view.Menu
 import android.view.WindowManager
-import android.view.inputmethod.EditorInfo
-import android.widget.EditText
-import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentTransaction
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
-import com.example.location.ApplicationMapKit.LocalHelp.loc
-import com.example.location.ApplicationMapKit.LocalHelp.locMark
-import com.example.location.ApplicationMapKit.LocalHelp.markAdd
-import com.example.location.ApplicationMapKit.LocalHelp.myLocation
-import com.example.location.ApplicationMapKit.LocalHelp.offOn
-import com.example.location.R.id.location_current_add_marker
+import com.example.location.ApplicationMapKit.LocalHelp.activityClose
+import com.example.location.ApplicationMapKit.LocalHelp.latitudeActivity
+import com.example.location.ApplicationMapKit.LocalHelp.latitudeDeviceOldPosition
+import com.example.location.ApplicationMapKit.LocalHelp.longitudeActivity
+import com.example.location.ApplicationMapKit.LocalHelp.longitudeDeviceOldPosition
 import com.example.location.databinding.ActivityMainBinding
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.android.material.snackbar.Snackbar
-import com.yandex.mapkit.Animation
-import com.yandex.mapkit.MapKit
-import com.yandex.mapkit.MapKitFactory
-import com.yandex.mapkit.geometry.Point
-import com.yandex.mapkit.location.Location
-import com.yandex.mapkit.location.LocationListener
-import com.yandex.mapkit.location.LocationManager
-import com.yandex.mapkit.location.LocationStatus
-import com.yandex.mapkit.map.CameraListener
-import com.yandex.mapkit.map.CameraPosition
-import com.yandex.mapkit.map.CameraUpdateReason
-import com.yandex.mapkit.map.IconStyle
-import com.yandex.mapkit.map.InputListener
-import com.yandex.mapkit.map.Map
-import com.yandex.mapkit.map.VisibleRegionUtils
-import com.yandex.mapkit.mapview.MapView
-import com.yandex.mapkit.search.Response
-import com.yandex.mapkit.search.SearchFactory
-import com.yandex.mapkit.search.SearchManager
-import com.yandex.mapkit.search.SearchManagerType
-import com.yandex.mapkit.search.SearchOptions
-import com.yandex.runtime.Error
-import com.yandex.runtime.image.ImageProvider
-import com.yandex.runtime.network.NetworkError
-import com.yandex.runtime.network.NotFoundError
-import com.yandex.runtime.network.RemoteError
-import com.google.android.play.core.splitinstall.SplitInstallManager
-import com.google.android.play.core.splitinstall.SplitInstallManagerFactory
-import com.google.android.play.core.splitinstall.SplitInstallRequest
 
 
-
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(),Transaction {
     private var _binding: ActivityMainBinding? = null
     private val binding get() = _binding!!
-
+    private val BEGIN = Menu.FIRST
+    private val BACK = BEGIN + 1
+ lateinit var  panoramaPlaceFragment:PanoramaPlaceFragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         _binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        panoramaPlaceFragment=PanoramaPlaceFragment.newInstance(latitudeActivity, longitudeActivity )
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         supportActionBar?.hide()
 
         requestLocationPermission()
 
-
     }
+
+
     private fun requestLocationPermission() {
         if (ActivityCompat.checkSelfPermission(
                 this,
@@ -99,18 +63,81 @@ class MainActivity : AppCompatActivity() {
         val bottomNavigationView = binding.panelNavigationMain
         val navController = findNavController(R.id.navHostFragment)
         val args = Bundle()
+        val callback = object : OnBackPressedCallback(true) {
 
+            override fun handleOnBackPressed() {
+                if(activityClose){
+
+                }
+                if (navController.graph.startDestination == navController.currentDestination?.id) {
+                    finish()
+                } else {
+                    navController.popBackStack()
+                    panoramaPlaceFragment =
+                        PanoramaPlaceFragment.newInstance(latitudeActivity, longitudeActivity)
+                    val transaction: FragmentTransaction = supportFragmentManager.beginTransaction()
+                    transaction.replace(R.id.small_navHostFragment, panoramaPlaceFragment)
+                    transaction.addToBackStack("panorama")
+                    transaction.commit()
+                    bottomNavigationView.menu.removeItem(BACK)
+                    bottomNavigationView.menu.add(
+                        Menu.NONE, R.id.panoramaFragment, Menu.NONE,
+                        R.string.panorama
+                    ).setIcon(R.drawable.panorama)
+                    bottomNavigationView.setBackgroundColor(resources.getColor(R.color.bottom1))
+                }
+            }
+        }
+     this.onBackPressedDispatcher.addCallback(this, callback)
         bottomNavigationView.setupWithNavController(navController)
         bottomNavigationView.setOnNavigationItemSelectedListener {
-            args.putFloat("lat",ApplicationMapKit.LocalHelp.latitudeActitvity.toFloat())
-            args.putFloat("long",ApplicationMapKit.LocalHelp.longitudeActivity.toFloat())
+            val obj=LatLong(ApplicationMapKit.LocalHelp.latitudeActivity,ApplicationMapKit.LocalHelp.longitudeActivity)
+            args.putSerializable("lat-long",obj)
             when (it.itemId) {
-                R.id.panoramaFragment-> {
-                    navController.navigate(R.id.panoramaFragmentFeature,args)
+                R.id.panoramaFragment -> {
+                    navController.navigate(R.id.panoramaFragmentFeature, args)
+                    bottomNavigationView.menu.removeItem(R.id.panoramaFragment)
+                    bottomNavigationView.menu.add(
+                        Menu.NONE, BACK, Menu.NONE,
+                        R.string.back
+                    ).setIcon(R.drawable.back)
+                    bottomNavigationView.setBackgroundColor(resources.getColor(R.color.bottom3))
+                }
+
+                BACK -> {
+                    navController.popBackStack()
+                    panoramaPlaceFragment=PanoramaPlaceFragment.newInstance( latitudeActivity,longitudeActivity )
+        val transaction: FragmentTransaction = supportFragmentManager.beginTransaction()
+        transaction.replace(R.id.small_navHostFragment, panoramaPlaceFragment)
+        transaction.addToBackStack("panorama")
+        transaction.commit()
+                    bottomNavigationView.menu.removeItem(BACK)
+                    bottomNavigationView.menu.add(
+                        Menu.NONE, R.id.panoramaFragment, Menu.NONE,
+                        R.string.panorama
+                    ).setIcon(R.drawable.panorama)
+                    bottomNavigationView.setBackgroundColor(resources.getColor(R.color.bottom1))
+                  //  latitudeActivity = latitudeDeviceOldPosition
+                   // longitudeActivity = longitudeDeviceOldPosition
                 }
             }
             true
         }
+
+        val transaction: FragmentTransaction = supportFragmentManager.beginTransaction()
+        transaction.add(R.id.small_navHostFragment, panoramaPlaceFragment)
+        transaction.addToBackStack("panorama")
+        transaction.commit()
+    }
+
+
+    override fun onRestart() {
+        super.onRestart()
+    }
+    override fun navigateTo(fragment: Fragment) {
+        val transaction: FragmentTransaction = supportFragmentManager.beginTransaction()
+        transaction.replace(R.id.small_navHostFragment, fragment)
+        transaction.commit()
     }
 
 }

@@ -1,8 +1,11 @@
 package home.howework.panoramafeature
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
+import com.example.location.ApplicationMapKit
 
 import com.yandex.mapkit.MapKitFactory
 import com.yandex.mapkit.geometry.Point
@@ -37,6 +40,21 @@ class PanoramaActivityF : AppCompatActivity(), PanoramaService.SearchListener {
     }
     override fun onStart() {
         super.onStart();
+        val callback = object : OnBackPressedCallback(true) {
+
+            override fun handleOnBackPressed() {
+                if (ApplicationMapKit.LocalHelp.activityClose) {
+                    val intent = Intent().setClassName(
+                       this@PanoramaActivityF,
+                        "com.example.location.MainActivity"
+                    )
+                    ApplicationMapKit.LocalHelp.activityClose=false
+                    startActivity(intent)
+                }
+            }
+
+        }
+        this.onBackPressedDispatcher.addCallback(this, callback)
         MapKitFactory.getInstance().onStart();
         binding.panoramaViewf.onStart();
         super.onStart()

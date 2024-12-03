@@ -7,13 +7,16 @@
 <fragment
     app:moduleName="panoramafeature"
     android:id="@+id/panoramaFragmentFeature"
-    android:name="home.howework.panorama.PanoramaPlaceFragment">
+    android:name="com.example.location.PanoramaPlaceFragment">
+<!--    <argument-->
+<!--        android:name="lon"-->
+<!--        app:argType="com.example.location.LatLong"/>-->
+<!--    <argument-->
+<!--        android:name="lat"-->
+<!--        app:argType="com.example.location.LatLong"/>-->
     <argument
-        android:name="lon"
-        app:argType="float" />
-    <argument
-        android:name="lat"
-        app:argType="float" />
+        android:name="lat-long"
+        app:argType="com.example.location.LatLong"/>
 
 </fragment>
     <fragment

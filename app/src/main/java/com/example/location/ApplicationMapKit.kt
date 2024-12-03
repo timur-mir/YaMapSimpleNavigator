@@ -35,9 +35,12 @@ class ApplicationMapKit: Application(){
         var offOnUserLayer=false
         var markAdd=false
         var locMark: Location? = null
-        var latitudeActitvity=55.751574
+        var latitudeActivity=55.751574
         var longitudeActivity=37.573856
+        var latitudeDeviceOldPosition=0.0
+        var longitudeDeviceOldPosition=0.0
         var marksSize=0
         var lastIdValue=0
+        var activityClose=false
     }
 }
