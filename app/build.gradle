@@ -40,6 +40,7 @@ android {
 }
 
 dependencies {
+//    implementation "org.jetbrains.kotlin:kotlin-reflect:1.8.20"
     def nav_version = "2.3.0-alpha06"
     implementation project(path: ':panorama')
     api "androidx.navigation:navigation-fragment-ktx:$nav_version"

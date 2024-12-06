@@ -40,12 +40,8 @@ class PanoramaPlaceFragment: Fragment(), PanoramaService.SearchListener {
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         PlacesFactory.initialize(requireContext())
-      //  activity?.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
         val mArgs = arguments
-//        var lat: Double = mArgs?.getDouble("lat")?.toDouble() ?: 55.751574
-//        var long: Double = mArgs?.getDouble("long")?.toDouble() ?: 37.573856
         val objLatLong= mArgs?.getSerializable("lat-long") as LatLong
         SEARCH_LOCATION = Point(objLatLong.lat,objLatLong.long)
         panoramaService = PlacesFactory.getInstance().createPanoramaService();
@@ -91,8 +87,6 @@ class PanoramaPlaceFragment: Fragment(), PanoramaService.SearchListener {
         fun newInstance(lat:Double,lon:Double ): PanoramaPlaceFragment {
             val args = Bundle().apply {
                 val obj=LatLong(lat,lon)
-//                putDouble(LAT, lat)
-//                putDouble(LON, lon)
                 putSerializable("lat-long",obj)
             }
             return PanoramaPlaceFragment().apply {

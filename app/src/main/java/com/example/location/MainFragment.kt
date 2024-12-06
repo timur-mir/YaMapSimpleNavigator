@@ -93,6 +93,7 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
     var azimuth: Float = 0.0f
     var tilt: Float = 0.0f
     var zoom: Float = 0.0f
+  lateinit  var toast:Toast
     private val marksViewModel by viewModels<MarksViewModel>
     {
         object : ViewModelProvider.Factory {
@@ -155,7 +156,6 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
 
             Configuration.ORIENTATION_LANDSCAPE -> {
                 if (locMark != null) {
-
                     if (markAdd == true) {
                         binding.mapview.map.mapObjects.addPlacemark(
                             locMark!!.position,
@@ -262,9 +262,6 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
                     snackbar.setBackgroundTint((Color.BLUE))
 
                         .show()
-
-
-
             }
         }
         binding.locationCurrentDeleteMarker.setOnClickListener{
@@ -328,7 +325,6 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
         }
         binding.geoPositionBtn.setOnClickListener {
             getLocation()
-
         }
         SearchFactory.initialize(requireContext())
         searchManager =
@@ -408,8 +404,9 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
                         )
                         intent.putExtra("lat", p1.latitude)
                         intent.putExtra("long", p1.longitude)
+                        intent.flags=(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
                         startActivity(intent)
-//                        activity?.finish()
+                        activity?.finish()
                     }
 
             }
@@ -494,12 +491,15 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
         return object : LocationListener {
             override fun onLocationUpdated(location: Location) {
                 loc = location
-                Toast.makeText(
-                    requireContext(),
-                    getString(R.string.yourCoordinates) + ": ${location.position.latitude} и ${location.position.longitude}",
-                    Toast.LENGTH_LONG
-                ).show()
-
+                if(isAdded) {
+                    toast=
+                  Toast.makeText(
+                        requireContext(),
+                        getString(R.string.yourCoordinates) + ": ${location.position.latitude} и ${location.position.longitude}",
+                        Toast.LENGTH_LONG
+                    )
+                    toast.show()
+                }
                 myLocation = location.position
                 if (myLocation != null) {
                     ApplicationMapKit.LocalHelp.latitudeActivity = location.position.latitude
@@ -514,6 +514,14 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
         }
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        if(::toast.isInitialized){
+            toast.cancel()
+        }
+        _binding=null
+
+    }
     private fun turnButtons() {
         if (loc != null) {
             binding.zoombtn.isEnabled = true

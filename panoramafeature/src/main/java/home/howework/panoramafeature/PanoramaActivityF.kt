@@ -1,6 +1,7 @@
 package home.howework.panoramafeature
 
 import android.content.Intent
+import android.content.pm.ActivityInfo
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
@@ -29,6 +30,7 @@ class PanoramaActivityF : AppCompatActivity(), PanoramaService.SearchListener {
         PlacesFactory.initialize(this)
         _binding = ActivityfPanoramaBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         val extras: Bundle? = intent.extras;
         if (extras != null) {
             var lat: Double = extras.getDouble("lat");
@@ -49,6 +51,7 @@ class PanoramaActivityF : AppCompatActivity(), PanoramaService.SearchListener {
                         "com.example.location.MainActivity"
                     )
                     ApplicationMapKit.LocalHelp.activityClose=false
+                    intent.flags=(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
                     startActivity(intent)
                 }
             }
@@ -85,5 +88,9 @@ class PanoramaActivityF : AppCompatActivity(), PanoramaService.SearchListener {
         }
 
         Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show();
+    }
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding=null
     }
     }

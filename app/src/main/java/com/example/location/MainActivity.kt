@@ -1,9 +1,11 @@
 package com.example.location
 
 import android.Manifest
+import android.content.pm.ActivityInfo
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.Menu
+import android.view.View
 import android.view.WindowManager
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
@@ -20,23 +22,23 @@ import com.example.location.ApplicationMapKit.LocalHelp.longitudeDeviceOldPositi
 import com.example.location.databinding.ActivityMainBinding
 
 
-class MainActivity : AppCompatActivity(),Transaction {
+class MainActivity : AppCompatActivity(), Transaction {
     private var _binding: ActivityMainBinding? = null
     private val binding get() = _binding!!
     private val BEGIN = Menu.FIRST
     private val BACK = BEGIN + 1
- lateinit var  panoramaPlaceFragment:PanoramaPlaceFragment
+    lateinit var panoramaPlaceFragment: PanoramaPlaceFragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         _binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        panoramaPlaceFragment=PanoramaPlaceFragment.newInstance(latitudeActivity, longitudeActivity )
+        panoramaPlaceFragment =
+            PanoramaPlaceFragment.newInstance(latitudeActivity, longitudeActivity)
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         supportActionBar?.hide()
-
         requestLocationPermission()
-
     }
 
 
@@ -58,6 +60,10 @@ class MainActivity : AppCompatActivity(),Transaction {
         return
     }
 
+    override fun onStart() {
+        super.onStart()
+
+    }
     override fun onResume() {
         super.onResume()
         val bottomNavigationView = binding.panelNavigationMain
@@ -66,7 +72,7 @@ class MainActivity : AppCompatActivity(),Transaction {
         val callback = object : OnBackPressedCallback(true) {
 
             override fun handleOnBackPressed() {
-                if(activityClose){
+                if (activityClose) {
 
                 }
                 if (navController.graph.startDestination == navController.currentDestination?.id) {
@@ -88,13 +94,18 @@ class MainActivity : AppCompatActivity(),Transaction {
                 }
             }
         }
-     this.onBackPressedDispatcher.addCallback(this, callback)
+        this.onBackPressedDispatcher.addCallback(this, callback)
         bottomNavigationView.setupWithNavController(navController)
         bottomNavigationView.setOnNavigationItemSelectedListener {
-            val obj=LatLong(ApplicationMapKit.LocalHelp.latitudeActivity,ApplicationMapKit.LocalHelp.longitudeActivity)
-            args.putSerializable("lat-long",obj)
+            val obj = LatLong(
+                ApplicationMapKit.LocalHelp.latitudeActivity,
+                ApplicationMapKit.LocalHelp.longitudeActivity
+            )
+            args.putSerializable("lat-long", obj)
             when (it.itemId) {
                 R.id.panoramaFragment -> {
+                    binding.smallNavHostFragment.isEnabled = false
+                    binding.smallNavHostFragment.visibility = View.INVISIBLE
                     navController.navigate(R.id.panoramaFragmentFeature, args)
                     bottomNavigationView.menu.removeItem(R.id.panoramaFragment)
                     bottomNavigationView.menu.add(
@@ -105,20 +116,21 @@ class MainActivity : AppCompatActivity(),Transaction {
                 }
 
                 BACK -> {
+                    binding.smallNavHostFragment.isEnabled = true
+                    binding.smallNavHostFragment.visibility = View.VISIBLE
                     navController.popBackStack()
-                    panoramaPlaceFragment=PanoramaPlaceFragment.newInstance( latitudeActivity,longitudeActivity )
-        val transaction: FragmentTransaction = supportFragmentManager.beginTransaction()
-        transaction.replace(R.id.small_navHostFragment, panoramaPlaceFragment)
-        transaction.addToBackStack("panorama")
-        transaction.commit()
+                    panoramaPlaceFragment =
+                        PanoramaPlaceFragment.newInstance(latitudeActivity, longitudeActivity)
+                    val transaction: FragmentTransaction = supportFragmentManager.beginTransaction()
+                    transaction.replace(R.id.small_navHostFragment, panoramaPlaceFragment)
+                    transaction.addToBackStack("panorama")
+                    transaction.commit()
                     bottomNavigationView.menu.removeItem(BACK)
                     bottomNavigationView.menu.add(
                         Menu.NONE, R.id.panoramaFragment, Menu.NONE,
                         R.string.panorama
                     ).setIcon(R.drawable.panorama)
                     bottomNavigationView.setBackgroundColor(resources.getColor(R.color.bottom1))
-                  //  latitudeActivity = latitudeDeviceOldPosition
-                   // longitudeActivity = longitudeDeviceOldPosition
                 }
             }
             true
@@ -134,7 +146,14 @@ class MainActivity : AppCompatActivity(),Transaction {
     override fun onRestart() {
         super.onRestart()
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding=null
+    }
     override fun navigateTo(fragment: Fragment) {
+        binding.smallNavHostFragment.isEnabled = true
+        binding.smallNavHostFragment.visibility = View.VISIBLE
         val transaction: FragmentTransaction = supportFragmentManager.beginTransaction()
         transaction.replace(R.id.small_navHostFragment, fragment)
         transaction.commit()

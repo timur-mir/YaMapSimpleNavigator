@@ -8,12 +8,6 @@
     app:moduleName="panoramafeature"
     android:id="@+id/panoramaFragmentFeature"
     android:name="com.example.location.PanoramaPlaceFragment">
-<!--    <argument-->
-<!--        android:name="lon"-->
-<!--        app:argType="com.example.location.LatLong"/>-->
-<!--    <argument-->
-<!--        android:name="lat"-->
-<!--        app:argType="com.example.location.LatLong"/>-->
     <argument
         android:name="lat-long"
         app:argType="com.example.location.LatLong"/>
