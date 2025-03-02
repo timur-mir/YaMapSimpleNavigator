@@ -5,7 +5,6 @@
     android:id="@+id/app_nav_graph"
     app:startDestination="@id/mainFragment">
 <fragment
-    app:moduleName="panoramafeature"
     android:id="@+id/panoramaFragmentFeature"
     android:name="com.example.location.PanoramaPlaceFragment">
     <argument
