@@ -120,7 +120,7 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         geocoder=Geocoder(requireActivity())
-        val
+
         val mapKit: MapKit = MapKitFactory.getInstance()
         val probki = mapKit.createTrafficLayer(binding.mapview.mapWindow)
         locationManager = MapKitFactory.getInstance().createLocationManager()
