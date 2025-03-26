@@ -29,7 +29,7 @@ class ApplicationMapKit: Application(){
         MapKitFactory.getInstance().onStart()
     }
     object LocalHelp {
-        var speachText=""
+        var speachText="Останкино"
         var myLocation: Point? = null
         var loc: Location? = null
         var offOn=false

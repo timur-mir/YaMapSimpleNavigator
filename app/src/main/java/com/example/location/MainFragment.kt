@@ -120,6 +120,7 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         geocoder=Geocoder(requireActivity())
+        val
         val mapKit: MapKit = MapKitFactory.getInstance()
         val probki = mapKit.createTrafficLayer(binding.mapview.mapWindow)
         locationManager = MapKitFactory.getInstance().createLocationManager()
@@ -353,7 +354,6 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
         }
         binding.searchField.setOnEditorActionListener { v, actionId, event ->
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-
                 queryPlace(binding.searchField.text.toString())
             }
             false
@@ -369,13 +369,13 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
         } ?: setLocation()
 
     }
+    @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == RECOGNIZER_RESULT && resultCode == RESULT_OK) {
             val matches: ArrayList<String>? =
                 data?.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
                 ApplicationMapKit.LocalHelp.speachText= matches?.get(0)?.toString() ?: "Деловой центр"
-            queryPlace( ApplicationMapKit.LocalHelp.speachText)
-//            ApplicationMapKit.LocalHelp.speachText=""
+            matches?.get(0)?.toString()?.let { queryPlace(matches?.get(0)?.toString() ?: "Театральная") }
         }
         super.onActivityResult(requestCode, resultCode, data)
     }
@@ -585,7 +585,12 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
         val args = Bundle()
         var needCoordinatesPointer=0
         if (binding.searchField.text.isNotEmpty()|| ApplicationMapKit.LocalHelp.speachText.isNotEmpty()) {
-            binding.searchField.text.clear()
+            Toast.makeText(requireContext(), "Нормально ${response.metadata.toponym}", Toast.LENGTH_SHORT).show()
+            if (binding.searchField.text.isNotEmpty())
+                {
+                binding.searchField.text.clear()
+            }
+            ApplicationMapKit.LocalHelp.speachText=""
             val mapObjects = binding.mapview.map.mapObjects
             mapObjects.clear()
             if(response.collection.children.size>1&&response.collection.children.size%2==0){
@@ -612,7 +617,7 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
                 ApplicationMapKit.LocalHelp.latitudeActivity = response.collection.children[needCoordinatesPointer].obj!!.geometry[0].point!!.latitude
                 ApplicationMapKit.LocalHelp.longitudeActivity = response.collection.children[needCoordinatesPointer].obj!!.geometry[0].point!!.longitude
                 lifecycleScope.launch (Dispatchers.Main) {
-                    delay(500)
+                    delay(1000)
                     if (response.collection.children.size > 0) {
                         panoramaPlaceFragment = PanoramaPlaceFragment.newInstance(
                             ApplicationMapKit.LocalHelp.latitudeActivity,
@@ -645,7 +650,7 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
                 ApplicationMapKit.LocalHelp.latitudeActivity = response.collection.children[0].obj!!.geometry[0].point!!.latitude
                 ApplicationMapKit.LocalHelp.longitudeActivity = response.collection.children[0].obj!!.geometry[0].point!!.longitude
                 lifecycleScope.launch (Dispatchers.Main) {
-                    delay(500)
+                    delay(1000)
                     if (response.collection.children.size > 0) {
                         panoramaPlaceFragment = PanoramaPlaceFragment.newInstance(
                             ApplicationMapKit.LocalHelp.latitudeActivity,
@@ -678,7 +683,7 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
                 ApplicationMapKit.LocalHelp.latitudeActivity = response.collection.children[2].obj!!.geometry[0].point!!.latitude
                 ApplicationMapKit.LocalHelp.longitudeActivity = response.collection.children[2].obj!!.geometry[0].point!!.longitude
                 lifecycleScope.launch (Dispatchers.Main) {
-                    delay(500)
+                    delay(1000)
                     if (response.collection.children.size > 0) {
                         panoramaPlaceFragment = PanoramaPlaceFragment.newInstance(
                             ApplicationMapKit.LocalHelp.latitudeActivity,
