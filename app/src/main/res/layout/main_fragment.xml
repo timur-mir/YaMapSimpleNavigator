@@ -15,6 +15,15 @@
 
     </com.yandex.mapkit.mapview.MapView>
 
+    <TextView
+        android:id="@+id/localInfo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:textColor="#FC3F1D"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/location_current_add_marker"
         android:layout_width="wrap_content"
@@ -75,6 +84,18 @@
         android:tag="0"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/sendLocation" />
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/voicesearch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#F10C5C"
+        android:layout_marginTop="6dp"
+        android:layout_marginBottom="100dp"
+        android:enabled="false"
+        android:src="@drawable/mic2"
+        android:tag="0"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/delallmarks" />
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/zoombtndec"
         android:layout_width="wrap_content"

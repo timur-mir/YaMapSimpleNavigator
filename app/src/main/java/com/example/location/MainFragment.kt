@@ -1,12 +1,15 @@
 package com.example.location
 
 import android.animation.ObjectAnimator
+import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.content.res.Configuration
 import android.graphics.Color
 import android.graphics.PointF
+import android.location.Geocoder
 import android.os.Bundle
 import android.os.Handler
+import android.speech.RecognizerIntent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -76,9 +79,10 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.location.ApplicationMapKit.LocalHelp.activityClose
+import com.yandex.mapkit.GeoObject
 
 class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener, CameraListener,
-    UserLocationObjectListener,Transaction {
+    UserLocationObjectListener,Transaction{
 
     private var _binding: MainFragmentBinding? = null
     val binding get() = _binding!!
@@ -88,12 +92,14 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
     lateinit var splitInstallManager: SplitInstallManager
     lateinit var locationmapkit: UserLocationLayer
     lateinit var  panoramaPlaceFragment:PanoramaPlaceFragment
+    lateinit var geocoder: Geocoder
     var lat: Double = 0.0
     var lon: Double = 0.0
     var azimuth: Float = 0.0f
     var tilt: Float = 0.0f
     var zoom: Float = 0.0f
-  lateinit  var toast:Toast
+    lateinit  var toast:Toast
+    private val RECOGNIZER_RESULT = 1234
     private val marksViewModel by viewModels<MarksViewModel>
     {
         object : ViewModelProvider.Factory {
@@ -113,7 +119,7 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        geocoder=Geocoder(requireActivity())
         val mapKit: MapKit = MapKitFactory.getInstance()
         val probki = mapKit.createTrafficLayer(binding.mapview.mapWindow)
         locationManager = MapKitFactory.getInstance().createLocationManager()
@@ -206,13 +212,13 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
             viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
                 marksViewModel.deleteMarks()
             }
-                viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
-                    mapObjects.clear()
+            viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
+                mapObjects.clear()
 
-                }
+            }
 
             viewLifecycleOwner.lifecycleScope.launch {
-                    delay(300)
+                delay(300)
                 marksViewModel.marks.collect { marks ->
                     if (marks != null) {
                         marks.forEach {
@@ -232,86 +238,86 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
 
         }
         binding.locationCurrentAddMarker.setOnClickListener {
-                getLocation()
+            getLocation()
             loc?.let { location ->
                 val mapObjects = binding.mapview.map.mapObjects
-                    locMark = location
-                    val snackbar = Snackbar.make(
-                        binding.root,
-                        "Маркер на карту",
-                        Snackbar.LENGTH_INDEFINITE
-                    )
-                        .setAction(getString(R.string.addMark)) {
-                            viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
-                                marksViewModel.addMark(
-                                    Mark(
-                                        marksSize+1,
-                                        locMark!!.position.longitude,
-                                        locMark!!.position.latitude
-                                    )
+                locMark = location
+                val snackbar = Snackbar.make(
+                    binding.root,
+                    "Маркер на карту",
+                    Snackbar.LENGTH_INDEFINITE
+                )
+                    .setAction(getString(R.string.addMark)) {
+                        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
+                            marksViewModel.addMark(
+                                Mark(
+                                    marksSize+1,
+                                    locMark!!.position.longitude,
+                                    locMark!!.position.latitude
                                 )
-                                marksSize+=1
-                            }
-                            mapObjects.addPlacemark(
-                                locMark!!.position,
-                                ImageProvider.fromResource(requireContext(), R.drawable.us_m22)
                             )
-
+                            marksSize+=1
                         }
-                    snackbar.setActionTextColor(Color.WHITE)
-                    snackbar.setBackgroundTint((Color.BLUE))
+                        mapObjects.addPlacemark(
+                            locMark!!.position,
+                            ImageProvider.fromResource(requireContext(), R.drawable.us_m22)
+                        )
 
-                        .show()
+                    }
+                snackbar.setActionTextColor(Color.WHITE)
+                snackbar.setBackgroundTint((Color.BLUE))
+
+                    .show()
             }
         }
         binding.locationCurrentDeleteMarker.setOnClickListener{
             val mapObjects = binding.mapview.map.mapObjects
             if (marksSize>0) {
 
-            val snackbar = Snackbar.make(
-                binding.root,
-                "Убрать c карты",
-                Snackbar.LENGTH_INDEFINITE
-            )
-                .setAction(getString(R.string.cancelMarkOnMap)) {
-                    mapObjects.clear()
+                val snackbar = Snackbar.make(
+                    binding.root,
+                    "Убрать c карты",
+                    Snackbar.LENGTH_INDEFINITE
+                )
+                    .setAction(getString(R.string.cancelMarkOnMap)) {
+                        mapObjects.clear()
 
-                    viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
-                        marksViewModel.deleteMark(
+                        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
+                            marksViewModel.deleteMark(
                                 marksSize,
-                        )
-                        if(marksSize>0) {
-                            marksSize -= 1
-                        }
-                    }
-                }
-
-
-            viewLifecycleOwner.lifecycleScope.launch {
-                marksViewModel.getAllMarks()
-                delay(300)
-                marksViewModel.marks2.collect { marks ->
-                    val mapObjectsInner = binding.mapview.map.mapObjects
-                    if (marks != null) {
-                        marks.forEach {
-                            mapObjectsInner.addPlacemark(
-                                Point(it.coordinateLat, it.coordinateLong),
-                                ImageProvider.fromResource(
-                                    requireContext(),
-                                    R.drawable.us_m2
-                                )
                             )
+                            if(marksSize>0) {
+                                marksSize -= 1
+                            }
                         }
+                    }
 
+
+                viewLifecycleOwner.lifecycleScope.launch {
+                    marksViewModel.getAllMarks()
+                    delay(300)
+                    marksViewModel.marks2.collect { marks ->
+                        val mapObjectsInner = binding.mapview.map.mapObjects
+                        if (marks != null) {
+                            marks.forEach {
+                                mapObjectsInner.addPlacemark(
+                                    Point(it.coordinateLat, it.coordinateLong),
+                                    ImageProvider.fromResource(
+                                        requireContext(),
+                                        R.drawable.us_m2
+                                    )
+                                )
+                            }
+
+                        }
                     }
                 }
+                snackbar.setActionTextColor(Color.WHITE)
+                snackbar.setBackgroundTint((Color.RED))
+
+                    .show()
+
             }
-            snackbar.setActionTextColor(Color.WHITE)
-            snackbar.setBackgroundTint((Color.RED))
-
-                .show()
-
-        }
         }
         binding.prob.setOnClickListener {
             if (offOn == false) {
@@ -330,8 +336,24 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
         searchManager =
             SearchFactory.getInstance().createSearchManager(SearchManagerType.COMBINED)
         binding.mapview.map.addCameraListener(this)
+
+        binding.voicesearch.setOnClickListener{
+            Toast.makeText(
+                requireContext(),
+                " Попробуйте голосовой поиск...",
+                Toast.LENGTH_LONG
+            ).show()
+            val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
+            intent.putExtra(
+                RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+                RecognizerIntent.LANGUAGE_MODEL_FREE_FORM
+            )
+            intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Speech to text")
+            startActivityForResult(intent, RECOGNIZER_RESULT)
+        }
         binding.searchField.setOnEditorActionListener { v, actionId, event ->
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+
                 queryPlace(binding.searchField.text.toString())
             }
             false
@@ -347,7 +369,16 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
         } ?: setLocation()
 
     }
-
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode == RECOGNIZER_RESULT && resultCode == RESULT_OK) {
+            val matches: ArrayList<String>? =
+                data?.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
+                ApplicationMapKit.LocalHelp.speachText= matches?.get(0)?.toString() ?: "Деловой центр"
+            queryPlace( ApplicationMapKit.LocalHelp.speachText)
+//            ApplicationMapKit.LocalHelp.speachText=""
+        }
+        super.onActivityResult(requestCode, resultCode, data)
+    }
     override fun onResume() {
         super.onResume()
         val mapObjects = binding.mapview.map.mapObjects
@@ -359,6 +390,7 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
         Handler().postDelayed({
             if (loc != null) {
                 activity?.runOnUiThread {
+                    binding.voicesearch.isEnabled=true
                     binding.zoombtn.isEnabled = true
                     binding.zoombtndec.isEnabled = true
                     binding.locationCurrentAddMarker.isEnabled = true
@@ -375,7 +407,7 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
             marksViewModel.marks.collect { marks ->
                 if (marks != null) {
                     marksSize=marks.size
-                  //  lastIdValue=marks.lastIndexOf(marks[marksSize])
+                    //  lastIdValue=marks.lastIndexOf(marks[marksSize])
                     marks.forEach {
                         mapObjects.addPlacemark(
                             Point(it.coordinateLat, it.coordinateLong),
@@ -491,13 +523,17 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
         return object : LocationListener {
             override fun onLocationUpdated(location: Location) {
                 loc = location
+                geocoder=Geocoder(requireActivity())
+                var town=geocoder.getFromLocation(location.position.latitude, location.position.longitude,1)
+                binding.localInfo.text= town!![0].adminArea.toString()
                 if(isAdded) {
                     toast=
-                  Toast.makeText(
-                        requireContext(),
-                        getString(R.string.yourCoordinates) + ": ${location.position.latitude} и ${location.position.longitude}",
-                        Toast.LENGTH_LONG
-                    )
+                        Toast.makeText(
+                            requireContext(),
+                            getString(R.string.yourCoordinates) + ": ${location.position.latitude} и ${location.position.longitude}" +
+                                    " город ${town!![0].adminArea}",
+                            Toast.LENGTH_LONG
+                        )
                     toast.show()
                 }
                 myLocation = location.position
@@ -524,6 +560,7 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
     }
     private fun turnButtons() {
         if (loc != null) {
+            binding.voicesearch.isEnabled=true
             binding.zoombtn.isEnabled = true
             binding.zoombtndec.isEnabled = true
             binding.locationCurrentAddMarker.isEnabled = true
@@ -547,36 +584,110 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
     override fun onSearchResponse(response: Response) {
         val args = Bundle()
         var needCoordinatesPointer=0
-        if (binding.searchField.text.isNotEmpty()) {
+        if (binding.searchField.text.isNotEmpty()|| ApplicationMapKit.LocalHelp.speachText.isNotEmpty()) {
+            binding.searchField.text.clear()
             val mapObjects = binding.mapview.map.mapObjects
             mapObjects.clear()
             if(response.collection.children.size>1&&response.collection.children.size%2==0){
                 needCoordinatesPointer=response.collection.children.size/2
-              val menuItem=  requireActivity().findViewById<BottomNavigationView>(R.id.panel_navigation_main).menu.getItem(0)
-               menuItem.title=resources.getString(R.string.panorama_look)
+                val snackbar=Snackbar.make(
+                    binding.root,
+                    "Посмотрите на результат  поиска...${response.metadata.requestText} ",
+                    Snackbar.LENGTH_LONG
+                )
+                snackbar.setTextColor(Color.argb(100,252,63,29))
+                snackbar.setBackgroundTint((Color.WHITE))
+                    .show()
+                binding.mapview.map.move(
+                    CameraPosition(Point(response.collection.children[0].obj!!.geometry[0].point!!.latitude,
+                        response.collection.children[0].obj!!.geometry[0].point!!.longitude ),
+                        binding.mapview.map.cameraPosition.zoom,
+                        binding.mapview.map.cameraPosition.azimuth,
+                        binding.mapview.map.cameraPosition.tilt),
+                    Animation(Animation.Type.SMOOTH, 1.0f), null )
+
+                val menuItem=  requireActivity().findViewById<BottomNavigationView>(R.id.panel_navigation_main).menu.getItem(0)
+                menuItem.title=resources.getString(R.string.panorama_look)
                 requireActivity().findViewById<BottomNavigationView>(R.id.panel_navigation_main).setBackgroundColor(resources.getColor(R.color.bottom2))
                 ApplicationMapKit.LocalHelp.latitudeActivity = response.collection.children[needCoordinatesPointer].obj!!.geometry[0].point!!.latitude
                 ApplicationMapKit.LocalHelp.longitudeActivity = response.collection.children[needCoordinatesPointer].obj!!.geometry[0].point!!.longitude
-                panoramaPlaceFragment=PanoramaPlaceFragment.newInstance(  ApplicationMapKit.LocalHelp.latitudeActivity,  ApplicationMapKit.LocalHelp.longitudeActivity )
-                (activity as Transaction).navigateTo(panoramaPlaceFragment)
+                lifecycleScope.launch (Dispatchers.Main) {
+                    delay(500)
+                    if (response.collection.children.size > 0) {
+                        panoramaPlaceFragment = PanoramaPlaceFragment.newInstance(
+                            ApplicationMapKit.LocalHelp.latitudeActivity,
+                            ApplicationMapKit.LocalHelp.longitudeActivity
+                        )
+                        (activity as Transaction).navigateTo(panoramaPlaceFragment)
+                    }
+                }
             }
             else if(response.collection.children.size==1){
+                val snackbar=Snackbar.make(
+                    binding.root,
+                    "Посмотрите на результат  поиска...${response.metadata.requestText} ",
+                    Snackbar.LENGTH_LONG
+                )
+                snackbar.setTextColor(Color.argb(100,252,63,29))
+                snackbar.setBackgroundTint((Color.WHITE))
+                    .show()
+                binding.mapview.map.move(
+                    CameraPosition(Point(response.collection.children[0].obj!!.geometry[0].point!!.latitude,
+                        response.collection.children[0].obj!!.geometry[0].point!!.longitude ),
+                        binding.mapview.map.cameraPosition.zoom,
+                        binding.mapview.map.cameraPosition.azimuth,
+                        binding.mapview.map.cameraPosition.tilt),
+                    Animation(Animation.Type.SMOOTH, 1.0f), null )
+
                 val menuItem=  requireActivity().findViewById<BottomNavigationView>(R.id.panel_navigation_main).menu.getItem(0)
                 menuItem.title=resources.getString(R.string.panorama_look)
                 requireActivity().findViewById<BottomNavigationView>(R.id.panel_navigation_main).setBackgroundColor(resources.getColor(R.color.bottom2))
                 ApplicationMapKit.LocalHelp.latitudeActivity = response.collection.children[0].obj!!.geometry[0].point!!.latitude
                 ApplicationMapKit.LocalHelp.longitudeActivity = response.collection.children[0].obj!!.geometry[0].point!!.longitude
-                panoramaPlaceFragment=PanoramaPlaceFragment.newInstance(  ApplicationMapKit.LocalHelp.latitudeActivity,  ApplicationMapKit.LocalHelp.longitudeActivity )
-                (activity as Transaction).navigateTo(panoramaPlaceFragment)
+                lifecycleScope.launch (Dispatchers.Main) {
+                    delay(500)
+                    if (response.collection.children.size > 0) {
+                        panoramaPlaceFragment = PanoramaPlaceFragment.newInstance(
+                            ApplicationMapKit.LocalHelp.latitudeActivity,
+                            ApplicationMapKit.LocalHelp.longitudeActivity
+                        )
+                        (activity as Transaction).navigateTo(panoramaPlaceFragment)
+                    }
+                }
             }
             else if(response.collection.children.size>2){
+             val snackbar=Snackbar.make(
+                    binding.root,
+                    "Посмотрите на результат  поиска...${response.metadata.requestText} ",
+                    Snackbar.LENGTH_LONG
+                )
+                snackbar.setTextColor(Color.argb(100,252,63,29))
+                snackbar.setBackgroundTint((Color.WHITE))
+                    .show()
+                binding.mapview.map.move(
+                    CameraPosition(Point(response.collection.children[2].obj!!.geometry[0].point!!.latitude,
+                        response.collection.children[2].obj!!.geometry[0].point!!.longitude ),
+                        binding.mapview.map.cameraPosition.zoom,
+                        binding.mapview.map.cameraPosition.azimuth,
+                        binding.mapview.map.cameraPosition.tilt),
+                    Animation(Animation.Type.SMOOTH, 1.0f), null )
+
                 val menuItem=  requireActivity().findViewById<BottomNavigationView>(R.id.panel_navigation_main).menu.getItem(0)
                 menuItem.title=resources.getString(R.string.panorama_look)
                 requireActivity().findViewById<BottomNavigationView>(R.id.panel_navigation_main).setBackgroundColor(resources.getColor(R.color.bottom2))
                 ApplicationMapKit.LocalHelp.latitudeActivity = response.collection.children[2].obj!!.geometry[0].point!!.latitude
                 ApplicationMapKit.LocalHelp.longitudeActivity = response.collection.children[2].obj!!.geometry[0].point!!.longitude
-                panoramaPlaceFragment=PanoramaPlaceFragment.newInstance(  ApplicationMapKit.LocalHelp.latitudeActivity,  ApplicationMapKit.LocalHelp.longitudeActivity )
-                (activity as Transaction).navigateTo(panoramaPlaceFragment)
+                lifecycleScope.launch (Dispatchers.Main) {
+                    delay(500)
+                    if (response.collection.children.size > 0) {
+                        panoramaPlaceFragment = PanoramaPlaceFragment.newInstance(
+                            ApplicationMapKit.LocalHelp.latitudeActivity,
+                            ApplicationMapKit.LocalHelp.longitudeActivity
+                        )
+                        (activity as Transaction).navigateTo(panoramaPlaceFragment)
+                    }
+                }
+
             }
             for (searchResult in response.collection.children) {
                 val resultLocation = searchResult.obj!!.geometry[0].point!!
@@ -663,5 +774,6 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
     override fun navigateTo(fragment: Fragment) {
         TODO("Not yet implemented")
     }
+
 
 }

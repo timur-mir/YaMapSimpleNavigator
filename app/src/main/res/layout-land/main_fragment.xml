@@ -13,6 +13,15 @@
         app:layout_constraintTop_toTopOf="parent">
 
     </com.yandex.mapkit.mapview.MapView>
+    <TextView
+        android:id="@+id/localInfo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:textStyle="bold"
+        android:textColor="#FC3F1D"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/userlocation"
         android:layout_width="wrap_content"
@@ -22,7 +31,8 @@
         android:enabled="false"
         android:src="@drawable/user_arrow"
        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:contentDescription="TODO" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/delallmarks"
@@ -35,7 +45,8 @@
         android:layout_marginStart="6dp"
         android:tag="0"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@id/userlocation" />
+        app:layout_constraintStart_toEndOf="@id/userlocation"
+        android:contentDescription="TODO" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/location_current_delete_marker"
@@ -49,7 +60,8 @@
         android:enabled="false"
         android:src="@drawable/delete"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@id/delallmarks" />
+        app:layout_constraintStart_toEndOf="@id/delallmarks"
+        android:contentDescription="TODO" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/location_current_add_marker"
@@ -63,7 +75,8 @@
         android:enabled="false"
         android:src="@drawable/us_m2"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/zoombtndec" />
+        app:layout_constraintTop_toBottomOf="@+id/zoombtndec"
+        android:contentDescription="TODO" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/zoombtn"
@@ -87,6 +100,17 @@
         android:tag="0"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/zoombtn" />
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/voicesearch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#F10C5C"
+        android:layout_marginTop="4dp"
+        android:enabled="false"
+        android:src="@drawable/mic2"
+        android:tag="0"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/sendLocation" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/zoombtndec"
@@ -139,7 +163,8 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/geo_position_btn"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toEndOf="@id/location_current_delete_marker" />
+        app:layout_constraintStart_toEndOf="@id/location_current_delete_marker"
+        android:autofillHints="" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

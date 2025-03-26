@@ -28,7 +28,7 @@
         android:background="#4548"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
-<!--        app:navGraph="@navigation/small_fragment_graph">-->
+        <!--        app:navGraph="@navigation/small_fragment_graph">-->
 
     </FrameLayout>
 

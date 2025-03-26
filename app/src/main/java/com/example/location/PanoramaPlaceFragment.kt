@@ -80,7 +80,7 @@ class PanoramaPlaceFragment: Fragment(), PanoramaService.SearchListener {
             errorMessage =  getString(R.string.networkError3)
         }
 
-        Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_SHORT).show();
+//        Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_SHORT).show();
     }
     companion object {
 

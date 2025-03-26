@@ -1,9 +1,11 @@
 package com.example.location
 
 import android.Manifest
+import android.content.Context
 import android.content.pm.ActivityInfo
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.AttributeSet
 import android.view.Menu
 import android.view.View
 import android.view.WindowManager
@@ -12,7 +14,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
+import androidx.navigation.NavController
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.example.location.ApplicationMapKit.LocalHelp.activityClose
 import com.example.location.ApplicationMapKit.LocalHelp.latitudeActivity
@@ -23,7 +27,7 @@ import com.example.location.databinding.ActivityMainBinding
 
 
 class MainActivity : AppCompatActivity(), Transaction {
-    private var _binding: ActivityMainBinding? = null
+    private var _binding:ActivityMainBinding?=null
     private val binding get() = _binding!!
     private val BEGIN = Menu.FIRST
     private val BACK = BEGIN + 1
@@ -64,9 +68,13 @@ class MainActivity : AppCompatActivity(), Transaction {
         super.onStart()
 
     }
+
     override fun onResume() {
         super.onResume()
         val bottomNavigationView = binding.panelNavigationMain
+//        val navHostFragment =
+//            supportFragmentManager.findFragmentById(R.id.navHostFragment) as NavHostFragment
+//        val navController: NavController = navHostFragment.navController
         val navController = findNavController(R.id.navHostFragment)
         val args = Bundle()
         val callback = object : OnBackPressedCallback(true) {
