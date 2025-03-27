@@ -111,6 +111,16 @@
         android:tag="0"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/sendLocation" />
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/userroute"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#CED84E"
+        android:layout_marginTop="10dp"
+        android:enabled="false"
+        android:src="@drawable/route"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/zoombtndec"
@@ -121,7 +131,7 @@
         android:enabled="false"
         android:src="@drawable/zoom_in"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/userroute" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/geo_position_btn"

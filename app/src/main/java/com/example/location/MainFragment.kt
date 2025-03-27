@@ -79,10 +79,23 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.location.ApplicationMapKit.LocalHelp.activityClose
+import com.example.location.ApplicationMapKit.LocalHelp.latitudeActivity
+import com.example.location.ApplicationMapKit.LocalHelp.longitudeActivity
+import com.example.location.ApplicationMapKit.LocalHelp.routeProcess
 import com.yandex.mapkit.GeoObject
+import com.yandex.mapkit.RequestPoint
+import com.yandex.mapkit.RequestPointType
+import com.yandex.mapkit.directions.DirectionsFactory
+import com.yandex.mapkit.directions.driving.DrivingOptions
+import com.yandex.mapkit.directions.driving.DrivingRoute
+import com.yandex.mapkit.directions.driving.DrivingRouter
+import com.yandex.mapkit.directions.driving.DrivingSession
+import com.yandex.mapkit.directions.driving.VehicleOptions
+import com.yandex.mapkit.map.MapObjectCollection
+import com.yandex.mapkit.search.Address
 
 class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener, CameraListener,
-    UserLocationObjectListener,Transaction{
+    UserLocationObjectListener,Transaction,DrivingSession.DrivingRouteListener{
 
     private var _binding: MainFragmentBinding? = null
     val binding get() = _binding!!
@@ -100,6 +113,13 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
     var zoom: Float = 0.0f
     lateinit  var toast:Toast
     private val RECOGNIZER_RESULT = 1234
+    lateinit var startLocationPoints:Point
+    lateinit var endLocationPoints:Point
+    lateinit var midleLocationPoints:Point
+    private var mapObjectsMain:MapObjectCollection?=null
+    private var drivingRouter:DrivingRouter?=null
+    private var drivingSession:DrivingSession?=null
+    var endLocationPointsEl:MutableList<android.location.Address>?=null
     private val marksViewModel by viewModels<MarksViewModel>
     {
         object : ViewModelProvider.Factory {
@@ -120,11 +140,28 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         geocoder=Geocoder(requireActivity())
-        val
+        endLocationPoints= Point(55.751574,37.573856)
         val mapKit: MapKit = MapKitFactory.getInstance()
         val probki = mapKit.createTrafficLayer(binding.mapview.mapWindow)
         locationManager = MapKitFactory.getInstance().createLocationManager()
         getLocation()
+        drivingRouter=DirectionsFactory.getInstance().createDrivingRouter()
+        mapObjectsMain=binding.mapview.map.mapObjects.addCollection()
+        binding.userroute.setOnClickListener {
+            routeProcess=true
+            Toast.makeText(
+                requireContext(),
+                " Назовите пункт назначения",
+                Toast.LENGTH_LONG
+            ).show()
+            val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
+            intent.putExtra(
+                RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+                RecognizerIntent.LANGUAGE_MODEL_FREE_FORM
+            )
+            intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Speech to text")
+            startActivityForResult(intent, RECOGNIZER_RESULT)
+        }
         binding.userlocation!!.setOnClickListener {
             getLocation()
             if (ApplicationMapKit.LocalHelp.offOnUserLayer) {
@@ -375,8 +412,44 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
             val matches: ArrayList<String>? =
                 data?.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
                 ApplicationMapKit.LocalHelp.speachText= matches?.get(0)?.toString() ?: "Деловой центр"
-            matches?.get(0)?.toString()?.let { queryPlace(matches?.get(0)?.toString() ?: "Театральная") }
+            if(routeProcess){
+                lifecycleScope.launch(Dispatchers.Main) {
+                    delay(1000)
+                     endLocationPointsEl= matches?.get(0)?.toString()?.let { geocoder.getFromLocationName(it,2) }
+                }
+                lifecycleScope.launch(Dispatchers.Main) {
+                    delay(1200)
+                    if (endLocationPointsEl != null && endLocationPointsEl!!.isNotEmpty()) {
+                        endLocationPoints =
+                            Point(
+                                endLocationPointsEl!![0].latitude,
+                                endLocationPointsEl!![0].longitude
+                            )
+                        delay(1500)
+                        Toast.makeText(
+                            requireContext(),
+                            "Координаты пункта назначения: ${endLocationPointsEl!![0].latitude} ${endLocationPointsEl!![0].longitude}",
+                            Toast.LENGTH_LONG
+                        ).show()
+                        startRoute()
+                    }
+                    else
+                    {
+                        Toast.makeText(
+                            requireContext(),
+                            " Попробуйте ещё раз",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+                }
+            }
+            else  {
+                matches?.get(0)?.toString()
+               ?.let { queryPlace(matches?.get(0)?.toString() ?: "Театральная") }
+            }
+
         }
+
         super.onActivityResult(requestCode, resultCode, data)
     }
     override fun onResume() {
@@ -390,6 +463,7 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
         Handler().postDelayed({
             if (loc != null) {
                 activity?.runOnUiThread {
+                    binding.userroute.isEnabled=true
                     binding.voicesearch.isEnabled=true
                     binding.zoombtn.isEnabled = true
                     binding.zoombtndec.isEnabled = true
@@ -452,6 +526,7 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
     override fun onStop() {
         binding.searchField.setText("")
         binding.mapview.onStop()
+        routeProcess=false
         super.onStop()
     }
 
@@ -523,7 +598,6 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
         return object : LocationListener {
             override fun onLocationUpdated(location: Location) {
                 loc = location
-                geocoder=Geocoder(requireActivity())
                 var town=geocoder.getFromLocation(location.position.latitude, location.position.longitude,1)
                 binding.localInfo.text= town!![0].adminArea.toString()
                 if(isAdded) {
@@ -560,6 +634,7 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
     }
     private fun turnButtons() {
         if (loc != null) {
+            binding.userroute.isEnabled=true
             binding.voicesearch.isEnabled=true
             binding.zoombtn.isEnabled = true
             binding.zoombtndec.isEnabled = true
@@ -780,5 +855,26 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
         TODO("Not yet implemented")
     }
 
+    override fun onDrivingRoutes(pointsRoute: MutableList<DrivingRoute>) {
+     for (routeCoord in pointsRoute){
+       binding.mapview.map.mapObjects.addPolyline(routeCoord.geometry)
+     }
+    }
 
-}
+    override fun onDrivingRoutesError(p0: Error) {
+        Toast.makeText(requireContext(), getString(R.string.notFoundError), Toast.LENGTH_SHORT).show()
+    }
+    private fun startRoute(){
+        val drivingOptions=DrivingOptions()
+        val vehicleOptions=VehicleOptions()
+        val requestRoutePoints:ArrayList<RequestPoint> = ArrayList()
+        requestRoutePoints.add(RequestPoint(myLocation!!,RequestPointType.WAYPOINT,null))
+      //  endLocationPoints=Point(latitudeActivity,longitudeActivity)
+        requestRoutePoints.add(RequestPoint(endLocationPoints,RequestPointType.WAYPOINT,null))
+        drivingSession=drivingRouter!!.requestRoutes(requestRoutePoints,drivingOptions,vehicleOptions,this)
+    }
+    }
+
+
+
+

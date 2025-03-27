@@ -29,6 +29,7 @@ class ApplicationMapKit: Application(){
         MapKitFactory.getInstance().onStart()
     }
     object LocalHelp {
+        var routeProcess=false
         var speachText="Останкино"
         var myLocation: Point? = null
         var loc: Location? = null
@@ -43,5 +44,6 @@ class ApplicationMapKit: Application(){
         var marksSize=0
         var lastIdValue=0
         var activityClose=false
+
     }
 }
