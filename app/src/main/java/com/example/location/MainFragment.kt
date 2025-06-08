@@ -10,6 +10,7 @@ import android.location.Geocoder
 import android.os.Bundle
 import android.os.Handler
 import android.speech.RecognizerIntent
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -93,9 +94,12 @@ import com.yandex.mapkit.directions.driving.DrivingSession
 import com.yandex.mapkit.directions.driving.VehicleOptions
 import com.yandex.mapkit.map.MapObjectCollection
 import com.yandex.mapkit.search.Address
+import org.json.JSONArray
+import org.json.JSONObject
+import java.net.URL
 
 class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener, CameraListener,
-    UserLocationObjectListener,Transaction,DrivingSession.DrivingRouteListener{
+    UserLocationObjectListener, Transaction, DrivingSession.DrivingRouteListener {
 
     private var _binding: MainFragmentBinding? = null
     val binding get() = _binding!!
@@ -104,22 +108,22 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
     lateinit var locationManager: LocationManager
     lateinit var splitInstallManager: SplitInstallManager
     lateinit var locationmapkit: UserLocationLayer
-    lateinit var  panoramaPlaceFragment:PanoramaPlaceFragment
+    lateinit var panoramaPlaceFragment: PanoramaPlaceFragment
     lateinit var geocoder: Geocoder
     var lat: Double = 0.0
     var lon: Double = 0.0
     var azimuth: Float = 0.0f
     var tilt: Float = 0.0f
     var zoom: Float = 0.0f
-    lateinit  var toast:Toast
+    lateinit var toast: Toast
     private val RECOGNIZER_RESULT = 1234
-    lateinit var startLocationPoints:Point
-    lateinit var endLocationPoints:Point
-    lateinit var midleLocationPoints:Point
-    private var mapObjectsMain:MapObjectCollection?=null
-    private var drivingRouter:DrivingRouter?=null
-    private var drivingSession:DrivingSession?=null
-    var endLocationPointsEl:MutableList<android.location.Address>?=null
+    lateinit var startLocationPoints: Point
+    lateinit var endLocationPoints: Point
+    lateinit var midleLocationPoints: Point
+    private var mapObjectsMain: MapObjectCollection? = null
+    private var drivingRouter: DrivingRouter? = null
+    private var drivingSession: DrivingSession? = null
+    var endLocationPointsEl: MutableList<android.location.Address>? = null
     private val marksViewModel by viewModels<MarksViewModel>
     {
         object : ViewModelProvider.Factory {
@@ -139,16 +143,16 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        geocoder=Geocoder(requireActivity())
-        endLocationPoints= Point(55.751574,37.573856)
+        geocoder = Geocoder(requireActivity())
+        endLocationPoints = Point(55.751574, 37.573856)
         val mapKit: MapKit = MapKitFactory.getInstance()
         val probki = mapKit.createTrafficLayer(binding.mapview.mapWindow)
         locationManager = MapKitFactory.getInstance().createLocationManager()
         getLocation()
-        drivingRouter=DirectionsFactory.getInstance().createDrivingRouter()
-        mapObjectsMain=binding.mapview.map.mapObjects.addCollection()
+        drivingRouter = DirectionsFactory.getInstance().createDrivingRouter()
+        mapObjectsMain = binding.mapview.map.mapObjects.addCollection()
         binding.userroute.setOnClickListener {
-            routeProcess=true
+            routeProcess = true
             Toast.makeText(
                 requireContext(),
                 " Назовите пункт назначения",
@@ -289,12 +293,12 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
                         viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
                             marksViewModel.addMark(
                                 Mark(
-                                    marksSize+1,
+                                    marksSize + 1,
                                     locMark!!.position.longitude,
                                     locMark!!.position.latitude
                                 )
                             )
-                            marksSize+=1
+                            marksSize += 1
                         }
                         mapObjects.addPlacemark(
                             locMark!!.position,
@@ -308,9 +312,9 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
                     .show()
             }
         }
-        binding.locationCurrentDeleteMarker.setOnClickListener{
+        binding.locationCurrentDeleteMarker.setOnClickListener {
             val mapObjects = binding.mapview.map.mapObjects
-            if (marksSize>0) {
+            if (marksSize > 0) {
 
                 val snackbar = Snackbar.make(
                     binding.root,
@@ -324,7 +328,7 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
                             marksViewModel.deleteMark(
                                 marksSize,
                             )
-                            if(marksSize>0) {
+                            if (marksSize > 0) {
                                 marksSize -= 1
                             }
                         }
@@ -375,7 +379,7 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
             SearchFactory.getInstance().createSearchManager(SearchManagerType.COMBINED)
         binding.mapview.map.addCameraListener(this)
 
-        binding.voicesearch.setOnClickListener{
+        binding.voicesearch.setOnClickListener {
             Toast.makeText(
                 requireContext(),
                 " Попробуйте голосовой поиск...",
@@ -406,16 +410,18 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
         } ?: setLocation()
 
     }
+
     @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == RECOGNIZER_RESULT && resultCode == RESULT_OK) {
             val matches: ArrayList<String>? =
                 data?.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
-                ApplicationMapKit.LocalHelp.speachText= matches?.get(0)?.toString() ?: "Деловой центр"
-            if(routeProcess){
+            ApplicationMapKit.LocalHelp.speachText = matches?.get(0)?.toString() ?: "Деловой центр"
+            if (routeProcess) {
                 lifecycleScope.launch(Dispatchers.Main) {
                     delay(1000)
-                     endLocationPointsEl= matches?.get(0)?.toString()?.let { geocoder.getFromLocationName(it,2) }
+                    endLocationPointsEl =
+                        matches?.get(0)?.toString()?.let { geocoder.getFromLocationName(it, 2) }
                 }
                 lifecycleScope.launch(Dispatchers.Main) {
                     delay(1200)
@@ -432,9 +438,7 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
                             Toast.LENGTH_LONG
                         ).show()
                         startRoute()
-                    }
-                    else
-                    {
+                    } else {
                         Toast.makeText(
                             requireContext(),
                             " Попробуйте ещё раз",
@@ -442,16 +446,16 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
                         ).show()
                     }
                 }
-            }
-            else  {
+            } else {
                 matches?.get(0)?.toString()
-               ?.let { queryPlace(matches?.get(0)?.toString() ?: "Театральная") }
+                    ?.let { queryPlace(matches?.get(0)?.toString() ?: "Театральная") }
             }
 
         }
 
         super.onActivityResult(requestCode, resultCode, data)
     }
+
     override fun onResume() {
         super.onResume()
         val mapObjects = binding.mapview.map.mapObjects
@@ -463,8 +467,8 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
         Handler().postDelayed({
             if (loc != null) {
                 activity?.runOnUiThread {
-                    binding.userroute.isEnabled=true
-                    binding.voicesearch.isEnabled=true
+                    binding.userroute.isEnabled = true
+                    binding.voicesearch.isEnabled = true
                     binding.zoombtn.isEnabled = true
                     binding.zoombtndec.isEnabled = true
                     binding.locationCurrentAddMarker.isEnabled = true
@@ -473,14 +477,14 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
                     binding.prob.isEnabled = true
                     binding.userlocation.isEnabled = true
                     binding.delallmarks.isEnabled = true
-                    binding.locationCurrentDeleteMarker.isEnabled=true
+                    binding.locationCurrentDeleteMarker.isEnabled = true
                 }
             }
         }, 6000)
         viewLifecycleOwner.lifecycleScope.launch {
             marksViewModel.marks.collect { marks ->
                 if (marks != null) {
-                    marksSize=marks.size
+                    marksSize = marks.size
                     //  lastIdValue=marks.lastIndexOf(marks[marksSize])
                     marks.forEach {
                         mapObjects.addPlacemark(
@@ -503,14 +507,15 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
                 splitInstallManager = SplitInstallManagerFactory.create(context);
                 splitInstallManager.startInstall(request)
                     .addOnSuccessListener {
-                        activityClose=true
+                        activityClose = true
                         val intent = Intent().setClassName(
                             requireContext(),
                             "home.howework.panoramafeature.PanoramaActivityF"
                         )
                         intent.putExtra("lat", p1.latitude)
                         intent.putExtra("long", p1.longitude)
-                        intent.flags=(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                        intent.flags =
+                            (Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
                         startActivity(intent)
                         activity?.finish()
                     }
@@ -526,7 +531,7 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
     override fun onStop() {
         binding.searchField.setText("")
         binding.mapview.onStop()
-        routeProcess=false
+        routeProcess = false
         super.onStop()
     }
 
@@ -593,15 +598,50 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
         )
     }
 
+    fun getWeatherInLocationPlace(latitude: String, longitude: String, town: String) {
+        Thread() {
+            try {
+                val allInfo = URL(
+                    "https://api.open-meteo.com/v1/forecast?latitude=$latitude" +
+                            "&longitude=$longitude&hourly=temperature_2m,weathercode"
+                ).readText(Charsets.UTF_8)
+                if (allInfo.isNotEmpty()) {
+                    val hourly = JSONObject(allInfo).getJSONObject("hourly")
+                    val tempDayHalf = hourly.getJSONArray("temperature_2m").getDouble(13).toInt()
+                    Thread.sleep(1000)
+                    requireActivity().runOnUiThread {
+                        Toast.makeText(
+                            requireActivity(),
+                            "Температура в полдень сегодня:$tempDayHalf°С",
+                            Toast.LENGTH_LONG
+                        ).show()
+                        Log.d("ResponseL", tempDayHalf.toString())
+                    }
+                }
+                else
+                {
+                Thread.currentThread().interrupt()
+                }
+                } catch (e: InterruptedException) {
+                    Log.e("ErrorXYZ", e.message.toString())
+                }
+
+        }.start()
+    }
 
     private fun localListener(): LocationListener {
         return object : LocationListener {
             override fun onLocationUpdated(location: Location) {
                 loc = location
-                var town=geocoder.getFromLocation(location.position.latitude, location.position.longitude,1)
-                binding.localInfo.text= town!![0].adminArea.toString()
-                if(isAdded) {
-                    toast=
+                var town = geocoder.getFromLocation(
+                    location.position.latitude,
+                    location.position.longitude,
+                    1
+                )
+                binding.localInfo.text = town!![0].adminArea.toString()
+
+                if (isAdded) {
+                    toast =
                         Toast.makeText(
                             requireContext(),
                             getString(R.string.yourCoordinates) + ": ${location.position.latitude} и ${location.position.longitude}" +
@@ -610,12 +650,17 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
                         )
                     toast.show()
                 }
+                getWeatherInLocationPlace(
+                    location.position.latitude.toString(),
+                    location.position.longitude.toString(),
+                    town!![0].adminArea.toString()
+                )
+
                 myLocation = location.position
                 if (myLocation != null) {
                     ApplicationMapKit.LocalHelp.latitudeActivity = location.position.latitude
                     ApplicationMapKit.LocalHelp.longitudeActivity = location.position.longitude
                     turnButtons()
-
                 }
             }
 
@@ -626,16 +671,17 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
 
     override fun onDestroyView() {
         super.onDestroyView()
-        if(::toast.isInitialized){
+        if (::toast.isInitialized) {
             toast.cancel()
         }
-        _binding=null
+        _binding = null
 
     }
+
     private fun turnButtons() {
         if (loc != null) {
-            binding.userroute.isEnabled=true
-            binding.voicesearch.isEnabled=true
+            binding.userroute.isEnabled = true
+            binding.voicesearch.isEnabled = true
             binding.zoombtn.isEnabled = true
             binding.zoombtndec.isEnabled = true
             binding.locationCurrentAddMarker.isEnabled = true
@@ -643,9 +689,9 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
             binding.searchField.isEnabled = true
             binding.prob.isEnabled = true
             binding.userlocation!!.isEnabled = true
-            binding.delallmarks.isEnabled=true
+            binding.delallmarks.isEnabled = true
             ApplicationMapKit.LocalHelp.offOnUserLayer = true
-            binding.locationCurrentDeleteMarker.isEnabled=true
+            binding.locationCurrentDeleteMarker.isEnabled = true
         }
     }
 
@@ -658,40 +704,55 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
 
     override fun onSearchResponse(response: Response) {
         val args = Bundle()
-        var needCoordinatesPointer=0
-        if (binding.searchField.text.isNotEmpty()|| ApplicationMapKit.LocalHelp.speachText.isNotEmpty()) {
-            Toast.makeText(requireContext(), "Нормально ${response.metadata.toponym}", Toast.LENGTH_SHORT).show()
-            if (binding.searchField.text.isNotEmpty())
-                {
+        var needCoordinatesPointer = 0
+        if (binding.searchField.text.isNotEmpty() || ApplicationMapKit.LocalHelp.speachText.isNotEmpty()) {
+            Toast.makeText(
+                requireContext(),
+                "Нормально ${response.metadata.toponym}",
+                Toast.LENGTH_SHORT
+            ).show()
+            if (binding.searchField.text.isNotEmpty()) {
                 binding.searchField.text.clear()
             }
-            ApplicationMapKit.LocalHelp.speachText=""
+            ApplicationMapKit.LocalHelp.speachText = ""
             val mapObjects = binding.mapview.map.mapObjects
             mapObjects.clear()
-            if(response.collection.children.size>1&&response.collection.children.size%2==0){
-                needCoordinatesPointer=response.collection.children.size/2
-                val snackbar=Snackbar.make(
+            if (response.collection.children.size > 1 && response.collection.children.size % 2 == 0) {
+//                needCoordinatesPointer = response.collection.children.size / 2
+                needCoordinatesPointer=0
+                val snackbar = Snackbar.make(
                     binding.root,
                     "Посмотрите на результат  поиска...${response.metadata.requestText} ",
                     Snackbar.LENGTH_LONG
                 )
-                snackbar.setTextColor(Color.argb(100,252,63,29))
+                snackbar.setTextColor(Color.argb(100, 252, 63, 29))
                 snackbar.setBackgroundTint((Color.WHITE))
                     .show()
                 binding.mapview.map.move(
-                    CameraPosition(Point(response.collection.children[0].obj!!.geometry[0].point!!.latitude,
-                        response.collection.children[0].obj!!.geometry[0].point!!.longitude ),
+                    CameraPosition(
+                        Point(
+                            response.collection.children[0].obj!!.geometry[0].point!!.latitude,
+                            response.collection.children[0].obj!!.geometry[0].point!!.longitude
+                        ),
                         binding.mapview.map.cameraPosition.zoom,
                         binding.mapview.map.cameraPosition.azimuth,
-                        binding.mapview.map.cameraPosition.tilt),
-                    Animation(Animation.Type.SMOOTH, 1.0f), null )
+                        binding.mapview.map.cameraPosition.tilt
+                    ),
+                    Animation(Animation.Type.SMOOTH, 1.0f), null
+                )
 
-                val menuItem=  requireActivity().findViewById<BottomNavigationView>(R.id.panel_navigation_main).menu.getItem(0)
-                menuItem.title=resources.getString(R.string.panorama_look)
-                requireActivity().findViewById<BottomNavigationView>(R.id.panel_navigation_main).setBackgroundColor(resources.getColor(R.color.bottom2))
-                ApplicationMapKit.LocalHelp.latitudeActivity = response.collection.children[needCoordinatesPointer].obj!!.geometry[0].point!!.latitude
-                ApplicationMapKit.LocalHelp.longitudeActivity = response.collection.children[needCoordinatesPointer].obj!!.geometry[0].point!!.longitude
-                lifecycleScope.launch (Dispatchers.Main) {
+                val menuItem =
+                    requireActivity().findViewById<BottomNavigationView>(R.id.panel_navigation_main).menu.getItem(
+                        0
+                    )
+                menuItem.title = resources.getString(R.string.panorama_look)
+                requireActivity().findViewById<BottomNavigationView>(R.id.panel_navigation_main)
+                    .setBackgroundColor(resources.getColor(R.color.bottom2))
+                ApplicationMapKit.LocalHelp.latitudeActivity =
+                    response.collection.children[needCoordinatesPointer].obj!!.geometry[0].point!!.latitude
+                ApplicationMapKit.LocalHelp.longitudeActivity =
+                    response.collection.children[needCoordinatesPointer].obj!!.geometry[0].point!!.longitude
+                lifecycleScope.launch(Dispatchers.Main) {
                     delay(1000)
                     if (response.collection.children.size > 0) {
                         panoramaPlaceFragment = PanoramaPlaceFragment.newInstance(
@@ -701,30 +762,40 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
                         (activity as Transaction).navigateTo(panoramaPlaceFragment)
                     }
                 }
-            }
-            else if(response.collection.children.size==1){
-                val snackbar=Snackbar.make(
+            } else if (response.collection.children.size == 1) {
+                val snackbar = Snackbar.make(
                     binding.root,
                     "Посмотрите на результат  поиска...${response.metadata.requestText} ",
                     Snackbar.LENGTH_LONG
                 )
-                snackbar.setTextColor(Color.argb(100,252,63,29))
+                snackbar.setTextColor(Color.argb(100, 252, 63, 29))
                 snackbar.setBackgroundTint((Color.WHITE))
                     .show()
                 binding.mapview.map.move(
-                    CameraPosition(Point(response.collection.children[0].obj!!.geometry[0].point!!.latitude,
-                        response.collection.children[0].obj!!.geometry[0].point!!.longitude ),
+                    CameraPosition(
+                        Point(
+                            response.collection.children[0].obj!!.geometry[0].point!!.latitude,
+                            response.collection.children[0].obj!!.geometry[0].point!!.longitude
+                        ),
                         binding.mapview.map.cameraPosition.zoom,
                         binding.mapview.map.cameraPosition.azimuth,
-                        binding.mapview.map.cameraPosition.tilt),
-                    Animation(Animation.Type.SMOOTH, 1.0f), null )
+                        binding.mapview.map.cameraPosition.tilt
+                    ),
+                    Animation(Animation.Type.SMOOTH, 1.0f), null
+                )
 
-                val menuItem=  requireActivity().findViewById<BottomNavigationView>(R.id.panel_navigation_main).menu.getItem(0)
-                menuItem.title=resources.getString(R.string.panorama_look)
-                requireActivity().findViewById<BottomNavigationView>(R.id.panel_navigation_main).setBackgroundColor(resources.getColor(R.color.bottom2))
-                ApplicationMapKit.LocalHelp.latitudeActivity = response.collection.children[0].obj!!.geometry[0].point!!.latitude
-                ApplicationMapKit.LocalHelp.longitudeActivity = response.collection.children[0].obj!!.geometry[0].point!!.longitude
-                lifecycleScope.launch (Dispatchers.Main) {
+                val menuItem =
+                    requireActivity().findViewById<BottomNavigationView>(R.id.panel_navigation_main).menu.getItem(
+                        0
+                    )
+                menuItem.title = resources.getString(R.string.panorama_look)
+                requireActivity().findViewById<BottomNavigationView>(R.id.panel_navigation_main)
+                    .setBackgroundColor(resources.getColor(R.color.bottom2))
+                ApplicationMapKit.LocalHelp.latitudeActivity =
+                    response.collection.children[0].obj!!.geometry[0].point!!.latitude
+                ApplicationMapKit.LocalHelp.longitudeActivity =
+                    response.collection.children[0].obj!!.geometry[0].point!!.longitude
+                lifecycleScope.launch(Dispatchers.Main) {
                     delay(1000)
                     if (response.collection.children.size > 0) {
                         panoramaPlaceFragment = PanoramaPlaceFragment.newInstance(
@@ -734,30 +805,40 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
                         (activity as Transaction).navigateTo(panoramaPlaceFragment)
                     }
                 }
-            }
-            else if(response.collection.children.size>2){
-             val snackbar=Snackbar.make(
+            } else if (response.collection.children.size > 2) {
+                val snackbar = Snackbar.make(
                     binding.root,
                     "Посмотрите на результат  поиска...${response.metadata.requestText} ",
                     Snackbar.LENGTH_LONG
                 )
-                snackbar.setTextColor(Color.argb(100,252,63,29))
+                snackbar.setTextColor(Color.argb(100, 252, 63, 29))
                 snackbar.setBackgroundTint((Color.WHITE))
                     .show()
                 binding.mapview.map.move(
-                    CameraPosition(Point(response.collection.children[2].obj!!.geometry[0].point!!.latitude,
-                        response.collection.children[2].obj!!.geometry[0].point!!.longitude ),
+                    CameraPosition(
+                        Point(
+                            response.collection.children[0].obj!!.geometry[0].point!!.latitude,
+                            response.collection.children[0].obj!!.geometry[0].point!!.longitude
+                        ),
                         binding.mapview.map.cameraPosition.zoom,
                         binding.mapview.map.cameraPosition.azimuth,
-                        binding.mapview.map.cameraPosition.tilt),
-                    Animation(Animation.Type.SMOOTH, 1.0f), null )
+                        binding.mapview.map.cameraPosition.tilt
+                    ),
+                    Animation(Animation.Type.SMOOTH, 1.0f), null
+                )
 
-                val menuItem=  requireActivity().findViewById<BottomNavigationView>(R.id.panel_navigation_main).menu.getItem(0)
-                menuItem.title=resources.getString(R.string.panorama_look)
-                requireActivity().findViewById<BottomNavigationView>(R.id.panel_navigation_main).setBackgroundColor(resources.getColor(R.color.bottom2))
-                ApplicationMapKit.LocalHelp.latitudeActivity = response.collection.children[2].obj!!.geometry[0].point!!.latitude
-                ApplicationMapKit.LocalHelp.longitudeActivity = response.collection.children[2].obj!!.geometry[0].point!!.longitude
-                lifecycleScope.launch (Dispatchers.Main) {
+                val menuItem =
+                    requireActivity().findViewById<BottomNavigationView>(R.id.panel_navigation_main).menu.getItem(
+                        0
+                    )
+                menuItem.title = resources.getString(R.string.panorama_look)
+                requireActivity().findViewById<BottomNavigationView>(R.id.panel_navigation_main)
+                    .setBackgroundColor(resources.getColor(R.color.bottom2))
+                ApplicationMapKit.LocalHelp.latitudeActivity =
+                    response.collection.children[0].obj!!.geometry[0].point!!.latitude
+                ApplicationMapKit.LocalHelp.longitudeActivity =
+                    response.collection.children[0].obj!!.geometry[0].point!!.longitude
+                lifecycleScope.launch(Dispatchers.Main) {
                     delay(1000)
                     if (response.collection.children.size > 0) {
                         panoramaPlaceFragment = PanoramaPlaceFragment.newInstance(
@@ -856,24 +937,27 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
     }
 
     override fun onDrivingRoutes(pointsRoute: MutableList<DrivingRoute>) {
-     for (routeCoord in pointsRoute){
-       binding.mapview.map.mapObjects.addPolyline(routeCoord.geometry)
-     }
+        for (routeCoord in pointsRoute) {
+            binding.mapview.map.mapObjects.addPolyline(routeCoord.geometry)
+        }
     }
 
     override fun onDrivingRoutesError(p0: Error) {
-        Toast.makeText(requireContext(), getString(R.string.notFoundError), Toast.LENGTH_SHORT).show()
+        Toast.makeText(requireContext(), getString(R.string.notFoundError), Toast.LENGTH_SHORT)
+            .show()
     }
-    private fun startRoute(){
-        val drivingOptions=DrivingOptions()
-        val vehicleOptions=VehicleOptions()
-        val requestRoutePoints:ArrayList<RequestPoint> = ArrayList()
-        requestRoutePoints.add(RequestPoint(myLocation!!,RequestPointType.WAYPOINT,null))
-      //  endLocationPoints=Point(latitudeActivity,longitudeActivity)
-        requestRoutePoints.add(RequestPoint(endLocationPoints,RequestPointType.WAYPOINT,null))
-        drivingSession=drivingRouter!!.requestRoutes(requestRoutePoints,drivingOptions,vehicleOptions,this)
+
+    private fun startRoute() {
+        val drivingOptions = DrivingOptions()
+        val vehicleOptions = VehicleOptions()
+        val requestRoutePoints: ArrayList<RequestPoint> = ArrayList()
+        requestRoutePoints.add(RequestPoint(myLocation!!, RequestPointType.WAYPOINT, null))
+        //  endLocationPoints=Point(latitudeActivity,longitudeActivity)
+        requestRoutePoints.add(RequestPoint(endLocationPoints, RequestPointType.WAYPOINT, null))
+        drivingSession =
+            drivingRouter!!.requestRoutes(requestRoutePoints, drivingOptions, vehicleOptions, this)
     }
-    }
+}
 
 
 
