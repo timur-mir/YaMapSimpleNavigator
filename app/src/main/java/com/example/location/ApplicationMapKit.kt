@@ -29,12 +29,13 @@ class ApplicationMapKit: Application(){
         MapKitFactory.getInstance().onStart()
     }
     object LocalHelp {
+        var lastPoint:Point?=null
         var routeProcess=false
         var speachText="Останкино"
         var myLocation: Point? = null
         var loc: Location? = null
         var offOn=false
-        var offOnUserLayer=false
+        var offOnUserLayer=true
         var markAdd=false
         var locMark: Location? = null
         var latitudeActivity=55.751574

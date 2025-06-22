@@ -80,6 +80,7 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.location.ApplicationMapKit.LocalHelp.activityClose
+import com.example.location.ApplicationMapKit.LocalHelp.lastPoint
 import com.example.location.ApplicationMapKit.LocalHelp.latitudeActivity
 import com.example.location.ApplicationMapKit.LocalHelp.longitudeActivity
 import com.example.location.ApplicationMapKit.LocalHelp.routeProcess
@@ -167,25 +168,27 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
             startActivityForResult(intent, RECOGNIZER_RESULT)
         }
         binding.userlocation!!.setOnClickListener {
-            getLocation()
+            //getLocation()
             if (ApplicationMapKit.LocalHelp.offOnUserLayer) {
                 if (::locationmapkit.isInitialized) {
                     locationmapkit!!.isVisible = true
                     locationmapkit!!.setObjectListener(this)
+
                     ApplicationMapKit.LocalHelp.offOnUserLayer = false
-                } else {
+                }
+                else{
                     locationmapkit = mapKit.createUserLocationLayer(binding.mapview.mapWindow)
                     locationmapkit!!.isVisible = true
                     locationmapkit!!.setObjectListener(this)
                     ApplicationMapKit.LocalHelp.offOnUserLayer = false
-
+                    lastPoint =  locationmapkit.cameraPosition()?.target
                 }
-            } else {
+            }
+                        else {
                 locationmapkit.isVisible = false
                 locationmapkit.setObjectListener(null)
                 ApplicationMapKit.LocalHelp.offOnUserLayer = true
             }
-
         }
         //Для добавления кода при повороте
         when (resources.configuration.orientation) {
@@ -280,7 +283,7 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
 
         }
         binding.locationCurrentAddMarker.setOnClickListener {
-            getLocation()
+           // getLocation()
             loc?.let { location ->
                 val mapObjects = binding.mapview.map.mapObjects
                 locMark = location
@@ -612,7 +615,7 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
                     requireActivity().runOnUiThread {
                         Toast.makeText(
                             requireActivity(),
-                            "Температура в полдень сегодня:$tempDayHalf°С",
+                            "Температура сегодня в полдень :$tempDayHalf°С",
                             Toast.LENGTH_LONG
                         ).show()
                         Log.d("ResponseL", tempDayHalf.toString())
@@ -640,6 +643,7 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
                 )
                 binding.localInfo.text = town!![0].adminArea.toString()
 
+
                 if (isAdded) {
                     toast =
                         Toast.makeText(
@@ -655,6 +659,11 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
                     location.position.longitude.toString(),
                     town!![0].adminArea.toString()
                 )
+                panoramaPlaceFragment = PanoramaPlaceFragment.newInstance(
+                    location.position.latitude,
+                    location.position.longitude
+                )
+                (activity as Transaction).navigateTo(panoramaPlaceFragment)
 
                 myLocation = location.position
                 if (myLocation != null) {
@@ -699,6 +708,8 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
         locationManager.requestSingleUpdate(
             localListener()
         )
+
+
     }
 
 
@@ -881,9 +892,6 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
         finished: Boolean
     ) {
         if (finished) {
-            if (binding.searchField.text.isNotEmpty())
-                queryPlace(binding.searchField.text.toString())
-        }
     }
 
     companion object {
