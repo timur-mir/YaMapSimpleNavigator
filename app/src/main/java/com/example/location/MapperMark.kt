@@ -7,11 +7,13 @@ fun MarkEntity.mapToMark()=
         Mark(
             id,
             coordinateLong,
-            coordinateLat
+            coordinateLat,
+            photoFileName
         )
 fun Mark.mapToMarkEntity()=
     MarkEntity(
         id = id,
         coordinateLong,
-        coordinateLat
+        coordinateLat,
+        photoFileName
     )

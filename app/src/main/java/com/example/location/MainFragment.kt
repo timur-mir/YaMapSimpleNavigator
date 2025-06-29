@@ -3,12 +3,20 @@ package com.example.location
 import android.animation.ObjectAnimator
 import android.app.Activity.RESULT_OK
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.content.pm.ResolveInfo
 import android.content.res.Configuration
+import android.graphics.Bitmap
 import android.graphics.Color
+import android.graphics.ImageDecoder
 import android.graphics.PointF
+import android.graphics.drawable.Icon
 import android.location.Geocoder
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
+import android.provider.MediaStore
 import android.speech.RecognizerIntent
 import android.util.Log
 import android.view.LayoutInflater
@@ -16,7 +24,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.inputmethod.EditorInfo
+import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
+import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AlertDialog
+import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import androidx.fragment.app.viewModels
@@ -84,7 +97,9 @@ import com.example.location.ApplicationMapKit.LocalHelp.lastPoint
 import com.example.location.ApplicationMapKit.LocalHelp.latitudeActivity
 import com.example.location.ApplicationMapKit.LocalHelp.longitudeActivity
 import com.example.location.ApplicationMapKit.LocalHelp.routeProcess
+import com.example.location.data.roomrepo.getScaledBitmap
 import com.yandex.mapkit.GeoObject
+import com.yandex.mapkit.Image
 import com.yandex.mapkit.RequestPoint
 import com.yandex.mapkit.RequestPointType
 import com.yandex.mapkit.directions.DirectionsFactory
@@ -93,15 +108,25 @@ import com.yandex.mapkit.directions.driving.DrivingRoute
 import com.yandex.mapkit.directions.driving.DrivingRouter
 import com.yandex.mapkit.directions.driving.DrivingSession
 import com.yandex.mapkit.directions.driving.VehicleOptions
+import com.yandex.mapkit.layers.GeoObjectTapListener
+import com.yandex.mapkit.map.MapObject
 import com.yandex.mapkit.map.MapObjectCollection
+import com.yandex.mapkit.map.MapObjectTapListener
 import com.yandex.mapkit.search.Address
+import com.yandex.runtime.ui_view.ViewProvider
 import org.json.JSONArray
 import org.json.JSONObject
+import java.io.File
 import java.net.URL
+import kotlin.math.abs
 
+private const val REQUEST_PHOTO = 2
 class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener, CameraListener,
     UserLocationObjectListener, Transaction, DrivingSession.DrivingRouteListener {
-
+    lateinit var placemarkTapListener: MapObjectTapListener
+    private val filesDir=ApplicationMapKit.applicationContext().filesDir
+    private lateinit var photoFile: File
+    private var photoUri: Uri? = null
     private var _binding: MainFragmentBinding? = null
     val binding get() = _binding!!
     lateinit var searchSession: com.yandex.mapkit.search.Session
@@ -142,8 +167,13 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
         return binding.root
     }
 
+    @RequiresApi(Build.VERSION_CODES.P)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        placemarkTapListener= MapObjectTapListener { obj, point ->
+            tapListener(point,obj)
+            true
+         }
         geocoder = Geocoder(requireActivity())
         endLocationPoints = Point(55.751574, 37.573856)
         val mapKit: MapKit = MapKitFactory.getInstance()
@@ -199,7 +229,7 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
                         binding.mapview.map.mapObjects.addPlacemark(
                             locMark!!.position,
                             ImageProvider.fromResource(requireContext(), R.drawable.us_m2)
-                        )
+                        ).addTapListener(placemarkTapListener)
 
                     }
                 }
@@ -211,7 +241,7 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
                         binding.mapview.map.mapObjects.addPlacemark(
                             locMark!!.position,
                             ImageProvider.fromResource(requireContext(), R.drawable.us_m2)
-                        )
+                        ).addTapListener(placemarkTapListener)
                     }
                 }
             }
@@ -266,15 +296,22 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
                 delay(300)
                 marksViewModel.marks.collect { marks ->
                     if (marks != null) {
-                        marks.forEach {
-                            mapObjects.addPlacemark(
-                                Point(it.coordinateLat, it.coordinateLong),
-                                ImageProvider.fromResource(
-                                    requireContext(),
-                                    R.drawable.us_m2
-                                )
-                            )
-                        }
+                      marks.forEach {
+                          mapObjects.addPlacemark(
+                              Point(
+                                 it.coordinateLat,
+                                it.coordinateLong
+                              ),
+                              ImageProvider.fromResource(
+                                  requireContext(),
+                                  R.drawable.us_m2
+                              )
+                          ).apply {
+                              addTapListener(placemarkTapListener)
+
+                          }
+
+                      }
 
                     }
                 }
@@ -283,6 +320,15 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
 
         }
         binding.locationCurrentAddMarker.setOnClickListener {
+            viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
+                marksViewModel.getMarksSize()
+            }
+            viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
+                delay(200)
+              marksViewModel.marksSize.collect{mSize->
+                  marksSize=mSize
+              }
+            }
            // getLocation()
             loc?.let { location ->
                 val mapObjects = binding.mapview.map.mapObjects
@@ -293,25 +339,73 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
                     Snackbar.LENGTH_INDEFINITE
                 )
                     .setAction(getString(R.string.addMark)) {
-                        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
-                            marksViewModel.addMark(
-                                Mark(
-                                    marksSize + 1,
-                                    locMark!!.position.longitude,
-                                    locMark!!.position.latitude
-                                )
-                            )
-                            marksSize += 1
-                        }
-                        mapObjects.addPlacemark(
-                            locMark!!.position,
-                            ImageProvider.fromResource(requireContext(), R.drawable.us_m22)
-                        )
+                        AlertDialog.Builder(requireActivity())
+                            .setCancelable(false)
+                            .setPositiveButton("Начать") { _, _ ->
+                                run {
+                                    val packageManager: PackageManager =
+                                        requireActivity().packageManager
+                                    val captureImage = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+                                    val resolvedActivity: ResolveInfo? =
+                                        packageManager.resolveActivity(
+                                            captureImage,
+                                            PackageManager.MATCH_DEFAULT_ONLY
+                                        )
+                                    if (resolvedActivity != null) {
+                                        photoFile =
+                                            File(filesDir, "PhotoPlace_${marksSize + 1}.jpg")
+                                        photoUri = FileProvider.getUriForFile(
+                                            requireActivity(),
+                                            "com.example.location.fileprovider",
+                                            photoFile
+                                        )
+                                        captureImage.putExtra(MediaStore.EXTRA_OUTPUT, photoUri)
+                                        val cameraActivities: List<ResolveInfo> =
+                                            packageManager.queryIntentActivities(
+                                                captureImage,
+                                                PackageManager.MATCH_DEFAULT_ONLY
+                                            )
+
+                                        for (cameraActivity in cameraActivities) {
+                                            requireActivity().grantUriPermission(
+                                                cameraActivity.activityInfo.packageName,
+                                                photoUri,
+                                                Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+                                            )
+                                        }
+
+
+                                        startActivityForResult(captureImage, REQUEST_PHOTO)
+                                    }
+
+                                    viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
+                                        delay(350)
+                                        marksViewModel.addMark(
+                                            Mark(
+                                                marksSize + 1,
+                                                locMark!!.position.longitude,
+                                                locMark!!.position.latitude,
+                                                photoFileName = "PhotoPlace_${marksSize + 1}.jpg"
+                                            )
+                                        )
+                                        // marksSize += 1
+                                    }
+                                    mapObjects.addPlacemark(
+                                        locMark!!.position,
+                                        ImageProvider.fromResource(
+                                            requireContext(),
+                                            R.drawable.us_m22
+                                        )
+                                    ).apply { userData = "PhotoPlace_${marksSize + 1}.jpg" }
+                                }
+                            }
+                            .setNegativeButton("Отменить",null)
+                            .setTitle("Добавление маркера и фото местности")
+                            .show()
 
                     }
                 snackbar.setActionTextColor(Color.WHITE)
                 snackbar.setBackgroundTint((Color.BLUE))
-
                     .show()
             }
         }
@@ -347,11 +441,9 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
                             marks.forEach {
                                 mapObjectsInner.addPlacemark(
                                     Point(it.coordinateLat, it.coordinateLong),
-                                    ImageProvider.fromResource(
-                                        requireContext(),
-                                        R.drawable.us_m2
-                                    )
-                                )
+                                    ImageProvider.fromResource(requireContext(),R.drawable.us_m2)
+                            //    ImageProvider.fromBitmap(getBitmapPlaceMark(it.photoFileName))
+                                ).addTapListener(placemarkTapListener)
                             }
 
                         }
@@ -413,7 +505,58 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
         } ?: setLocation()
 
     }
+    @RequiresApi(Build.VERSION_CODES.P)
 
+    private fun tapListener(point: Point,objectMap:MapObject) {
+        val li = LayoutInflater.from(requireActivity())
+        val mark_info_view: View = li.inflate(R.layout.info_about_mark, null)
+        val text = mark_info_view.findViewById<View>(R.id.main_info) as TextView
+        val image = mark_info_view.findViewById<View>(R.id.mark_pict) as ImageView
+
+        Toast.makeText(
+            requireContext(),
+            "Координаты нажатия ${point.latitude} и ${point.longitude}",
+            Toast.LENGTH_LONG
+        ).show()
+
+        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
+            marksViewModel.getAllMarks()
+            marksViewModel.marks2.collect { marks ->
+                var i = 0
+                while (i < marks!!.size) {
+
+                    if (
+                        objectMap.userData.toString()==marks[i].photoFileName.toString()||
+                        //marks[i].coordinateLat==point.latitude && (point.longitude)==marks[i].coordinateLong
+                          marks[i].coordinateLat - point.latitude < 0.01 && (point.longitude) - marks[i].coordinateLong  < 0.01&&objectMap.isValid
+                        || point.latitude - marks[i].coordinateLat < 0.01 && marks[i].coordinateLong - (point.longitude)< 0.009&&objectMap.isValid
+                    )
+
+                    {
+                        requireActivity().runOnUiThread {
+                            image.setImageBitmap(getBitmapPlaceMark(marks[i].photoFileName))
+                            text.text = "Фото места: ${marks[i].photoFileName.toString()}"
+                        }
+                        delay(3000)
+                     //   continue
+                    }
+                    i += 1
+                }
+            }
+
+
+
+        }
+        Handler().postDelayed({
+            requireActivity().runOnUiThread {
+                AlertDialog.Builder(requireActivity())
+                    .setView(mark_info_view)
+                    .setCancelable(false)
+                    .setNegativeButton("Понятно", null)
+                    .show()
+            }
+        },2000)
+    }
     @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == RECOGNIZER_RESULT && resultCode == RESULT_OK) {
@@ -459,6 +602,7 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
         super.onActivityResult(requestCode, resultCode, data)
     }
 
+    @RequiresApi(Build.VERSION_CODES.P)
     override fun onResume() {
         super.onResume()
         val mapObjects = binding.mapview.map.mapObjects
@@ -492,15 +636,29 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
                     marks.forEach {
                         mapObjects.addPlacemark(
                             Point(it.coordinateLat, it.coordinateLong),
-                            ImageProvider.fromResource(requireContext(), R.drawable.us_m2)
-                        )
+                           ImageProvider.fromResource(requireContext(), R.drawable.us_m2)
+                         //ViewProvider(ImageView(requireContext()))
+                        ).addTapListener(placemarkTapListener)
+
                     }
 
                 }
             }
         }
     }
-
+        @RequiresApi(Build.VERSION_CODES.P)
+        fun getBitmapPlaceMark(fileName:String):Bitmap{
+            photoFile=File(filesDir, fileName)
+//            photoUri = FileProvider.getUriForFile(
+//                requireActivity(),
+//                "com.example.location.fileprovider",
+//                photoFile
+            val source = ImageDecoder.createSource(
+                photoFile
+            )
+      //  return getScaledBitmap(photoFile.path, requireActivity())
+        return ImageDecoder.decodeBitmap(source)
+        }
     private fun inputListenerOnMap(): InputListener {
         val inputListener: InputListener = object : InputListener {
             override fun onMapTap(p0: Map, p1: Point) {
@@ -892,6 +1050,7 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
         finished: Boolean
     ) {
         if (finished) {
+        }
     }
 
     companion object {

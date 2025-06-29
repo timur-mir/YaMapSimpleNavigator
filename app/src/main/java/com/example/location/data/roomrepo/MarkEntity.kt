@@ -8,5 +8,6 @@ data class MarkEntity (
  @PrimaryKey
     var id:Int,
     var coordinateLong:Double,
-    var coordinateLat:Double
+    var coordinateLat:Double,
+    var photoFileName:String
         )

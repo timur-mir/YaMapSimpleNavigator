@@ -12,13 +12,16 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class MarksViewModel:ViewModel() {
-    private val marksRepo = MarksRepository()
+    private val marksRepo = MarksRepository(ApplicationMapKit.applicationContext())
     private val _marks: MutableStateFlow<List<Mark>?> = MutableStateFlow(emptyList())
     val marks: StateFlow<List<Mark>?>
         get() = _marks.asStateFlow()
     private val _marks2: MutableStateFlow<List<Mark>?> = MutableStateFlow(emptyList())
     val marks2: StateFlow<List<Mark>?>
         get() = _marks2.asStateFlow()
+    private val _marksSize: MutableStateFlow<Int> = MutableStateFlow(0)
+    val marksSize: StateFlow<Int>
+        get() = _marksSize.asStateFlow()
     init {
         viewModelScope.launch {
             marksRepo.getMarks().collect {
@@ -31,6 +34,17 @@ class MarksViewModel:ViewModel() {
              marksRepo.insertMark(mark)
          }
      }
+    fun getMarksSize() {
+        viewModelScope.launch {
+            marksRepo.getMarks().collect {
+                if (it != null) {
+                    _marksSize.value = it.size
+                }
+                else
+                    _marksSize.value = 0
+            }
+        }
+    }
          fun getAllMarks() {
             viewModelScope.launch {
                 marksRepo.getMarks().collect {

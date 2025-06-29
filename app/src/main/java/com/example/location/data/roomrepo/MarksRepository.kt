@@ -1,14 +1,19 @@
 package com.example.location.data.roomrepo
 
+import android.content.Context
 import com.example.location.domain.Mark
 import com.example.location.mapToMark
 import com.example.location.mapToMarkEntity
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import java.io.File
 
 
-class MarksRepository {
+class MarksRepository(context:Context) {
     private val marksDao = MarksDatabaseImpl.INSTANCE!!.getMarksDao()
+    private val filesDir=context.applicationContext.filesDir
+
+    fun getPhotoFile(markPhoto: Mark): File = File(filesDir, markPhoto.photoFileName)
 
     fun getMarks(): Flow<List<Mark>?> {
         val allMarks = marksDao.getAllMarks()

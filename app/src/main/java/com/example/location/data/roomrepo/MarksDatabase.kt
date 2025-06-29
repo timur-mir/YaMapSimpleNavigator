@@ -14,7 +14,7 @@ abstract class MarksDatabase: RoomDatabase() {
     abstract fun getMarksDao(): MarksDao
 
     companion object {
-        const val DB_VERSION = 2
+        const val DB_VERSION = 3
         const val DB_NAME = "MarksBase"
     }
 }
