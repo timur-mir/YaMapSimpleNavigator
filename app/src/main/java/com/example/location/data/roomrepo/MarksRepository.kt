@@ -2,8 +2,8 @@ package com.example.location.data.roomrepo
 
 import android.content.Context
 import com.example.location.domain.Mark
-import com.example.location.mapToMark
-import com.example.location.mapToMarkEntity
+import com.example.location.presentation.mapToMark
+import com.example.location.presentation.mapToMarkEntity
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import java.io.File

@@ -6,13 +6,12 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
-import com.example.location.ApplicationMapKit
+import com.example.location.presentation.ApplicationMapKit
 
 import com.yandex.mapkit.MapKitFactory
 import com.yandex.mapkit.geometry.Point
 import com.yandex.mapkit.places.PlacesFactory
 import com.yandex.mapkit.places.panorama.PanoramaService
-import com.yandex.mapkit.places.panorama.PanoramaView
 import com.yandex.runtime.Error
 import com.yandex.runtime.network.NetworkError
 import com.yandex.runtime.network.NotFoundError
@@ -48,7 +47,7 @@ class PanoramaActivityF : AppCompatActivity(), PanoramaService.SearchListener {
                 if (ApplicationMapKit.LocalHelp.activityClose) {
                     val intent = Intent().setClassName(
                        this@PanoramaActivityF,
-                        "com.example.location.MainActivity"
+                        "com.example.location.presentation.MainActivity"
                     )
                     ApplicationMapKit.LocalHelp.activityClose=false
                     intent.flags=(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)

@@ -6,7 +6,7 @@
     <fragment
         app:moduleName="panoramafeature"
         android:id="@+id/panoramaFragmentFeature"
-        android:name="com.example.location.PanoramaPlaceFragment">
+        android:name="com.example.location.presentation.PanoramaPlaceFragment">
         <argument
             android:name="lon"
             app:argType="float" />

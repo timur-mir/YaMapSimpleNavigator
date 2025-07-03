@@ -6,7 +6,7 @@
     app:startDestination="@id/mainFragment">
     <fragment
         android:id="@+id/panoramaFragmentFeature"
-        android:name="com.example.location.PanoramaPlaceFragment">
+        android:name="com.example.location.presentation.PanoramaPlaceFragment">
         <argument
             android:name="lat-long"
             app:argType="com.example.location.LatLong"/>
@@ -14,7 +14,7 @@
     </fragment>
     <fragment
         android:id="@+id/mainFragment"
-        android:name="com.example.location.MainFragment"
+        android:name="com.example.location.presentation.MainFragment"
         android:label="MainFragment"
         tools:layout="@layout/main_fragment"/>
 </navigation>
