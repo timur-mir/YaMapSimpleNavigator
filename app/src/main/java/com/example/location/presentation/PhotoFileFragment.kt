@@ -23,7 +23,7 @@ class PhotoFileFragment: DialogFragment() {
         val dialogView: View = inflater.inflate(R.layout.photo_file_fragment, container, false)
         exitButton = dialogView.findViewById(R.id.exit) as AppCompatButton
         imView = dialogView.findViewById(R.id.image_photo) as ImageView
-        imView.setScaleType(ImageView.ScaleType.FIT_CENTER)
+        imView.setScaleType(ImageView.ScaleType.CENTER)
         imagePath = arguments?.getString("path")
         if (imagePath == null) {
         } else {

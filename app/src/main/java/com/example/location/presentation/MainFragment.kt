@@ -11,6 +11,7 @@ import android.graphics.ImageDecoder
 import android.graphics.PointF
 import android.location.Geocoder
 import android.net.Uri
+import android.opengl.Visibility
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -21,6 +22,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
+import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
@@ -32,6 +34,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.example.location.presentation.ApplicationMapKit.LocalHelp.loc
 import com.example.location.presentation.ApplicationMapKit.LocalHelp.locMark
 import com.example.location.presentation.ApplicationMapKit.LocalHelp.markAdd
@@ -115,6 +118,7 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
     lateinit var splitInstallManager: SplitInstallManager
     lateinit var locationmapkit: UserLocationLayer
     lateinit var panoramaPlaceFragment: PanoramaPlaceFragment
+    lateinit var showAllMarksFragment: ShowAllMarksFragment
     lateinit var geocoder: Geocoder
     var lat: Double = 0.0
     var lon: Double = 0.0
@@ -259,44 +263,11 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
                 }
             }
         }
-
-        binding.delallmarks.setOnClickListener {
-            val mapObjects = binding.mapview.map.mapObjects
-            viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
-                marksViewModel.deleteMarks()
-            }
-            viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
-                mapObjects.clear()
-
-            }
-
-            viewLifecycleOwner.lifecycleScope.launch {
-                delay(300)
-                marksViewModel.marks.collect { marks ->
-                    if (marks != null) {
-                        marks.forEach {
-                            mapObjects.addPlacemark(
-                                Point(
-                                    it.coordinateLat,
-                                    it.coordinateLong
-                                ),
-                                ImageProvider.fromResource(
-                                    requireContext(),
-                                    R.drawable.us_m2
-                                )
-                            ).apply {
-                                addTapListener(placemarkTapListener)
-
-                            }
-
-                        }
-
-                    }
-                }
-            }
-
-
-        }
+binding.showAllLocationMark.setOnClickListener {
+   showAllMarksFragment = ShowAllMarksFragment.newInstance()
+parentFragmentManager.beginTransaction().replace(R.id.navHostFragment,showAllMarksFragment).commit()
+requireActivity().findViewById<FrameLayout>(R.id.navHostFragment).bringToFront()
+}
         binding.locationCurrentAddMarker.setOnClickListener {
             viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
                 marksViewModel.getMarksSize()
@@ -386,53 +357,6 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
                 snackbar.setActionTextColor(Color.WHITE)
                 snackbar.setBackgroundTint((Color.BLUE))
                     .show()
-            }
-        }
-        binding.locationCurrentDeleteMarker.setOnClickListener {
-            val mapObjects = binding.mapview.map.mapObjects
-            if (marksSize > 0) {
-
-                val snackbar = Snackbar.make(
-                    binding.root,
-                    "Убрать c карты",
-                    Snackbar.LENGTH_INDEFINITE
-                )
-                    .setAction(getString(R.string.cancelMarkOnMap)) {
-                        mapObjects.clear()
-
-                        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
-                            marksViewModel.deleteMark(
-                                marksSize,
-                            )
-                            if (marksSize > 0) {
-                                marksSize -= 1
-                            }
-                        }
-                    }
-
-
-                viewLifecycleOwner.lifecycleScope.launch {
-                    marksViewModel.getAllMarks()
-                    delay(300)
-                    marksViewModel.marks2.collect { marks ->
-                        val mapObjectsInner = binding.mapview.map.mapObjects
-                        if (marks != null) {
-                            marks.forEach {
-                                mapObjectsInner.addPlacemark(
-                                    Point(it.coordinateLat, it.coordinateLong),
-                                    ImageProvider.fromResource(requireContext(), R.drawable.us_m2)
-                                    //    ImageProvider.fromBitmap(getBitmapPlaceMark(it.photoFileName))
-                                ).addTapListener(placemarkTapListener)
-                            }
-
-                        }
-                    }
-                }
-                snackbar.setActionTextColor(Color.WHITE)
-                snackbar.setBackgroundTint((Color.RED))
-
-                    .show()
-
             }
         }
         binding.prob.setOnClickListener {
@@ -616,8 +540,7 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
                     binding.searchField.isEnabled = true
                     binding.prob.isEnabled = true
                     binding.userlocation.isEnabled = true
-                    binding.delallmarks.isEnabled = true
-                    binding.locationCurrentDeleteMarker.isEnabled = true
+                    binding.showAllLocationMark.isEnabled = true
                 }
             }
         }, 6000)
@@ -763,7 +686,6 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
                 if (allInfo.isNotEmpty()) {
                     val hourly = JSONObject(allInfo).getJSONObject("hourly")
                     val tempDayHalf = hourly.getJSONArray("temperature_2m").getDouble(13).toInt()
-                    Thread.sleep(1000)
                     requireActivity().runOnUiThread {
                         Toast.makeText(
                             requireActivity(),
@@ -848,9 +770,8 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
             binding.searchField.isEnabled = true
             binding.prob.isEnabled = true
             binding.userlocation!!.isEnabled = true
-            binding.delallmarks.isEnabled = true
+            binding.showAllLocationMark.isEnabled = true
             ApplicationMapKit.LocalHelp.offOnUserLayer = true
-            binding.locationCurrentDeleteMarker.isEnabled = true
         }
     }
 
@@ -1116,6 +1037,7 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
         drivingSession =
             drivingRouter!!.requestRoutes(requestRoutePoints, drivingOptions, vehicleOptions, this)
     }
+
 }
 
 

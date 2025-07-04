@@ -36,18 +36,6 @@
         android:src="@drawable/us_m2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/zoombtndec" />
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/location_current_delete_marker"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginTop="6dp"
-        android:backgroundTint="#FF5722"
-        android:enabled="false"
-        android:src="@drawable/delete"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/location_current_add_marker" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/zoombtn"
@@ -59,7 +47,7 @@
         android:src="@drawable/zoom_out"
         android:tag="0"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/location_current_delete_marker" />
+        app:layout_constraintTop_toBottomOf="@+id/location_current_add_marker" />
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/sendLocation"
         android:layout_width="wrap_content"
@@ -73,14 +61,14 @@
         app:layout_constraintBottom_toTopOf="@+id/delallmarks"
         app:layout_constraintTop_toBottomOf="@+id/zoombtn" />
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/delallmarks"
+        android:id="@+id/show_all_location_mark"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:backgroundTint="#1CFBAD"
         android:layout_marginTop="6dp"
         android:layout_marginBottom="100dp"
         android:enabled="false"
-        android:src="@drawable/delete2"
+        android:src="@drawable/baseline_format_list_bulleted_24"
         android:tag="0"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/sendLocation" />
@@ -95,7 +83,7 @@
         android:src="@drawable/mic2"
         android:tag="0"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/delallmarks" />
+        app:layout_constraintTop_toBottomOf="@+id/show_all_location_mark" />
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/zoombtndec"
         android:layout_width="wrap_content"
