@@ -10,9 +10,10 @@ import androidx.core.view.doOnLayout
 import androidx.fragment.app.DialogFragment
 import com.example.location.R
 import com.example.location.data.roomrepo.getScaledBitmap
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class PhotoFileFragment: DialogFragment() {
-    private lateinit var exitButton: androidx.appcompat.widget.AppCompatButton
+    private lateinit var exitButton: FloatingActionButton
     private lateinit var imView: ImageView
     var imagePath: String? = ""
     override fun onCreateView(
@@ -21,9 +22,8 @@ class PhotoFileFragment: DialogFragment() {
         savedInstanceState: Bundle?
     ): View? {
         val dialogView: View = inflater.inflate(R.layout.photo_file_fragment, container, false)
-        exitButton = dialogView.findViewById(R.id.exit) as AppCompatButton
+        exitButton = dialogView.findViewById(R.id.exit)
         imView = dialogView.findViewById(R.id.image_photo) as ImageView
-        imView.setScaleType(ImageView.ScaleType.CENTER)
         imagePath = arguments?.getString("path")
         if (imagePath == null) {
         } else {

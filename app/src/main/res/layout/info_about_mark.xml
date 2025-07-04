@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#1CB122"
+    android:background="@drawable/fon_tekstura2"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 <!--    android:background="#C3AEE8"-->
     <TextView
@@ -25,6 +25,7 @@
         android:layout_height="200dp"
         android:layout_marginTop="2dp"
         android:src="@drawable/geolocation"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/main_info" />
 </androidx.constraintlayout.widget.ConstraintLayout>

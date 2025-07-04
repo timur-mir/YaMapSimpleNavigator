@@ -39,6 +39,6 @@ fun getScaledBitmap(path: String?, destWidth: Int, destHeight: Int): Bitmap {
     options = BitmapFactory.Options()
     options.inSampleSize = inSampleSize
     val bitmap=BitmapFactory.decodeFile(path, options)
- return  Bitmap.createScaledBitmap(bitmap, 800, 600, true)
+ return  Bitmap.createScaledBitmap(bitmap, options.outWidth, options.outHeight, true)
 
 }

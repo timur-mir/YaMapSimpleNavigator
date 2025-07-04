@@ -29,11 +29,14 @@ class ApplicationMapKit: Application(){
         MapKitFactory.getInstance().onStart()
     }
     object LocalHelp {
+        var currentArea=""
         var lastPoint:Point?=null
         var routeProcess=false
-        var speachText="Останкино"
+        var speachText=""
         var myLocation: Point? = null
         var loc: Location? = null
+        var actualLoc: Location? = null
+        var actualLocationFlag=false
         var offOn=false
         var offOnUserLayer=true
         var markAdd=false

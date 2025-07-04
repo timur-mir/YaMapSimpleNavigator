@@ -5,13 +5,16 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
 import androidx.activity.OnBackPressedCallback
 import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentTransaction
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.location.LatLong
 import com.example.location.R
@@ -30,6 +33,8 @@ class ShowAllMarksFragment:Fragment() {
     private val filesDir = ApplicationMapKit.applicationContext().filesDir
     private lateinit var photoFile: File
     private var photoUri: Uri? = null
+    lateinit var panoramaPlaceFragment: PanoramaPlaceFragment
+     lateinit var  fragPanoramaPlace:FrameLayout
     private val marksViewModel by viewModels<MarksViewModel>
     {
         object : ViewModelProvider.Factory {
@@ -49,11 +54,19 @@ class ShowAllMarksFragment:Fragment() {
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        fragPanoramaPlace = requireActivity().findViewById<FrameLayout>(R.id.small_navHostFragment)
         val callback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 val mainFragment = MainFragment()
                 parentFragmentManager.beginTransaction().replace(R.id.navHostFragment,mainFragment).commit()
+
+                panoramaPlaceFragment =
+                    PanoramaPlaceFragment.newInstance(
+                        ApplicationMapKit.LocalHelp.latitudeActivity,
+                        ApplicationMapKit.LocalHelp.longitudeActivity
+                    )
+                (activity as Transaction).navigateTo(panoramaPlaceFragment)
+        fragPanoramaPlace.bringToFront()
             }
         }
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)

@@ -86,6 +86,9 @@ import com.example.location.presentation.ApplicationMapKit.LocalHelp.activityClo
 import com.example.location.presentation.ApplicationMapKit.LocalHelp.lastPoint
 import com.example.location.presentation.ApplicationMapKit.LocalHelp.routeProcess
 import com.example.location.data.roomrepo.getScaledBitmap
+import com.example.location.presentation.ApplicationMapKit.LocalHelp.actualLoc
+import com.example.location.presentation.ApplicationMapKit.LocalHelp.actualLocationFlag
+import com.example.location.presentation.ApplicationMapKit.LocalHelp.currentArea
 import com.yandex.mapkit.RequestPoint
 import com.yandex.mapkit.RequestPointType
 import com.yandex.mapkit.directions.DirectionsFactory
@@ -141,7 +144,6 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
                 MarksViewModel() as T
         }
     }
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -168,11 +170,6 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
         mapObjectsMain = binding.mapview.map.mapObjects.addCollection()
         binding.userroute.setOnClickListener {
             routeProcess = true
-            Toast.makeText(
-                requireContext(),
-                " Назовите пункт назначения",
-                Toast.LENGTH_LONG
-            ).show()
             val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
             intent.putExtra(
                 RecognizerIntent.EXTRA_LANGUAGE_MODEL,
@@ -263,11 +260,12 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
                 }
             }
         }
-binding.showAllLocationMark.setOnClickListener {
-   showAllMarksFragment = ShowAllMarksFragment.newInstance()
-parentFragmentManager.beginTransaction().replace(R.id.navHostFragment,showAllMarksFragment).commit()
-requireActivity().findViewById<FrameLayout>(R.id.navHostFragment).bringToFront()
-}
+        binding.showAllLocationMark.setOnClickListener {
+            showAllMarksFragment = ShowAllMarksFragment.newInstance()
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.navHostFragment, showAllMarksFragment).commit()
+            requireActivity().findViewById<FrameLayout>(R.id.navHostFragment).bringToFront()
+        }
         binding.locationCurrentAddMarker.setOnClickListener {
             viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
                 marksViewModel.getMarksSize()
@@ -290,7 +288,7 @@ requireActivity().findViewById<FrameLayout>(R.id.navHostFragment).bringToFront()
                     .setAction(getString(R.string.addMark)) {
                         AlertDialog.Builder(requireActivity())
                             .setCancelable(false)
-                            .setPositiveButton("Начать") { _, _ ->
+                            .setPositiveButton("Добавить") { _, _ ->
                                 run {
                                     val packageManager: PackageManager =
                                         requireActivity().packageManager
@@ -308,14 +306,12 @@ requireActivity().findViewById<FrameLayout>(R.id.navHostFragment).bringToFront()
                                             "com.example.location.fileprovider",
                                             photoFile
                                         )
-
                                         captureImage.putExtra(MediaStore.EXTRA_OUTPUT, photoUri)
                                         val cameraActivities: List<ResolveInfo> =
                                             packageManager.queryIntentActivities(
                                                 captureImage,
                                                 PackageManager.MATCH_DEFAULT_ONLY
                                             )
-
                                         for (cameraActivity in cameraActivities) {
                                             requireActivity().grantUriPermission(
                                                 cameraActivity.activityInfo.packageName,
@@ -323,11 +319,8 @@ requireActivity().findViewById<FrameLayout>(R.id.navHostFragment).bringToFront()
                                                 Intent.FLAG_GRANT_WRITE_URI_PERMISSION
                                             )
                                         }
-
-
                                         startActivityForResult(captureImage, REQUEST_PHOTO)
                                     }
-
                                     viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
                                         delay(350)
                                         marksViewModel.addMark(
@@ -338,7 +331,6 @@ requireActivity().findViewById<FrameLayout>(R.id.navHostFragment).bringToFront()
                                                 photoFileName = "PhotoPlace_${marksSize + 1}.jpg"
                                             )
                                         )
-                                        // marksSize += 1
                                     }
                                     mapObjects.addPlacemark(
                                         locMark!!.position,
@@ -370,7 +362,14 @@ requireActivity().findViewById<FrameLayout>(R.id.navHostFragment).bringToFront()
 
         }
         binding.geoPositionBtn.setOnClickListener {
-            getLocation()
+                                toast =
+                        Toast.makeText(
+                            requireContext(),
+                            getString(R.string.yourCoordinates) + ": ${actualLoc!!.position.latitude} и ${actualLoc!!.position.longitude}" +
+                                    " _ ${currentArea}",
+                            Toast.LENGTH_LONG
+                        )
+                    toast.show()
         }
         SearchFactory.initialize(requireContext())
         searchManager =
@@ -378,11 +377,7 @@ requireActivity().findViewById<FrameLayout>(R.id.navHostFragment).bringToFront()
         binding.mapview.map.addCameraListener(this)
 
         binding.voicesearch.setOnClickListener {
-            Toast.makeText(
-                requireContext(),
-                " Попробуйте голосовой поиск...",
-                Toast.LENGTH_LONG
-            ).show()
+            routeProcess=false
             val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
             intent.putExtra(
                 RecognizerIntent.EXTRA_LANGUAGE_MODEL,
@@ -416,22 +411,14 @@ requireActivity().findViewById<FrameLayout>(R.id.navHostFragment).bringToFront()
         val mark_info_view: View = li.inflate(R.layout.info_about_mark, null)
         val text = mark_info_view.findViewById<View>(R.id.main_info) as TextView
         val image = mark_info_view.findViewById<View>(R.id.mark_pict) as ImageView
-
-        Toast.makeText(
-            requireContext(),
-            "Координаты нажатия ${point.latitude} и ${point.longitude}",
-            Toast.LENGTH_LONG
-        ).show()
-
         viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
             marksViewModel.getAllMarks()
             marksViewModel.marks2.collect { marks ->
                 var i = 0
                 while (i < marks!!.size) {
-
+// условие содержит неточный подход проверки объекта
                     if (
                         objectMap.userData.toString() == marks[i].photoFileName.toString() ||
-                        //marks[i].coordinateLat==point.latitude && (point.longitude)==marks[i].coordinateLong
                         marks[i].coordinateLat - point.latitude < 0.01 && (point.longitude) - marks[i].coordinateLong < 0.01 && objectMap.isValid
                         || point.latitude - marks[i].coordinateLat < 0.01 && marks[i].coordinateLong - (point.longitude) < 0.009 && objectMap.isValid
                     ) {
@@ -445,11 +432,9 @@ requireActivity().findViewById<FrameLayout>(R.id.navHostFragment).bringToFront()
                                 args.putString("path", pathPhoto);
                                 photoFileFragment.setArguments(args);
                                 photoFileFragment.show(childFragmentManager, "photoMark")
-
                             }
                         }
                         delay(3000)
-                        //   continue
                     }
                     i += 1
                 }
@@ -461,8 +446,8 @@ requireActivity().findViewById<FrameLayout>(R.id.navHostFragment).bringToFront()
             requireActivity().runOnUiThread {
                 AlertDialog.Builder(requireActivity())
                     .setView(mark_info_view)
-                    .setCancelable(false)
-                    .setNegativeButton("Понятно", null)
+                    .setCancelable(true)
+                    .setPositiveButton("Закрыть", null)
                     .show()
             }
         }, 2000)
@@ -489,11 +474,6 @@ requireActivity().findViewById<FrameLayout>(R.id.navHostFragment).bringToFront()
                                 endLocationPointsEl!![0].longitude
                             )
                         delay(1500)
-                        Toast.makeText(
-                            requireContext(),
-                            "Координаты пункта назначения: ${endLocationPointsEl!![0].latitude} ${endLocationPointsEl!![0].longitude}",
-                            Toast.LENGTH_LONG
-                        ).show()
                         startRoute()
                     } else {
                         Toast.makeText(
@@ -508,8 +488,7 @@ requireActivity().findViewById<FrameLayout>(R.id.navHostFragment).bringToFront()
                     ?.let { queryPlace(matches?.get(0)?.toString() ?: "Театральная") }
             }
 
-        }
-        else if(requestCode== REQUEST_PHOTO && resultCode == RESULT_OK){
+        } else if (requestCode == REQUEST_PHOTO && resultCode == RESULT_OK) {
             val bitmap =
                 getScaledBitmap(photoFile.path, requireActivity())
             val fos = FileOutputStream(photoFile)
@@ -524,10 +503,10 @@ requireActivity().findViewById<FrameLayout>(R.id.navHostFragment).bringToFront()
         super.onResume()
         val mapObjects = binding.mapview.map.mapObjects
         Handler().postDelayed({
-            if (loc == null) {
+            if (loc == null|| routeProcess) {
                 getLocation()
             }
-        }, 5000)
+        }, 2000)
         Handler().postDelayed({
             if (loc != null) {
                 activity?.runOnUiThread {
@@ -543,17 +522,15 @@ requireActivity().findViewById<FrameLayout>(R.id.navHostFragment).bringToFront()
                     binding.showAllLocationMark.isEnabled = true
                 }
             }
-        }, 6000)
+        }, 2400)
         viewLifecycleOwner.lifecycleScope.launch {
             marksViewModel.marks.collect { marks ->
                 if (marks != null) {
                     marksSize = marks.size
-                    //  lastIdValue=marks.lastIndexOf(marks[marksSize])
                     marks.forEach {
                         mapObjects.addPlacemark(
                             Point(it.coordinateLat, it.coordinateLong),
                             ImageProvider.fromResource(requireContext(), R.drawable.us_m2)
-                            //ViewProvider(ImageView(requireContext()))
                         ).addTapListener(placemarkTapListener)
 
                     }
@@ -571,9 +548,10 @@ requireActivity().findViewById<FrameLayout>(R.id.navHostFragment).bringToFront()
         )
         return ImageDecoder.decodeBitmap(source)
     }
-    fun getPathPhoto(fileName: String): String{
+
+    private fun getPathPhoto(fileName: String): String {
         photoFile = File(filesDir, fileName)
-              return photoFile.path
+        return photoFile.path
     }
 
     private fun inputListenerOnMap(): InputListener {
@@ -686,13 +664,15 @@ requireActivity().findViewById<FrameLayout>(R.id.navHostFragment).bringToFront()
                 if (allInfo.isNotEmpty()) {
                     val hourly = JSONObject(allInfo).getJSONObject("hourly")
                     val tempDayHalf = hourly.getJSONArray("temperature_2m").getDouble(13).toInt()
-                    requireActivity().runOnUiThread {
-                        Toast.makeText(
-                            requireActivity(),
-                            "Температура сегодня в полдень :$tempDayHalf°С",
-                            Toast.LENGTH_LONG
-                        ).show()
-                        Log.d("ResponseL", tempDayHalf.toString())
+                    if(!actualLocationFlag) {
+                        requireActivity().runOnUiThread {
+                            Toast.makeText(
+                                requireActivity(),
+                                "Температура сегодня в полдень :$tempDayHalf°С",
+                                Toast.LENGTH_LONG
+                            ).show()
+                            Log.d("ResponseL", tempDayHalf.toString())
+                        }
                     }
                 } else {
                     Thread.currentThread().interrupt()
@@ -707,24 +687,24 @@ requireActivity().findViewById<FrameLayout>(R.id.navHostFragment).bringToFront()
     private fun localListener(): LocationListener {
         return object : LocationListener {
             override fun onLocationUpdated(location: Location) {
+                if(!actualLocationFlag){
                 loc = location
+                actualLoc=location
+                    actualLocationFlag=true
+                }
+                    else{
+                    loc = location
+                    }
                 var town = geocoder.getFromLocation(
                     location.position.latitude,
                     location.position.longitude,
                     1
                 )
                 binding.localInfo.text = town!![0].adminArea.toString()
+                currentArea=town!![0].adminArea.toString()
 
 
                 if (isAdded) {
-                    toast =
-                        Toast.makeText(
-                            requireContext(),
-                            getString(R.string.yourCoordinates) + ": ${location.position.latitude} и ${location.position.longitude}" +
-                                    " город ${town!![0].adminArea}",
-                            Toast.LENGTH_LONG
-                        )
-                    toast.show()
                 }
                 getWeatherInLocationPlace(
                     location.position.latitude.toString(),
@@ -788,11 +768,6 @@ requireActivity().findViewById<FrameLayout>(R.id.navHostFragment).bringToFront()
         val args = Bundle()
         var needCoordinatesPointer = 0
         if (binding.searchField.text.isNotEmpty() || ApplicationMapKit.LocalHelp.speachText.isNotEmpty()) {
-            Toast.makeText(
-                requireContext(),
-                "Нормально ${response.metadata.toponym}",
-                Toast.LENGTH_SHORT
-            ).show()
             if (binding.searchField.text.isNotEmpty()) {
                 binding.searchField.text.clear()
             }
@@ -800,15 +775,14 @@ requireActivity().findViewById<FrameLayout>(R.id.navHostFragment).bringToFront()
             val mapObjects = binding.mapview.map.mapObjects
             mapObjects.clear()
             if (response.collection.children.size > 1 && response.collection.children.size % 2 == 0) {
-//                needCoordinatesPointer = response.collection.children.size / 2
                 needCoordinatesPointer = 0
                 val snackbar = Snackbar.make(
                     binding.root,
-                    "Посмотрите на результат  поиска...${response.metadata.requestText} ",
+                    "Результат  поиска...${response.metadata.requestText} ",
                     Snackbar.LENGTH_LONG
                 )
-                snackbar.setTextColor(Color.argb(100, 252, 63, 29))
-                snackbar.setBackgroundTint((Color.WHITE))
+                snackbar.setTextColor(Color.WHITE)
+                snackbar.setBackgroundTint((Color.RED))
                     .show()
                 binding.mapview.map.move(
                     CameraPosition(
@@ -847,11 +821,11 @@ requireActivity().findViewById<FrameLayout>(R.id.navHostFragment).bringToFront()
             } else if (response.collection.children.size == 1) {
                 val snackbar = Snackbar.make(
                     binding.root,
-                    "Посмотрите на результат  поиска...${response.metadata.requestText} ",
+                    "Результат  поиска...${response.metadata.requestText} ",
                     Snackbar.LENGTH_LONG
                 )
-                snackbar.setTextColor(Color.argb(100, 252, 63, 29))
-                snackbar.setBackgroundTint((Color.WHITE))
+                snackbar.setTextColor(Color.WHITE)
+                snackbar.setBackgroundTint((Color.RED))
                     .show()
                 binding.mapview.map.move(
                     CameraPosition(
@@ -890,11 +864,11 @@ requireActivity().findViewById<FrameLayout>(R.id.navHostFragment).bringToFront()
             } else if (response.collection.children.size > 2) {
                 val snackbar = Snackbar.make(
                     binding.root,
-                    "Посмотрите на результат  поиска...${response.metadata.requestText} ",
+                    "Результат  поиска...${response.metadata.requestText} ",
                     Snackbar.LENGTH_LONG
                 )
-                snackbar.setTextColor(Color.argb(100, 252, 63, 29))
-                snackbar.setBackgroundTint((Color.WHITE))
+                snackbar.setTextColor(Color.WHITE)
+                snackbar.setBackgroundTint((Color.RED))
                     .show()
                 binding.mapview.map.move(
                     CameraPosition(
@@ -1027,12 +1001,13 @@ requireActivity().findViewById<FrameLayout>(R.id.navHostFragment).bringToFront()
             .show()
     }
 
+
     private fun startRoute() {
+        binding.mapview.map.mapObjects.clear()
         val drivingOptions = DrivingOptions()
         val vehicleOptions = VehicleOptions()
         val requestRoutePoints: ArrayList<RequestPoint> = ArrayList()
         requestRoutePoints.add(RequestPoint(myLocation!!, RequestPointType.WAYPOINT, null))
-        //  endLocationPoints=Point(latitudeActivity,longitudeActivity)
         requestRoutePoints.add(RequestPoint(endLocationPoints, RequestPointType.WAYPOINT, null))
         drivingSession =
             drivingRouter!!.requestRoutes(requestRoutePoints, drivingOptions, vehicleOptions, this)

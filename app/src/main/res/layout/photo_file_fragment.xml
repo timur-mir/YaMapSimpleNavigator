@@ -2,7 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/forf"
+    android:background="@drawable/fon_tekstura2"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <ImageView
@@ -10,10 +10,10 @@
         android:layout_width="400dp"
         android:layout_height="540dp"
         android:layout_marginTop="10dp"
-        android:background="#59371B1B"
         android:cropToPadding="true"
         android:layout_gravity="center"
-        android:scaleType="matrix"
+        android:src="@drawable/mic"
+        android:scaleType="fitCenter"
         app:layout_constraintBottom_toTopOf="@+id/exit"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.454"
@@ -23,15 +23,14 @@
 
 
 
-    <androidx.appcompat.widget.AppCompatButton
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/exit"
-        android:layout_width="240dp"
-        android:layout_height="50dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginBottom="10dp"
-        android:background="@drawable/red_rounded"
-        android:text="Выйти из режима просмотра изображения"
-        android:textColor="@color/white"
+        android:backgroundTint="@color/white"
+        android:src="@drawable/baseline_arrow_back_24"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
