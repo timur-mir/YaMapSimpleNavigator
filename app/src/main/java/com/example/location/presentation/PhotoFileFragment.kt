@@ -34,7 +34,6 @@ class PhotoFileFragment: DialogFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
         val dialogView: View = inflater.inflate(R.layout.photo_file_fragment, container, false)
         exitButton = dialogView.findViewById(R.id.exit)
         sendButton = dialogView.findViewById(R.id.send)
@@ -47,7 +46,6 @@ class PhotoFileFragment: DialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val filesDir =requireActivity().filesDir
-        //Toast.makeText(requireActivity(),"$imageName и $imagePath  и ${filesDir.length()}",Toast.LENGTH_LONG).show()
         if (imagePath == null) {
         } else {
             imView.doOnLayout { measuredView ->

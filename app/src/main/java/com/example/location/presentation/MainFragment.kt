@@ -419,14 +419,15 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
                 if (marks?.size!=0&&marks!=null) {
                     while (i < marks.size) {
                         requireActivity().runOnUiThread {
-
                             image.setImageBitmap(getBitmapPlaceMark(marks[i].photoFileName))
                             text.text = "Фото места: ${marks[i].photoFileName.toString()}"
                             image.setOnClickListener {
                                 val photoFileFragment = PhotoFileFragment()
                                 val args: Bundle = Bundle()
                                 val pathPhoto = getPathPhoto(marks[i].photoFileName)
+                                val photoName=marks[i].photoFileName
                                 args.putString("path", pathPhoto);
+                                args.putString("photo",photoName)
                                 photoFileFragment.arguments = args;
                                 photoFileFragment.show(childFragmentManager, "photoMark")
                             }
