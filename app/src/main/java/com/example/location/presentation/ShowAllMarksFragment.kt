@@ -92,6 +92,8 @@ class ShowAllMarksFragment:Fragment() {
     private fun showMark(fileMark:String) {
         val photoFileFragment = PhotoFileFragment()
         val args: Bundle = Bundle()
+        val fileNameStr= fileMark
+        args.putString("photo",fileNameStr)
         val pathPhoto = getPathPhoto(fileMark)
         args.putString("path", pathPhoto);
         photoFileFragment.setArguments(args);
@@ -130,7 +132,6 @@ class ShowAllMarksFragment:Fragment() {
 
             }
         }
-
     }
     fun getPathPhoto(fileName: String): String{
         photoFile = File(filesDir, fileName)
@@ -141,6 +142,4 @@ class ShowAllMarksFragment:Fragment() {
             return ShowAllMarksFragment()
             }
         }
-
-
     }

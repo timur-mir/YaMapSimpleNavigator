@@ -276,7 +276,6 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
                     marksSize = mSize
                 }
             }
-            // getLocation()
             loc?.let { location ->
                 val mapObjects = binding.mapview.map.mapObjects
                 locMark = location
@@ -362,14 +361,16 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
 
         }
         binding.geoPositionBtn.setOnClickListener {
-                                toast =
-                        Toast.makeText(
-                            requireContext(),
-                            getString(R.string.yourCoordinates) + ": ${actualLoc!!.position.latitude} и ${actualLoc!!.position.longitude}" +
-                                    " _ ${currentArea}",
-                            Toast.LENGTH_LONG
-                        )
-                    toast.show()
+            if(actualLoc!=null) {
+                toast =
+                    Toast.makeText(
+                        requireContext(),
+                        getString(R.string.yourCoordinates) + ": ${actualLoc!!.position.latitude} и ${actualLoc!!.position.longitude}" +
+                                " _ ${currentArea}",
+                        Toast.LENGTH_LONG
+                    )
+                toast.show()
+            }
         }
         SearchFactory.initialize(requireContext())
         searchManager =
@@ -417,33 +418,32 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
                 var i = 0
                 if (marks?.size!=0&&marks!=null) {
                     while (i < marks.size) {
-// условие содержит неточный подход проверки объекта
-                        if (
-                            objectMap.userData.toString() == marks[i].photoFileName.toString() ||
-                            marks[i].coordinateLat - point.latitude < 0.01 && (point.longitude) - marks[i].coordinateLong < 0.01 && objectMap.isValid
-                            || point.latitude - marks[i].coordinateLat < 0.01 && marks[i].coordinateLong - (point.longitude) < 0.009 && objectMap.isValid
-                        ) {
-                            requireActivity().runOnUiThread {
-                                image.setImageBitmap(getBitmapPlaceMark(marks[i].photoFileName))
-                                text.text = "Фото места: ${marks[i].photoFileName.toString()}"
-                                image.setOnClickListener {
-                                    val photoFileFragment = PhotoFileFragment()
-                                    val args: Bundle = Bundle()
-                                    val pathPhoto = getPathPhoto(marks[i].photoFileName)
-                                    args.putString("path", pathPhoto);
-                                    photoFileFragment.setArguments(args);
-                                    photoFileFragment.show(childFragmentManager, "photoMark")
-                                }
+                        requireActivity().runOnUiThread {
+
+                            image.setImageBitmap(getBitmapPlaceMark(marks[i].photoFileName))
+                            text.text = "Фото места: ${marks[i].photoFileName.toString()}"
+                            image.setOnClickListener {
+                                val photoFileFragment = PhotoFileFragment()
+                                val args: Bundle = Bundle()
+                                val pathPhoto = getPathPhoto(marks[i].photoFileName)
+                                args.putString("path", pathPhoto);
+                                photoFileFragment.arguments = args;
+                                photoFileFragment.show(childFragmentManager, "photoMark")
                             }
-                            delay(3000)
                         }
+                        delay(3000)
                         i += 1
+                        if(i== marks.size){
+                            i -= 1
+                            break
+                        }
                     }
+
                 }
             }
 
         }
-        Handler().postDelayed({
+
             requireActivity().runOnUiThread {
                 AlertDialog.Builder(requireActivity())
                     .setView(mark_info_view)
@@ -451,7 +451,7 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
                     .setPositiveButton("Закрыть", null)
                     .show()
             }
-        }, 2000)
+
     }
 
     @Deprecated("Deprecated in Java")
@@ -766,7 +766,6 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
 
 
     override fun onSearchResponse(response: Response) {
-        val args = Bundle()
         var needCoordinatesPointer = 0
         if (binding.searchField.text.isNotEmpty() || ApplicationMapKit.LocalHelp.speachText.isNotEmpty()) {
             if (binding.searchField.text.isNotEmpty()) {

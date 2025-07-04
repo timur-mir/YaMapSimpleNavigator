@@ -8,6 +8,7 @@
     <string name="addMark">Добавить  маркер</string>
     <string name="cancelMarkOnMap">Убрать маркер</string>
     <string name="sendingLocationCoordinates">Отправка координат местоположения</string>
+    <string name="sendingPhoto">Отправка фото</string>
     <string name="locationCoordinates">Координаты местоположения</string>
     <string name="indicated">Вы указали на регион со следующими координатами</string>
     <string name="yourCoordinates">Ваши координаты местоположения</string>
