@@ -415,31 +415,32 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
             marksViewModel.getAllMarks()
             marksViewModel.marks2.collect { marks ->
                 var i = 0
-                while (i < marks!!.size) {
+                if (marks?.size!=0&&marks!=null) {
+                    while (i < marks.size) {
 // условие содержит неточный подход проверки объекта
-                    if (
-                        objectMap.userData.toString() == marks[i].photoFileName.toString() ||
-                        marks[i].coordinateLat - point.latitude < 0.01 && (point.longitude) - marks[i].coordinateLong < 0.01 && objectMap.isValid
-                        || point.latitude - marks[i].coordinateLat < 0.01 && marks[i].coordinateLong - (point.longitude) < 0.009 && objectMap.isValid
-                    ) {
-                        requireActivity().runOnUiThread {
-                            image.setImageBitmap(getBitmapPlaceMark(marks[i].photoFileName))
-                            text.text = "Фото места: ${marks[i].photoFileName.toString()}"
-                            image.setOnClickListener {
-                                val photoFileFragment = PhotoFileFragment()
-                                val args: Bundle = Bundle()
-                                val pathPhoto = getPathPhoto(marks[i].photoFileName)
-                                args.putString("path", pathPhoto);
-                                photoFileFragment.setArguments(args);
-                                photoFileFragment.show(childFragmentManager, "photoMark")
+                        if (
+                            objectMap.userData.toString() == marks[i].photoFileName.toString() ||
+                            marks[i].coordinateLat - point.latitude < 0.01 && (point.longitude) - marks[i].coordinateLong < 0.01 && objectMap.isValid
+                            || point.latitude - marks[i].coordinateLat < 0.01 && marks[i].coordinateLong - (point.longitude) < 0.009 && objectMap.isValid
+                        ) {
+                            requireActivity().runOnUiThread {
+                                image.setImageBitmap(getBitmapPlaceMark(marks[i].photoFileName))
+                                text.text = "Фото места: ${marks[i].photoFileName.toString()}"
+                                image.setOnClickListener {
+                                    val photoFileFragment = PhotoFileFragment()
+                                    val args: Bundle = Bundle()
+                                    val pathPhoto = getPathPhoto(marks[i].photoFileName)
+                                    args.putString("path", pathPhoto);
+                                    photoFileFragment.setArguments(args);
+                                    photoFileFragment.show(childFragmentManager, "photoMark")
+                                }
                             }
+                            delay(3000)
                         }
-                        delay(3000)
+                        i += 1
                     }
-                    i += 1
                 }
             }
-
 
         }
         Handler().postDelayed({

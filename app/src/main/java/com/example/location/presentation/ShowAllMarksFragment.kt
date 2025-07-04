@@ -83,7 +83,9 @@ class ShowAllMarksFragment:Fragment() {
             binding.marksListRecycler.setHasFixedSize(true)
             binding.marksListRecycler.addItemDecoration(ItemOffsetDecoration(requireContext()))
             marksViewModel.marks2.collect { marks ->
-                showMarksListAdapter.submitList(marks)
+                if (marks?.size!=0&&marks!=null) {
+                    showMarksListAdapter.submitList(marks)
+                }
             }
         }
     }
@@ -99,29 +101,34 @@ class ShowAllMarksFragment:Fragment() {
         viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
             marksViewModel.getAllMarks()
             marksViewModel.marks2.collect { marks ->
-           marks!!.map { mark->if (mark.id==id){
+                if (marks?.size!=0&&marks!=null) {
+                    marks.map { mark ->
+                        if (mark.id == id) {
 
-                    marksViewModel.deleteMark(id)
-                    photoFile =
-                        File(filesDir, mark.photoFileName)
-                    photoUri = FileProvider.getUriForFile(
-                        requireActivity(),
-                        "com.example.location.fileprovider",
-                        photoFile
-                    )
-                    delay(200)
-                    requireActivity().contentResolver.delete(photoUri!!, null, null)
+                            marksViewModel.deleteMark(id)
+                            photoFile =
+                                File(filesDir, mark.photoFileName)
+                            photoUri = FileProvider.getUriForFile(
+                                requireActivity(),
+                                "com.example.location.fileprovider",
+                                photoFile
+                            )
+                            delay(200)
+                            requireActivity().contentResolver.delete(photoUri!!, null, null)
 
-                } }
-                delay(300)
-                marksViewModel.getAllMarks()
-                marksViewModel.marks2.collect { marks ->
-                    showMarksListAdapter.submitList(marks)
-                    showMarksListAdapter.notifyDataSetChanged()
+                        }
+                    }
+                    delay(300)
+                    marksViewModel.getAllMarks()
+                    marksViewModel.marks2.collect { marks ->
+                        if (marks?.size!=0&&marks!=null) {
+                            showMarksListAdapter.submitList(marks)
+                            showMarksListAdapter.notifyDataSetChanged()
+                        }
+                    }
                 }
+
             }
-
-
         }
 
     }
