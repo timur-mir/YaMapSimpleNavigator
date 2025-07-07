@@ -41,6 +41,7 @@ class ApplicationMapKit: Application(){
         var offOnUserLayer=true
         var markAdd=false
         var locMark: Location? = null
+        var userLocationHide=false
         var latitudeActivity=55.751574
         var longitudeActivity=37.573856
         var latitudeDeviceOldPosition=0.0

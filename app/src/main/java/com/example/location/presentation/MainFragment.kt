@@ -144,6 +144,7 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
                 MarksViewModel() as T
         }
     }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -168,6 +169,7 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
         getLocation()
         drivingRouter = DirectionsFactory.getInstance().createDrivingRouter()
         mapObjectsMain = binding.mapview.map.mapObjects.addCollection()
+        binding.mapview.map.isRotateGesturesEnabled = false
         binding.userroute.setOnClickListener {
             routeProcess = true
             val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
@@ -179,12 +181,10 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
             startActivityForResult(intent, RECOGNIZER_RESULT)
         }
         binding.userlocation!!.setOnClickListener {
-            //getLocation()
             if (ApplicationMapKit.LocalHelp.offOnUserLayer) {
                 if (::locationmapkit.isInitialized) {
                     locationmapkit!!.isVisible = true
                     locationmapkit!!.setObjectListener(this)
-
                     ApplicationMapKit.LocalHelp.offOnUserLayer = false
                 } else {
                     locationmapkit = mapKit.createUserLocationLayer(binding.mapview.mapWindow)
@@ -207,7 +207,7 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
                     if (markAdd == true) {
                         binding.mapview.map.mapObjects.addPlacemark(
                             locMark!!.position,
-                            ImageProvider.fromResource(requireContext(), R.drawable.us_m2)
+                            ImageProvider.fromResource(requireContext(), R.drawable.user_mark)
                         ).addTapListener(placemarkTapListener)
 
                     }
@@ -219,7 +219,7 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
                     if (markAdd == true) {
                         binding.mapview.map.mapObjects.addPlacemark(
                             locMark!!.position,
-                            ImageProvider.fromResource(requireContext(), R.drawable.us_m2)
+                            ImageProvider.fromResource(requireContext(), R.drawable.user_mark)
                         ).addTapListener(placemarkTapListener)
                     }
                 }
@@ -335,7 +335,7 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
                                         locMark!!.position,
                                         ImageProvider.fromResource(
                                             requireContext(),
-                                            R.drawable.us_m22
+                                            R.drawable.us_m2
                                         )
                                     ).apply { userData = "PhotoPlace_${marksSize + 1}.jpg" }
                                 }
@@ -361,7 +361,8 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
 
         }
         binding.geoPositionBtn.setOnClickListener {
-            if(actualLoc!=null) {
+
+            if (actualLoc != null) {
                 toast =
                     Toast.makeText(
                         requireContext(),
@@ -370,6 +371,8 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
                         Toast.LENGTH_LONG
                     )
                 toast.show()
+            } else {
+                getLocation()
             }
         }
         SearchFactory.initialize(requireContext())
@@ -378,7 +381,7 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
         binding.mapview.map.addCameraListener(this)
 
         binding.voicesearch.setOnClickListener {
-            routeProcess=false
+            routeProcess = false
             val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
             intent.putExtra(
                 RecognizerIntent.EXTRA_LANGUAGE_MODEL,
@@ -416,7 +419,7 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
             marksViewModel.getAllMarks()
             marksViewModel.marks2.collect { marks ->
                 var i = 0
-                if (marks?.size!=0&&marks!=null) {
+                if (marks?.size != 0 && marks != null) {
                     while (i < marks.size) {
                         requireActivity().runOnUiThread {
                             image.setImageBitmap(getBitmapPlaceMark(marks[i].photoFileName))
@@ -425,16 +428,16 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
                                 val photoFileFragment = PhotoFileFragment()
                                 val args: Bundle = Bundle()
                                 val pathPhoto = getPathPhoto(marks[i].photoFileName)
-                                val photoName=marks[i].photoFileName
+                                val photoName = marks[i].photoFileName
                                 args.putString("path", pathPhoto);
-                                args.putString("photo",photoName)
+                                args.putString("photo", photoName)
                                 photoFileFragment.arguments = args;
                                 photoFileFragment.show(childFragmentManager, "photoMark")
                             }
                         }
                         delay(3000)
                         i += 1
-                        if(i== marks.size){
+                        if (i == marks.size) {
                             i -= 1
                             break
                         }
@@ -445,13 +448,13 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
 
         }
 
-            requireActivity().runOnUiThread {
-                AlertDialog.Builder(requireActivity())
-                    .setView(mark_info_view)
-                    .setCancelable(true)
-                    .setPositiveButton("Закрыть", null)
-                    .show()
-            }
+        requireActivity().runOnUiThread {
+            AlertDialog.Builder(requireActivity())
+                .setView(mark_info_view)
+                .setCancelable(true)
+                .setPositiveButton("Закрыть", null)
+                .show()
+        }
 
     }
 
@@ -495,6 +498,7 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
                 getScaledBitmap(photoFile.path, requireActivity())
             val fos = FileOutputStream(photoFile)
             bitmap.compress(Bitmap.CompressFormat.JPEG, 50, fos)
+           Handler().postDelayed({ getLocation() }, 200)
         }
 
         super.onActivityResult(requestCode, resultCode, data)
@@ -505,7 +509,7 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
         super.onResume()
         val mapObjects = binding.mapview.map.mapObjects
         Handler().postDelayed({
-            if (loc == null|| routeProcess) {
+            if (loc == null || routeProcess) {
                 getLocation()
             }
         }, 2000)
@@ -532,7 +536,7 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
                     marks.forEach {
                         mapObjects.addPlacemark(
                             Point(it.coordinateLat, it.coordinateLong),
-                            ImageProvider.fromResource(requireContext(), R.drawable.us_m2)
+                            ImageProvider.fromResource(requireContext(), R.drawable.user_mark)
                         ).addTapListener(placemarkTapListener)
 
                     }
@@ -619,7 +623,7 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
     private fun setLocation() {
         binding.mapview.map.move(
             CameraPosition(Point(55.751574, 37.573856), 13.0f, 0.0f, 0.0f),
-            Animation(Animation.Type.SMOOTH, 0.0f), null
+            Animation(Animation.Type.SMOOTH, 1f), null
         )
     }
 
@@ -632,7 +636,7 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
     ) {
         binding.mapview.map.move(
             CameraPosition(Point(lat, lon), zoom, azimuth, tilt),
-            Animation(Animation.Type.SMOOTH, 0.0f), null
+            Animation(Animation.Type.SMOOTH, 1f), null
         )
     }
 
@@ -666,7 +670,7 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
                 if (allInfo.isNotEmpty()) {
                     val hourly = JSONObject(allInfo).getJSONObject("hourly")
                     val tempDayHalf = hourly.getJSONArray("temperature_2m").getDouble(13).toInt()
-                    if(!actualLocationFlag) {
+                    if (!actualLocationFlag) {
                         requireActivity().runOnUiThread {
                             Toast.makeText(
                                 requireActivity(),
@@ -689,24 +693,24 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
     private fun localListener(): LocationListener {
         return object : LocationListener {
             override fun onLocationUpdated(location: Location) {
-                if(!actualLocationFlag){
-                loc = location
-                actualLoc=location
-                    actualLocationFlag=true
-                }
-                    else{
+                if (!actualLocationFlag) {
                     loc = location
-                    }
-                var town = geocoder.getFromLocation(
+                    actualLoc = location
+                    actualLocationFlag = true
+                } else {
+                    loc = location
+                }
+                val town = geocoder.getFromLocation(
                     location.position.latitude,
                     location.position.longitude,
                     1
                 )
                 binding.localInfo.text = town!![0].adminArea.toString()
-                currentArea=town!![0].adminArea.toString()
+                currentArea = town!![0].adminArea.toString()
 
 
                 if (isAdded) {
+                    //......//
                 }
                 getWeatherInLocationPlace(
                     location.position.latitude.toString(),
@@ -959,26 +963,14 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
                 (binding.mapview.width() * 0.5).toFloat(), binding.mapview.height() * 0.83.toFloat()
             )
         )
-        userLocationView.arrow.setIcon(
-            ImageProvider.fromResource(
-                requireContext(),
-                R.drawable.user_arrow_alt2
-            )
-        )
         val picIcon = userLocationView.pin.useCompositeIcon()
         picIcon.setIcon(
-            "Icon", ImageProvider.fromResource(requireContext(), R.drawable.search_result),
-            IconStyle().setRotationType(RotationType.NO_ROTATION).setZIndex(0f).setScale(1f)
-        )
-        picIcon.setIcon(
 
-            "pin", ImageProvider.fromResource(requireContext(), R.drawable.nothing),
+            "icon", ImageProvider.fromResource(requireContext(), R.drawable.compas),
             IconStyle().setAnchor(PointF(0.5f, 05f)).setRotationType(RotationType.ROTATE)
                 .setZIndex(1f).setScale(0.5f)
         )
-        userLocationView.accuracyCircle.fillColor = Color.BLUE and -0x66000001
-
-
+        userLocationView.accuracyCircle.fillColor = Color.GREEN and -0x66000001
     }
 
     override fun onObjectRemoved(p0: UserLocationView) {
