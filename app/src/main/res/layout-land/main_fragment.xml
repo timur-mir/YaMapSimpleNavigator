@@ -22,6 +22,15 @@
         android:textColor="#FC3F1D"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+    <TextView
+        android:id="@+id/stepsInfo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:textStyle="bold"
+        android:textColor="#1816E8"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/localInfo" />
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/userlocation"
         android:layout_width="wrap_content"
@@ -49,16 +58,16 @@
         android:contentDescription="TODO" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/location_current_delete_marker"
+        android:id="@+id/go_next"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="4dp"
         android:layout_marginStart="6dp"
-        android:backgroundTint="#FF5722"
+        android:backgroundTint="#1816E8"
         android:enabled="false"
-        android:src="@drawable/delete"
+        android:src="@drawable/baseline_directions_walk_24"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@id/show_all_location_mark"
         android:contentDescription="TODO" />
@@ -173,7 +182,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/geo_position_btn"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toEndOf="@id/location_current_delete_marker"
+        app:layout_constraintStart_toEndOf="@id/go_next"
         android:autofillHints="" />
 
 

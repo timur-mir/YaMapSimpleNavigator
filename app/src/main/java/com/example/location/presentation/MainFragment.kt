@@ -9,6 +9,10 @@ import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.ImageDecoder
 import android.graphics.PointF
+import android.hardware.Sensor
+import android.hardware.SensorEvent
+import android.hardware.SensorEventListener
+import android.hardware.SensorManager
 import android.location.Geocoder
 import android.net.Uri
 import android.opengl.Visibility
@@ -28,6 +32,9 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
+import android.content.Context
+import androidx.core.content.ContextCompat.checkSelfPermission
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -89,6 +96,7 @@ import com.example.location.data.roomrepo.getScaledBitmap
 import com.example.location.presentation.ApplicationMapKit.LocalHelp.actualLoc
 import com.example.location.presentation.ApplicationMapKit.LocalHelp.actualLocationFlag
 import com.example.location.presentation.ApplicationMapKit.LocalHelp.currentArea
+import com.example.location.presentation.ApplicationMapKit.LocalHelp.offOnUserLayer
 import com.yandex.mapkit.RequestPoint
 import com.yandex.mapkit.RequestPointType
 import com.yandex.mapkit.directions.DirectionsFactory
@@ -108,7 +116,8 @@ import java.net.URL
 private const val REQUEST_PHOTO = 2
 
 class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener, CameraListener,
-    UserLocationObjectListener, Transaction, DrivingSession.DrivingRouteListener {
+    UserLocationObjectListener, Transaction, DrivingSession.DrivingRouteListener,
+    SensorEventListener {
     lateinit var placemarkTapListener: MapObjectTapListener
     private val filesDir = ApplicationMapKit.applicationContext().filesDir
     private lateinit var photoFile: File
@@ -137,6 +146,11 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
     private var drivingRouter: DrivingRouter? = null
     private var drivingSession: DrivingSession? = null
     var endLocationPointsEl: MutableList<android.location.Address>? = null
+    private lateinit var sensorManager: SensorManager
+    private var stepSensor: Sensor? = null
+    private var running = false
+    private var totalSteps = 0f
+    private var previousTotalSteps = 0f
     private val marksViewModel by viewModels<MarksViewModel>
     {
         object : ViewModelProvider.Factory {
@@ -154,9 +168,30 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
         return binding.root
     }
 
+    private fun jumpToNextActivity() {
+        val intent = Intent(requireContext(), StepActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+        startActivity(intent)
+        activity?.finish()
+    }
+
+    private fun registerSensor() {
+        sensorManager = requireActivity().getSystemService(Context.SENSOR_SERVICE) as SensorManager
+        stepSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER)
+        if (stepSensor != null) {
+            sensorManager.registerListener(this, stepSensor, SensorManager.SENSOR_DELAY_UI)
+            Toast.makeText(requireContext(), "Шагомер включён!", Toast.LENGTH_LONG).show()
+        } else {
+            Toast.makeText(requireContext(), "Сенсор движения не найден!", Toast.LENGTH_LONG).show()
+        }
+    }
+
     @RequiresApi(Build.VERSION_CODES.P)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding.goNext.setOnClickListener {
+            jumpToNextActivity()
+        }
         placemarkTapListener = MapObjectTapListener { obj, point ->
             tapListener(point, obj)
             true
@@ -166,7 +201,7 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
         val mapKit: MapKit = MapKitFactory.getInstance()
         val probki = mapKit.createTrafficLayer(binding.mapview.mapWindow)
         locationManager = MapKitFactory.getInstance().createLocationManager()
-        getLocation()
+        locationmapkit = mapKit.createUserLocationLayer(binding.mapview.mapWindow)
         drivingRouter = DirectionsFactory.getInstance().createDrivingRouter()
         mapObjectsMain = binding.mapview.map.mapObjects.addCollection()
         binding.mapview.map.isRotateGesturesEnabled = false
@@ -181,22 +216,51 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
             startActivityForResult(intent, RECOGNIZER_RESULT)
         }
         binding.userlocation!!.setOnClickListener {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                if (requireActivity().checkSelfPermission(android.Manifest.permission.ACTIVITY_RECOGNITION) != PackageManager.PERMISSION_GRANTED) {
+                    requestPermissions(
+                        arrayOf(android.Manifest.permission.ACTIVITY_RECOGNITION),
+                        100
+                    )
+                }
+            }
             if (ApplicationMapKit.LocalHelp.offOnUserLayer) {
                 if (::locationmapkit.isInitialized) {
                     locationmapkit!!.isVisible = true
                     locationmapkit!!.setObjectListener(this)
                     ApplicationMapKit.LocalHelp.offOnUserLayer = false
-                } else {
-                    locationmapkit = mapKit.createUserLocationLayer(binding.mapview.mapWindow)
-                    locationmapkit!!.isVisible = true
-                    locationmapkit!!.setObjectListener(this)
-                    ApplicationMapKit.LocalHelp.offOnUserLayer = false
-                    lastPoint = locationmapkit.cameraPosition()?.target
+                    running = true
+                    binding.stepsInfo.text = "Начинайте движение →"
+
+                    val town = locationmapkit.cameraPosition()?.target?.latitude?.let { it1 ->
+                        locationmapkit.cameraPosition()?.target?.longitude?.let { it2 ->
+                            geocoder.getFromLocation(
+                                it1,
+                                it2,
+                                1
+                            )
+                        }
+                    }
+                    if(town?.get(0)?.adminArea.toString()!="null"){
+                        binding.localInfo.text = town?.get(0)?.adminArea.toString()
+                        currentArea = town?.get(0)?.adminArea.toString()
+                    }
+                    else {
+                        binding.localInfo.text= currentArea
+                    }
+                    registerSensor()
+                    loadData()
+                    resetSteps()
                 }
             } else {
+                running = false
                 locationmapkit.isVisible = false
                 locationmapkit.setObjectListener(null)
                 ApplicationMapKit.LocalHelp.offOnUserLayer = true
+                if(::sensorManager.isInitialized) {
+                    sensorManager.unregisterListener(this)
+                }
+                binding.stepsInfo.text = "Включите режим наблюдения перемещения ↑"
             }
         }
         //Для добавления кода при повороте
@@ -241,7 +305,6 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
         }
         binding.sendLocation.setOnClickListener {
             if (loc == null) {
-                getLocation()
             } else {
                 Intent(Intent.ACTION_SEND).apply {
                     type = "text/plain"
@@ -361,8 +424,6 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
 
         }
         binding.geoPositionBtn.setOnClickListener {
-
-            if (actualLoc != null) {
                 toast =
                     Toast.makeText(
                         requireContext(),
@@ -371,9 +432,7 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
                         Toast.LENGTH_LONG
                     )
                 toast.show()
-            } else {
-                getLocation()
-            }
+
         }
         SearchFactory.initialize(requireContext())
         searchManager =
@@ -498,7 +557,7 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
                 getScaledBitmap(photoFile.path, requireActivity())
             val fos = FileOutputStream(photoFile)
             bitmap.compress(Bitmap.CompressFormat.JPEG, 50, fos)
-           Handler().postDelayed({ getLocation() }, 200)
+           // Handler().postDelayed({ getLocation() }, 200)
         }
 
         super.onActivityResult(requestCode, resultCode, data)
@@ -591,21 +650,23 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
     }
 
     override fun onStop() {
-        binding.searchField.setText("")
         binding.mapview.onStop()
         routeProcess = false
+        actualLocationFlag = false
+        locationManager.unsubscribe(localListener())
+        offOnUserLayer=true
         super.onStop()
     }
 
     override fun onStart() {
         super.onStart()
+        if(currentArea.isNotEmpty()){
+            binding.localInfo.text= currentArea
+        }
         binding.mapview.map.addInputListener(inputListenerOnMap())
         binding.mapview.map.isRotateGesturesEnabled = true
         binding.mapview.map.isScrollGesturesEnabled = true
         binding.mapview.onStart()
-        if (loc == null) {
-            getLocation()
-        }
     }
 
     override fun onSaveInstanceState(bundle: Bundle) {
@@ -705,8 +766,9 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
                     location.position.longitude,
                     1
                 )
-                binding.localInfo.text = town!![0].adminArea.toString()
-                currentArea = town!![0].adminArea.toString()
+
+                    binding.localInfo.text = town!![0].adminArea.toString()
+                    currentArea = town!![0].adminArea.toString()
 
 
                 if (isAdded) {
@@ -765,8 +827,6 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
         locationManager.requestSingleUpdate(
             localListener()
         )
-
-
     }
 
 
@@ -1004,6 +1064,39 @@ class MainFragment : Fragment(), com.yandex.mapkit.search.Session.SearchListener
         requestRoutePoints.add(RequestPoint(endLocationPoints, RequestPointType.WAYPOINT, null))
         drivingSession =
             drivingRouter!!.requestRoutes(requestRoutePoints, drivingOptions, vehicleOptions, this)
+    }
+
+    private fun resetSteps() {
+        previousTotalSteps = totalSteps
+        binding.stepsInfo.text = "Вы прошли ◄↕► $0 шаг..."
+        saveData()
+
+    }
+
+    private fun saveData() {
+        val sharedPreferences =
+            requireActivity().getSharedPreferences("myPrefs", Context.MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+        editor.putFloat("key1", previousTotalSteps)
+        editor.apply()
+    }
+
+    private fun loadData() {
+        val sharedPreferences =
+            requireActivity().getSharedPreferences("myPrefs", Context.MODE_PRIVATE)
+        previousTotalSteps = sharedPreferences.getFloat("key1", 0f)
+    }
+
+    override fun onSensorChanged(event: SensorEvent?) {
+        if (event == null) return
+        if (running) {
+            totalSteps = event.values[0]
+            val currentSteps = (totalSteps - previousTotalSteps).toInt()
+            binding.stepsInfo.text = "Вы прошли ◄↕► $currentSteps шаг..."
+        }
+    }
+
+    override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
     }
 
 }

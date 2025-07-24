@@ -24,6 +24,15 @@
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+    <TextView
+        android:id="@+id/stepsInfo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:textColor="#1816E8"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/localInfo" />
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/location_current_add_marker"
         android:layout_width="wrap_content"
@@ -84,6 +93,19 @@
         android:tag="0"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/show_all_location_mark" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/go_next"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:backgroundTint="#1816E8"
+        android:layout_marginTop="6dp"
+        android:src="@drawable/baseline_directions_walk_24"
+        app:layout_constraintTop_toBottomOf="@+id/voicesearch"
+        app:layout_constraintEnd_toEndOf="parent"
+/>
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/zoombtndec"
         android:layout_width="wrap_content"
