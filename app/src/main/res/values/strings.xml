@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">Location</string>
+    <string name="notFoundError">Неизвестная ошибка</string>
+    <string name="remoteError">Ошибка удаленного подключения</string>
+    <string name="networkError">Ошибка сети</string>
+    <string name="cancel">Отмена</string>
+    <string name="back">В карты</string>
+    <string name="addMark">Добавить  маркер</string>
+    <string name="cancelMarkOnMap">Убрать маркер</string>
+    <string name="sendingLocationCoordinates">Отправка координат местоположения</string>
+    <string name="sendingPhoto">Отправка фото</string>
+    <string name="locationCoordinates">Координаты местоположения</string>
+    <string name="indicated">Вы указали на регион со следующими координатами</string>
+    <string name="yourCoordinates">Ваши координаты местоположения</string>
+    <string name="myLocation">Моя локация</string>
+    <string name="title_panoramafeature">Module Title</string>
+    <string name="panorama">Панорама</string>
+    <string name="panorama_look">Посмотреть панораму</string>
+</resources>

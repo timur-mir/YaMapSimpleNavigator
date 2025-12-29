@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/app_nav_graph"
+    app:startDestination="@id/mainFragment">
+    <fragment
+        android:id="@+id/panoramaFragmentFeature"
+        android:name="com.example.location.presentation.PanoramaPlaceFragment">
+        <argument
+            android:name="lat-long"
+            app:argType="com.example.location.LatLong"/>
+
+    </fragment>
+    <fragment
+        android:id="@+id/mainFragment"
+        android:name="com.example.location.presentation.MainFragment"
+        android:label="MainFragment"
+        tools:layout="@layout/main_fragment">
+        <action
+            android:id="@+id/action_mainFragment_to_showAllMarksFragment"
+            app:destination="@id/showAllMarksFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/showAllMarksFragment"
+        android:name="com.example.location.presentation.ShowAllMarksFragment"
+        android:label="ShowAllMarksFragment"
+        tools:layout="@layout/show_all_marks_fragment"/>
+</navigation>

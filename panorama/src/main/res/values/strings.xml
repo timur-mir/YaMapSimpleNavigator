@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="notFoundError3">Ошибка не найдена</string>
+    <string name="remoteError3">Ошибка удаленного подключения</string>
+    <string name="networkError3">Ошибка сети</string>
+</resources>
