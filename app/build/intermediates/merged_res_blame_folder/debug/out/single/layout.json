@@ -1,0 +1,38 @@
+[
+    {
+        "merged": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-mergeDebugResources-45:\\layout\\show_all_marks_fragment.xml",
+        "source": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-main-48:\\layout\\show_all_marks_fragment.xml"
+    },
+    {
+        "merged": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-mergeDebugResources-45:\\layout\\activity_main.xml",
+        "source": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-main-48:\\layout\\activity_main.xml"
+    },
+    {
+        "merged": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-mergeDebugResources-45:\\layout\\mark__list.xml",
+        "source": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-main-48:\\layout\\mark__list.xml"
+    },
+    {
+        "merged": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-mergeDebugResources-45:\\layout\\activity_step.xml",
+        "source": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-main-48:\\layout\\activity_step.xml"
+    },
+    {
+        "merged": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-mergeDebugResources-45:\\layout\\info_about_mark.xml",
+        "source": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-main-48:\\layout\\info_about_mark.xml"
+    },
+    {
+        "merged": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-mergeDebugResources-45:\\layout\\photo_file_fragment.xml",
+        "source": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-main-48:\\layout\\photo_file_fragment.xml"
+    },
+    {
+        "merged": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-mergeDebugResources-45:\\layout\\panorama_place_fragment.xml",
+        "source": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-main-48:\\layout\\panorama_place_fragment.xml"
+    },
+    {
+        "merged": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-mergeDebugResources-45:\\layout\\main_fragment.xml",
+        "source": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-main-48:\\layout\\main_fragment.xml"
+    },
+    {
+        "merged": "com.example.location.app-mergeDebugResources-45:/layout/main_fragment.xml",
+        "source": "com.example.location.app-main-48:/layout/main_fragment.xml"
+    }
+]

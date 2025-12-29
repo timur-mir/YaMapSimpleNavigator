@@ -1,0 +1,320 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="com.example.location"
+4    android:versionCode="1"
+5    android:versionName="1.0" >
+6
+7    <uses-sdk
+8        android:minSdkVersion="24"
+8-->C:\Users\TIMURMIR\myBase\android_dev_1_2022\m19_location\app\src\main\AndroidManifest.xml
+9        android:targetSdkVersion="33" />
+9-->C:\Users\TIMURMIR\myBase\android_dev_1_2022\m19_location\app\src\main\AndroidManifest.xml
+10
+11    <uses-feature
+11-->C:\Users\TIMURMIR\myBase\android_dev_1_2022\m19_location\app\src\main\AndroidManifest.xml:5:5-7:36
+12        android:name="android.hardware.camera"
+12-->C:\Users\TIMURMIR\myBase\android_dev_1_2022\m19_location\app\src\main\AndroidManifest.xml:6:9-47
+13        android:required="false" />
+13-->C:\Users\TIMURMIR\myBase\android_dev_1_2022\m19_location\app\src\main\AndroidManifest.xml:7:9-33
+14
+15    <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION" />
+15-->C:\Users\TIMURMIR\myBase\android_dev_1_2022\m19_location\app\src\main\AndroidManifest.xml:9:5-79
+15-->C:\Users\TIMURMIR\myBase\android_dev_1_2022\m19_location\app\src\main\AndroidManifest.xml:9:22-76
+16    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+16-->C:\Users\TIMURMIR\myBase\android_dev_1_2022\m19_location\app\src\main\AndroidManifest.xml:10:5-79
+16-->C:\Users\TIMURMIR\myBase\android_dev_1_2022\m19_location\app\src\main\AndroidManifest.xml:10:22-76
+17    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+17-->C:\Users\TIMURMIR\myBase\android_dev_1_2022\m19_location\app\src\main\AndroidManifest.xml:11:5-81
+17-->C:\Users\TIMURMIR\myBase\android_dev_1_2022\m19_location\app\src\main\AndroidManifest.xml:11:22-78
+18    <uses-permission android:name="android.permission.INTERNET" />
+18-->C:\Users\TIMURMIR\myBase\android_dev_1_2022\m19_location\app\src\main\AndroidManifest.xml:12:5-67
+18-->C:\Users\TIMURMIR\myBase\android_dev_1_2022\m19_location\app\src\main\AndroidManifest.xml:12:22-64
+19    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+19-->[com.yandex.android:maps.mobile:4.3.1-full] C:\Users\TIMURMIR\.gradle\caches\transforms-3\ca66cf3e5a0e27cc6b99a89cc2cb2604\transformed\maps.mobile-4.3.1-full\AndroidManifest.xml:13:5-79
+19-->[com.yandex.android:maps.mobile:4.3.1-full] C:\Users\TIMURMIR\.gradle\caches\transforms-3\ca66cf3e5a0e27cc6b99a89cc2cb2604\transformed\maps.mobile-4.3.1-full\AndroidManifest.xml:13:22-76
+20    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+20-->[com.yandex.android:maps.mobile:4.3.1-full] C:\Users\TIMURMIR\.gradle\caches\transforms-3\ca66cf3e5a0e27cc6b99a89cc2cb2604\transformed\maps.mobile-4.3.1-full\AndroidManifest.xml:15:5-76
+20-->[com.yandex.android:maps.mobile:4.3.1-full] C:\Users\TIMURMIR\.gradle\caches\transforms-3\ca66cf3e5a0e27cc6b99a89cc2cb2604\transformed\maps.mobile-4.3.1-full\AndroidManifest.xml:15:22-73
+21    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+21-->[com.yandex.android:maps.mobile:4.3.1-full] C:\Users\TIMURMIR\.gradle\caches\transforms-3\ca66cf3e5a0e27cc6b99a89cc2cb2604\transformed\maps.mobile-4.3.1-full\AndroidManifest.xml:16:5-76
+21-->[com.yandex.android:maps.mobile:4.3.1-full] C:\Users\TIMURMIR\.gradle\caches\transforms-3\ca66cf3e5a0e27cc6b99a89cc2cb2604\transformed\maps.mobile-4.3.1-full\AndroidManifest.xml:16:22-73
+22    <uses-permission android:name="android.permission.WAKE_LOCK" />
+22-->[com.yandex.android:maps.mobile:4.3.1-full] C:\Users\TIMURMIR\.gradle\caches\transforms-3\ca66cf3e5a0e27cc6b99a89cc2cb2604\transformed\maps.mobile-4.3.1-full\AndroidManifest.xml:21:5-68
+22-->[com.yandex.android:maps.mobile:4.3.1-full] C:\Users\TIMURMIR\.gradle\caches\transforms-3\ca66cf3e5a0e27cc6b99a89cc2cb2604\transformed\maps.mobile-4.3.1-full\AndroidManifest.xml:21:22-65
+23    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+23-->[com.yandex.android:maps.mobile:4.3.1-full] C:\Users\TIMURMIR\.gradle\caches\transforms-3\ca66cf3e5a0e27cc6b99a89cc2cb2604\transformed\maps.mobile-4.3.1-full\AndroidManifest.xml:22:5-81
+23-->[com.yandex.android:maps.mobile:4.3.1-full] C:\Users\TIMURMIR\.gradle\caches\transforms-3\ca66cf3e5a0e27cc6b99a89cc2cb2604\transformed\maps.mobile-4.3.1-full\AndroidManifest.xml:22:22-78
+24
+25    <permission
+25-->[androidx.core:core:1.9.0] C:\Users\TIMURMIR\.gradle\caches\transforms-3\0ac64b6c2c7c87329717354a0a7cef15\transformed\core-1.9.0\AndroidManifest.xml:22:5-24:47
+26        android:name="com.example.location.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
+26-->[androidx.core:core:1.9.0] C:\Users\TIMURMIR\.gradle\caches\transforms-3\0ac64b6c2c7c87329717354a0a7cef15\transformed\core-1.9.0\AndroidManifest.xml:23:9-81
+27        android:protectionLevel="signature" />
+27-->[androidx.core:core:1.9.0] C:\Users\TIMURMIR\.gradle\caches\transforms-3\0ac64b6c2c7c87329717354a0a7cef15\transformed\core-1.9.0\AndroidManifest.xml:24:9-44
+28
+29    <uses-permission android:name="com.example.location.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" /> <!-- Permission will be merged into the manifest of the hosting app. -->
+29-->[androidx.core:core:1.9.0] C:\Users\TIMURMIR\.gradle\caches\transforms-3\0ac64b6c2c7c87329717354a0a7cef15\transformed\core-1.9.0\AndroidManifest.xml:26:5-97
+29-->[androidx.core:core:1.9.0] C:\Users\TIMURMIR\.gradle\caches\transforms-3\0ac64b6c2c7c87329717354a0a7cef15\transformed\core-1.9.0\AndroidManifest.xml:26:22-94
+30    <!-- Is required to launch foreground extraction service for targetSdkVersion 28+. -->
+31    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+31-->[com.google.android.play:core:1.7.2] C:\Users\TIMURMIR\.gradle\caches\transforms-3\b0ba2909247418e9abe3dbc028be4e32\transformed\core-1.7.2\AndroidManifest.xml:8:3-74
+31-->[com.google.android.play:core:1.7.2] C:\Users\TIMURMIR\.gradle\caches\transforms-3\b0ba2909247418e9abe3dbc028be4e32\transformed\core-1.7.2\AndroidManifest.xml:8:20-72
+32
+33    <application
+33-->C:\Users\TIMURMIR\myBase\android_dev_1_2022\m19_location\app\src\main\AndroidManifest.xml:14:5-49:19
+34        android:name="com.example.location.presentation.ApplicationMapKit"
+34-->C:\Users\TIMURMIR\myBase\android_dev_1_2022\m19_location\app\src\main\AndroidManifest.xml:15:9-55
+35        android:allowBackup="true"
+35-->C:\Users\TIMURMIR\myBase\android_dev_1_2022\m19_location\app\src\main\AndroidManifest.xml:16:9-35
+36        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+36-->[androidx.core:core:1.9.0] C:\Users\TIMURMIR\.gradle\caches\transforms-3\0ac64b6c2c7c87329717354a0a7cef15\transformed\core-1.9.0\AndroidManifest.xml:28:18-86
+37        android:dataExtractionRules="@xml/data_extraction_rules"
+37-->C:\Users\TIMURMIR\myBase\android_dev_1_2022\m19_location\app\src\main\AndroidManifest.xml:17:9-65
+38        android:debuggable="true"
+38-->[:panoramafeature] C:\Users\TIMURMIR\myBase\android_dev_1_2022\m19_location\panoramafeature\build\intermediates\metadata_feature_manifest\debug\AndroidManifest.xml:24:9-34
+39        android:extractNativeLibs="false"
+39-->[:panoramafeature] C:\Users\TIMURMIR\myBase\android_dev_1_2022\m19_location\panoramafeature\build\intermediates\metadata_feature_manifest\debug\AndroidManifest.xml:25:9-42
+40        android:fullBackupContent="@xml/backup_rules"
+40-->C:\Users\TIMURMIR\myBase\android_dev_1_2022\m19_location\app\src\main\AndroidManifest.xml:18:9-54
+41        android:icon="@mipmap/ic_launcher"
+41-->C:\Users\TIMURMIR\myBase\android_dev_1_2022\m19_location\app\src\main\AndroidManifest.xml:19:9-43
+42        android:label="@string/app_name"
+42-->C:\Users\TIMURMIR\myBase\android_dev_1_2022\m19_location\app\src\main\AndroidManifest.xml:20:9-41
+43        android:roundIcon="@mipmap/ic_launcher_round"
+43-->C:\Users\TIMURMIR\myBase\android_dev_1_2022\m19_location\app\src\main\AndroidManifest.xml:21:9-54
+44        android:supportsRtl="true"
+44-->C:\Users\TIMURMIR\myBase\android_dev_1_2022\m19_location\app\src\main\AndroidManifest.xml:22:9-35
+45        android:testOnly="true"
+45-->[:panoramafeature] C:\Users\TIMURMIR\myBase\android_dev_1_2022\m19_location\panoramafeature\build\intermediates\metadata_feature_manifest\debug\AndroidManifest.xml:26:9-32
+46        android:theme="@style/Theme.MapKitYandex" >
+46-->C:\Users\TIMURMIR\myBase\android_dev_1_2022\m19_location\app\src\main\AndroidManifest.xml:23:9-50
+47        <activity
+47-->C:\Users\TIMURMIR\myBase\android_dev_1_2022\m19_location\app\src\main\AndroidManifest.xml:25:9-27:40
+48            android:name="com.example.location.presentation.StepActivity"
+48-->C:\Users\TIMURMIR\myBase\android_dev_1_2022\m19_location\app\src\main\AndroidManifest.xml:26:13-54
+49            android:exported="false" />
+49-->C:\Users\TIMURMIR\myBase\android_dev_1_2022\m19_location\app\src\main\AndroidManifest.xml:27:13-37
+50        <activity
+50-->C:\Users\TIMURMIR\myBase\android_dev_1_2022\m19_location\app\src\main\AndroidManifest.xml:28:9-38:20
+51            android:name="com.example.location.presentation.MainActivity"
+51-->C:\Users\TIMURMIR\myBase\android_dev_1_2022\m19_location\app\src\main\AndroidManifest.xml:29:13-54
+52            android:exported="true"
+52-->C:\Users\TIMURMIR\myBase\android_dev_1_2022\m19_location\app\src\main\AndroidManifest.xml:30:13-36
+53            android:launchMode="singleTask"
+53-->C:\Users\TIMURMIR\myBase\android_dev_1_2022\m19_location\app\src\main\AndroidManifest.xml:31:13-44
+54            android:screenOrientation="portrait" >
+54-->C:\Users\TIMURMIR\myBase\android_dev_1_2022\m19_location\app\src\main\AndroidManifest.xml:32:13-49
+55            <intent-filter>
+55-->C:\Users\TIMURMIR\myBase\android_dev_1_2022\m19_location\app\src\main\AndroidManifest.xml:33:13-37:29
+56                <action android:name="android.intent.action.MAIN" />
+56-->C:\Users\TIMURMIR\myBase\android_dev_1_2022\m19_location\app\src\main\AndroidManifest.xml:34:17-69
+56-->C:\Users\TIMURMIR\myBase\android_dev_1_2022\m19_location\app\src\main\AndroidManifest.xml:34:25-66
+57
+58                <category android:name="android.intent.category.LAUNCHER" />
+58-->C:\Users\TIMURMIR\myBase\android_dev_1_2022\m19_location\app\src\main\AndroidManifest.xml:36:17-77
+58-->C:\Users\TIMURMIR\myBase\android_dev_1_2022\m19_location\app\src\main\AndroidManifest.xml:36:27-74
+59            </intent-filter>
+60        </activity>
+61
+62        <provider
+62-->C:\Users\TIMURMIR\myBase\android_dev_1_2022\m19_location\app\src\main\AndroidManifest.xml:40:9-48:20
+63            android:name="androidx.core.content.FileProvider"
+63-->C:\Users\TIMURMIR\myBase\android_dev_1_2022\m19_location\app\src\main\AndroidManifest.xml:41:13-62
+64            android:authorities="com.example.location.fileprovider"
+64-->C:\Users\TIMURMIR\myBase\android_dev_1_2022\m19_location\app\src\main\AndroidManifest.xml:42:13-68
+65            android:exported="false"
+65-->C:\Users\TIMURMIR\myBase\android_dev_1_2022\m19_location\app\src\main\AndroidManifest.xml:43:13-37
+66            android:grantUriPermissions="true" >
+66-->C:\Users\TIMURMIR\myBase\android_dev_1_2022\m19_location\app\src\main\AndroidManifest.xml:44:13-47
+67            <meta-data
+67-->C:\Users\TIMURMIR\myBase\android_dev_1_2022\m19_location\app\src\main\AndroidManifest.xml:45:13-47:49
+68                android:name="android.support.FILE_PROVIDER_PATHS"
+68-->C:\Users\TIMURMIR\myBase\android_dev_1_2022\m19_location\app\src\main\AndroidManifest.xml:46:17-67
+69                android:resource="@xml/files" />
+69-->C:\Users\TIMURMIR\myBase\android_dev_1_2022\m19_location\app\src\main\AndroidManifest.xml:47:17-46
+70        </provider>
+71
+72        <meta-data
+72-->[com.yandex.android:maps.mobile:4.3.1-full] C:\Users\TIMURMIR\.gradle\caches\transforms-3\ca66cf3e5a0e27cc6b99a89cc2cb2604\transformed\maps.mobile-4.3.1-full\AndroidManifest.xml:25:9-27:38
+73            android:name="yandex.maps.runtime.stl.linkage"
+73-->[com.yandex.android:maps.mobile:4.3.1-full] C:\Users\TIMURMIR\.gradle\caches\transforms-3\ca66cf3e5a0e27cc6b99a89cc2cb2604\transformed\maps.mobile-4.3.1-full\AndroidManifest.xml:26:13-59
+74            android:value="static" />
+74-->[com.yandex.android:maps.mobile:4.3.1-full] C:\Users\TIMURMIR\.gradle\caches\transforms-3\ca66cf3e5a0e27cc6b99a89cc2cb2604\transformed\maps.mobile-4.3.1-full\AndroidManifest.xml:27:13-35
+75
+76        <service
+76-->[com.yandex.android:maps.mobile:4.3.1-full] C:\Users\TIMURMIR\.gradle\caches\transforms-3\ca66cf3e5a0e27cc6b99a89cc2cb2604\transformed\maps.mobile-4.3.1-full\AndroidManifest.xml:29:9-32:72
+77            android:name="com.evernote.android.job.patched.internal.v21.PlatformJobService"
+77-->[com.yandex.android:maps.mobile:4.3.1-full] C:\Users\TIMURMIR\.gradle\caches\transforms-3\ca66cf3e5a0e27cc6b99a89cc2cb2604\transformed\maps.mobile-4.3.1-full\AndroidManifest.xml:30:13-92
+78            android:exported="false"
+78-->[com.yandex.android:maps.mobile:4.3.1-full] C:\Users\TIMURMIR\.gradle\caches\transforms-3\ca66cf3e5a0e27cc6b99a89cc2cb2604\transformed\maps.mobile-4.3.1-full\AndroidManifest.xml:31:13-37
+79            android:permission="android.permission.BIND_JOB_SERVICE" />
+79-->[com.yandex.android:maps.mobile:4.3.1-full] C:\Users\TIMURMIR\.gradle\caches\transforms-3\ca66cf3e5a0e27cc6b99a89cc2cb2604\transformed\maps.mobile-4.3.1-full\AndroidManifest.xml:32:13-69
+80        <service
+80-->[com.yandex.android:maps.mobile:4.3.1-full] C:\Users\TIMURMIR\.gradle\caches\transforms-3\ca66cf3e5a0e27cc6b99a89cc2cb2604\transformed\maps.mobile-4.3.1-full\AndroidManifest.xml:33:9-36:72
+81            android:name="com.evernote.android.job.patched.internal.v14.PlatformAlarmService"
+81-->[com.yandex.android:maps.mobile:4.3.1-full] C:\Users\TIMURMIR\.gradle\caches\transforms-3\ca66cf3e5a0e27cc6b99a89cc2cb2604\transformed\maps.mobile-4.3.1-full\AndroidManifest.xml:34:13-94
+82            android:exported="false"
+82-->[com.yandex.android:maps.mobile:4.3.1-full] C:\Users\TIMURMIR\.gradle\caches\transforms-3\ca66cf3e5a0e27cc6b99a89cc2cb2604\transformed\maps.mobile-4.3.1-full\AndroidManifest.xml:35:13-37
+83            android:permission="android.permission.BIND_JOB_SERVICE" />
+83-->[com.yandex.android:maps.mobile:4.3.1-full] C:\Users\TIMURMIR\.gradle\caches\transforms-3\ca66cf3e5a0e27cc6b99a89cc2cb2604\transformed\maps.mobile-4.3.1-full\AndroidManifest.xml:36:13-69
+84        <service
+84-->[com.yandex.android:maps.mobile:4.3.1-full] C:\Users\TIMURMIR\.gradle\caches\transforms-3\ca66cf3e5a0e27cc6b99a89cc2cb2604\transformed\maps.mobile-4.3.1-full\AndroidManifest.xml:37:9-39:40
+85            android:name="com.evernote.android.job.patched.internal.v14.PlatformAlarmServiceExact"
+85-->[com.yandex.android:maps.mobile:4.3.1-full] C:\Users\TIMURMIR\.gradle\caches\transforms-3\ca66cf3e5a0e27cc6b99a89cc2cb2604\transformed\maps.mobile-4.3.1-full\AndroidManifest.xml:38:13-99
+86            android:exported="false" />
+86-->[com.yandex.android:maps.mobile:4.3.1-full] C:\Users\TIMURMIR\.gradle\caches\transforms-3\ca66cf3e5a0e27cc6b99a89cc2cb2604\transformed\maps.mobile-4.3.1-full\AndroidManifest.xml:39:13-37
+87
+88        <receiver
+88-->[com.yandex.android:maps.mobile:4.3.1-full] C:\Users\TIMURMIR\.gradle\caches\transforms-3\ca66cf3e5a0e27cc6b99a89cc2cb2604\transformed\maps.mobile-4.3.1-full\AndroidManifest.xml:41:9-50:20
+89            android:name="com.evernote.android.job.patched.internal.v14.PlatformAlarmReceiver"
+89-->[com.yandex.android:maps.mobile:4.3.1-full] C:\Users\TIMURMIR\.gradle\caches\transforms-3\ca66cf3e5a0e27cc6b99a89cc2cb2604\transformed\maps.mobile-4.3.1-full\AndroidManifest.xml:42:13-95
+90            android:exported="false" >
+90-->[com.yandex.android:maps.mobile:4.3.1-full] C:\Users\TIMURMIR\.gradle\caches\transforms-3\ca66cf3e5a0e27cc6b99a89cc2cb2604\transformed\maps.mobile-4.3.1-full\AndroidManifest.xml:43:13-37
+91            <intent-filter>
+91-->[com.yandex.android:maps.mobile:4.3.1-full] C:\Users\TIMURMIR\.gradle\caches\transforms-3\ca66cf3e5a0e27cc6b99a89cc2cb2604\transformed\maps.mobile-4.3.1-full\AndroidManifest.xml:44:13-49:29
+92
+93                <!-- Keep the filter for legacy intents -->
+94                <action android:name="com.evernote.android.job.patched.internal.v14.RUN_JOB" />
+94-->[com.yandex.android:maps.mobile:4.3.1-full] C:\Users\TIMURMIR\.gradle\caches\transforms-3\ca66cf3e5a0e27cc6b99a89cc2cb2604\transformed\maps.mobile-4.3.1-full\AndroidManifest.xml:47:17-96
+94-->[com.yandex.android:maps.mobile:4.3.1-full] C:\Users\TIMURMIR\.gradle\caches\transforms-3\ca66cf3e5a0e27cc6b99a89cc2cb2604\transformed\maps.mobile-4.3.1-full\AndroidManifest.xml:47:25-93
+95                <action android:name="net.vrallev.android.job.v14.RUN_JOB" />
+95-->[com.yandex.android:maps.mobile:4.3.1-full] C:\Users\TIMURMIR\.gradle\caches\transforms-3\ca66cf3e5a0e27cc6b99a89cc2cb2604\transformed\maps.mobile-4.3.1-full\AndroidManifest.xml:48:17-78
+95-->[com.yandex.android:maps.mobile:4.3.1-full] C:\Users\TIMURMIR\.gradle\caches\transforms-3\ca66cf3e5a0e27cc6b99a89cc2cb2604\transformed\maps.mobile-4.3.1-full\AndroidManifest.xml:48:25-75
+96            </intent-filter>
+97        </receiver>
+98        <receiver
+98-->[com.yandex.android:maps.mobile:4.3.1-full] C:\Users\TIMURMIR\.gradle\caches\transforms-3\ca66cf3e5a0e27cc6b99a89cc2cb2604\transformed\maps.mobile-4.3.1-full\AndroidManifest.xml:51:9-60:20
+99            android:name="com.evernote.android.job.patched.internal.JobBootReceiver"
+99-->[com.yandex.android:maps.mobile:4.3.1-full] C:\Users\TIMURMIR\.gradle\caches\transforms-3\ca66cf3e5a0e27cc6b99a89cc2cb2604\transformed\maps.mobile-4.3.1-full\AndroidManifest.xml:52:13-85
+100            android:exported="false" >
+100-->[com.yandex.android:maps.mobile:4.3.1-full] C:\Users\TIMURMIR\.gradle\caches\transforms-3\ca66cf3e5a0e27cc6b99a89cc2cb2604\transformed\maps.mobile-4.3.1-full\AndroidManifest.xml:53:13-37
+101            <intent-filter>
+101-->[com.yandex.android:maps.mobile:4.3.1-full] C:\Users\TIMURMIR\.gradle\caches\transforms-3\ca66cf3e5a0e27cc6b99a89cc2cb2604\transformed\maps.mobile-4.3.1-full\AndroidManifest.xml:54:13-59:29
+102                <action android:name="android.intent.action.BOOT_COMPLETED" />
+102-->[com.yandex.android:maps.mobile:4.3.1-full] C:\Users\TIMURMIR\.gradle\caches\transforms-3\ca66cf3e5a0e27cc6b99a89cc2cb2604\transformed\maps.mobile-4.3.1-full\AndroidManifest.xml:55:17-79
+102-->[com.yandex.android:maps.mobile:4.3.1-full] C:\Users\TIMURMIR\.gradle\caches\transforms-3\ca66cf3e5a0e27cc6b99a89cc2cb2604\transformed\maps.mobile-4.3.1-full\AndroidManifest.xml:55:25-76
+103                <action android:name="android.intent.action.QUICKBOOT_POWERON" />
+103-->[com.yandex.android:maps.mobile:4.3.1-full] C:\Users\TIMURMIR\.gradle\caches\transforms-3\ca66cf3e5a0e27cc6b99a89cc2cb2604\transformed\maps.mobile-4.3.1-full\AndroidManifest.xml:56:17-82
+103-->[com.yandex.android:maps.mobile:4.3.1-full] C:\Users\TIMURMIR\.gradle\caches\transforms-3\ca66cf3e5a0e27cc6b99a89cc2cb2604\transformed\maps.mobile-4.3.1-full\AndroidManifest.xml:56:25-79
+104                <action android:name="com.htc.intent.action.QUICKBOOT_POWERON" />
+104-->[com.yandex.android:maps.mobile:4.3.1-full] C:\Users\TIMURMIR\.gradle\caches\transforms-3\ca66cf3e5a0e27cc6b99a89cc2cb2604\transformed\maps.mobile-4.3.1-full\AndroidManifest.xml:57:17-82
+104-->[com.yandex.android:maps.mobile:4.3.1-full] C:\Users\TIMURMIR\.gradle\caches\transforms-3\ca66cf3e5a0e27cc6b99a89cc2cb2604\transformed\maps.mobile-4.3.1-full\AndroidManifest.xml:57:25-79
+105                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+105-->[com.yandex.android:maps.mobile:4.3.1-full] C:\Users\TIMURMIR\.gradle\caches\transforms-3\ca66cf3e5a0e27cc6b99a89cc2cb2604\transformed\maps.mobile-4.3.1-full\AndroidManifest.xml:58:17-84
+105-->[com.yandex.android:maps.mobile:4.3.1-full] C:\Users\TIMURMIR\.gradle\caches\transforms-3\ca66cf3e5a0e27cc6b99a89cc2cb2604\transformed\maps.mobile-4.3.1-full\AndroidManifest.xml:58:25-81
+106            </intent-filter>
+107        </receiver>
+108
+109        <service
+109-->[com.yandex.android:maps.mobile:4.3.1-full] C:\Users\TIMURMIR\.gradle\caches\transforms-3\ca66cf3e5a0e27cc6b99a89cc2cb2604\transformed\maps.mobile-4.3.1-full\AndroidManifest.xml:62:9-65:72
+110            android:name="com.evernote.android.job.patched.internal.JobRescheduleService"
+110-->[com.yandex.android:maps.mobile:4.3.1-full] C:\Users\TIMURMIR\.gradle\caches\transforms-3\ca66cf3e5a0e27cc6b99a89cc2cb2604\transformed\maps.mobile-4.3.1-full\AndroidManifest.xml:63:13-90
+111            android:exported="false"
+111-->[com.yandex.android:maps.mobile:4.3.1-full] C:\Users\TIMURMIR\.gradle\caches\transforms-3\ca66cf3e5a0e27cc6b99a89cc2cb2604\transformed\maps.mobile-4.3.1-full\AndroidManifest.xml:64:13-37
+112            android:permission="android.permission.BIND_JOB_SERVICE" />
+112-->[com.yandex.android:maps.mobile:4.3.1-full] C:\Users\TIMURMIR\.gradle\caches\transforms-3\ca66cf3e5a0e27cc6b99a89cc2cb2604\transformed\maps.mobile-4.3.1-full\AndroidManifest.xml:65:13-69
+113        <service
+113-->[com.yandex.android:maps.mobile:4.3.1-full] C:\Users\TIMURMIR\.gradle\caches\transforms-3\ca66cf3e5a0e27cc6b99a89cc2cb2604\transformed\maps.mobile-4.3.1-full\AndroidManifest.xml:66:9-69:72
+114            android:name="com.yandex.runtime.connectivity.internal.ConnectivityService"
+114-->[com.yandex.android:maps.mobile:4.3.1-full] C:\Users\TIMURMIR\.gradle\caches\transforms-3\ca66cf3e5a0e27cc6b99a89cc2cb2604\transformed\maps.mobile-4.3.1-full\AndroidManifest.xml:67:13-88
+115            android:exported="true"
+115-->[com.yandex.android:maps.mobile:4.3.1-full] C:\Users\TIMURMIR\.gradle\caches\transforms-3\ca66cf3e5a0e27cc6b99a89cc2cb2604\transformed\maps.mobile-4.3.1-full\AndroidManifest.xml:68:13-36
+116            android:permission="android.permission.BIND_JOB_SERVICE" />
+116-->[com.yandex.android:maps.mobile:4.3.1-full] C:\Users\TIMURMIR\.gradle\caches\transforms-3\ca66cf3e5a0e27cc6b99a89cc2cb2604\transformed\maps.mobile-4.3.1-full\AndroidManifest.xml:69:13-69
+117
+118        <activity
+118-->[com.google.android.gms:play-services-base:18.0.1] C:\Users\TIMURMIR\.gradle\caches\transforms-3\2556f6b891f59fee6d7f7f77fbca2c31\transformed\play-services-base-18.0.1\AndroidManifest.xml:20:9-22:45
+119            android:name="com.google.android.gms.common.api.GoogleApiActivity"
+119-->[com.google.android.gms:play-services-base:18.0.1] C:\Users\TIMURMIR\.gradle\caches\transforms-3\2556f6b891f59fee6d7f7f77fbca2c31\transformed\play-services-base-18.0.1\AndroidManifest.xml:20:19-85
+120            android:exported="false"
+120-->[com.google.android.gms:play-services-base:18.0.1] C:\Users\TIMURMIR\.gradle\caches\transforms-3\2556f6b891f59fee6d7f7f77fbca2c31\transformed\play-services-base-18.0.1\AndroidManifest.xml:22:19-43
+121            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+121-->[com.google.android.gms:play-services-base:18.0.1] C:\Users\TIMURMIR\.gradle\caches\transforms-3\2556f6b891f59fee6d7f7f77fbca2c31\transformed\play-services-base-18.0.1\AndroidManifest.xml:21:19-78
+122
+123        <meta-data
+123-->[com.google.android.gms:play-services-basement:18.0.0] C:\Users\TIMURMIR\.gradle\caches\transforms-3\c13673172872d3ed8efa44d0004ef851\transformed\play-services-basement-18.0.0\AndroidManifest.xml:21:9-23:69
+124            android:name="com.google.android.gms.version"
+124-->[com.google.android.gms:play-services-basement:18.0.0] C:\Users\TIMURMIR\.gradle\caches\transforms-3\c13673172872d3ed8efa44d0004ef851\transformed\play-services-basement-18.0.0\AndroidManifest.xml:22:13-58
+125            android:value="@integer/google_play_services_version" />
+125-->[com.google.android.gms:play-services-basement:18.0.0] C:\Users\TIMURMIR\.gradle\caches\transforms-3\c13673172872d3ed8efa44d0004ef851\transformed\play-services-basement-18.0.0\AndroidManifest.xml:23:13-66
+126
+127        <service
+127-->[androidx.room:room-runtime:2.4.3] C:\Users\TIMURMIR\.gradle\caches\transforms-3\142e13c48033ece1ccebbb779a2c8518\transformed\room-runtime-2.4.3\AndroidManifest.xml:25:9-28:40
+128            android:name="androidx.room.MultiInstanceInvalidationService"
+128-->[androidx.room:room-runtime:2.4.3] C:\Users\TIMURMIR\.gradle\caches\transforms-3\142e13c48033ece1ccebbb779a2c8518\transformed\room-runtime-2.4.3\AndroidManifest.xml:26:13-74
+129            android:directBootAware="true"
+129-->[androidx.room:room-runtime:2.4.3] C:\Users\TIMURMIR\.gradle\caches\transforms-3\142e13c48033ece1ccebbb779a2c8518\transformed\room-runtime-2.4.3\AndroidManifest.xml:27:13-43
+130            android:exported="false" />
+130-->[androidx.room:room-runtime:2.4.3] C:\Users\TIMURMIR\.gradle\caches\transforms-3\142e13c48033ece1ccebbb779a2c8518\transformed\room-runtime-2.4.3\AndroidManifest.xml:28:13-37
+131
+132        <provider
+132-->[androidx.emoji2:emoji2:1.2.0] C:\Users\TIMURMIR\.gradle\caches\transforms-3\0faad89bd72b1c73ebfd343c929de804\transformed\emoji2-1.2.0\AndroidManifest.xml:24:9-32:20
+133            android:name="androidx.startup.InitializationProvider"
+133-->[androidx.emoji2:emoji2:1.2.0] C:\Users\TIMURMIR\.gradle\caches\transforms-3\0faad89bd72b1c73ebfd343c929de804\transformed\emoji2-1.2.0\AndroidManifest.xml:25:13-67
+134            android:authorities="com.example.location.androidx-startup"
+134-->[androidx.emoji2:emoji2:1.2.0] C:\Users\TIMURMIR\.gradle\caches\transforms-3\0faad89bd72b1c73ebfd343c929de804\transformed\emoji2-1.2.0\AndroidManifest.xml:26:13-68
+135            android:exported="false" >
+135-->[androidx.emoji2:emoji2:1.2.0] C:\Users\TIMURMIR\.gradle\caches\transforms-3\0faad89bd72b1c73ebfd343c929de804\transformed\emoji2-1.2.0\AndroidManifest.xml:27:13-37
+136            <meta-data
+136-->[androidx.emoji2:emoji2:1.2.0] C:\Users\TIMURMIR\.gradle\caches\transforms-3\0faad89bd72b1c73ebfd343c929de804\transformed\emoji2-1.2.0\AndroidManifest.xml:29:13-31:52
+137                android:name="androidx.emoji2.text.EmojiCompatInitializer"
+137-->[androidx.emoji2:emoji2:1.2.0] C:\Users\TIMURMIR\.gradle\caches\transforms-3\0faad89bd72b1c73ebfd343c929de804\transformed\emoji2-1.2.0\AndroidManifest.xml:30:17-75
+138                android:value="androidx.startup" />
+138-->[androidx.emoji2:emoji2:1.2.0] C:\Users\TIMURMIR\.gradle\caches\transforms-3\0faad89bd72b1c73ebfd343c929de804\transformed\emoji2-1.2.0\AndroidManifest.xml:31:17-49
+139            <meta-data
+139-->[androidx.lifecycle:lifecycle-process:2.4.1] C:\Users\TIMURMIR\.gradle\caches\transforms-3\03acce58cc97401542b57775d22f8227\transformed\lifecycle-process-2.4.1\AndroidManifest.xml:31:13-33:52
+140                android:name="androidx.lifecycle.ProcessLifecycleInitializer"
+140-->[androidx.lifecycle:lifecycle-process:2.4.1] C:\Users\TIMURMIR\.gradle\caches\transforms-3\03acce58cc97401542b57775d22f8227\transformed\lifecycle-process-2.4.1\AndroidManifest.xml:32:17-78
+141                android:value="androidx.startup" />
+141-->[androidx.lifecycle:lifecycle-process:2.4.1] C:\Users\TIMURMIR\.gradle\caches\transforms-3\03acce58cc97401542b57775d22f8227\transformed\lifecycle-process-2.4.1\AndroidManifest.xml:33:17-49
+142        </provider> <!-- The activities will be merged into the manifest of the hosting app. -->
+143        <activity
+143-->[com.google.android.play:core:1.7.2] C:\Users\TIMURMIR\.gradle\caches\transforms-3\b0ba2909247418e9abe3dbc028be4e32\transformed\core-1.7.2\AndroidManifest.xml:12:5-271
+144            android:name="com.google.android.play.core.missingsplits.PlayCoreMissingSplitsActivity"
+144-->[com.google.android.play:core:1.7.2] C:\Users\TIMURMIR\.gradle\caches\transforms-3\b0ba2909247418e9abe3dbc028be4e32\transformed\core-1.7.2\AndroidManifest.xml:12:15-102
+145            android:enabled="false"
+145-->[com.google.android.play:core:1.7.2] C:\Users\TIMURMIR\.gradle\caches\transforms-3\b0ba2909247418e9abe3dbc028be4e32\transformed\core-1.7.2\AndroidManifest.xml:12:103-126
+146            android:exported="false"
+146-->[com.google.android.play:core:1.7.2] C:\Users\TIMURMIR\.gradle\caches\transforms-3\b0ba2909247418e9abe3dbc028be4e32\transformed\core-1.7.2\AndroidManifest.xml:12:127-151
+147            android:launchMode="singleInstance"
+147-->[com.google.android.play:core:1.7.2] C:\Users\TIMURMIR\.gradle\caches\transforms-3\b0ba2909247418e9abe3dbc028be4e32\transformed\core-1.7.2\AndroidManifest.xml:12:204-239
+148            android:process=":playcore_missing_splits_activity"
+148-->[com.google.android.play:core:1.7.2] C:\Users\TIMURMIR\.gradle\caches\transforms-3\b0ba2909247418e9abe3dbc028be4e32\transformed\core-1.7.2\AndroidManifest.xml:12:152-203
+149            android:stateNotNeeded="true" />
+149-->[com.google.android.play:core:1.7.2] C:\Users\TIMURMIR\.gradle\caches\transforms-3\b0ba2909247418e9abe3dbc028be4e32\transformed\core-1.7.2\AndroidManifest.xml:12:240-269
+150        <activity
+150-->[com.google.android.play:core:1.7.2] C:\Users\TIMURMIR\.gradle\caches\transforms-3\b0ba2909247418e9abe3dbc028be4e32\transformed\core-1.7.2\AndroidManifest.xml:13:5-226
+151            android:name="com.google.android.play.core.common.PlayCoreDialogWrapperActivity"
+151-->[com.google.android.play:core:1.7.2] C:\Users\TIMURMIR\.gradle\caches\transforms-3\b0ba2909247418e9abe3dbc028be4e32\transformed\core-1.7.2\AndroidManifest.xml:13:15-95
+152            android:enabled="false"
+152-->[com.google.android.play:core:1.7.2] C:\Users\TIMURMIR\.gradle\caches\transforms-3\b0ba2909247418e9abe3dbc028be4e32\transformed\core-1.7.2\AndroidManifest.xml:13:96-119
+153            android:exported="false"
+153-->[com.google.android.play:core:1.7.2] C:\Users\TIMURMIR\.gradle\caches\transforms-3\b0ba2909247418e9abe3dbc028be4e32\transformed\core-1.7.2\AndroidManifest.xml:13:120-144
+154            android:stateNotNeeded="true"
+154-->[com.google.android.play:core:1.7.2] C:\Users\TIMURMIR\.gradle\caches\transforms-3\b0ba2909247418e9abe3dbc028be4e32\transformed\core-1.7.2\AndroidManifest.xml:13:145-174
+155            android:theme="@style/Theme.PlayCore.Transparent" /> <!-- The service will be merged into the manifest of the hosting app. -->
+155-->[com.google.android.play:core:1.7.2] C:\Users\TIMURMIR\.gradle\caches\transforms-3\b0ba2909247418e9abe3dbc028be4e32\transformed\core-1.7.2\AndroidManifest.xml:13:175-224
+156        <service
+156-->[com.google.android.play:core:1.7.2] C:\Users\TIMURMIR\.gradle\caches\transforms-3\b0ba2909247418e9abe3dbc028be4e32\transformed\core-1.7.2\AndroidManifest.xml:16:5-145
+157            android:name="com.google.android.play.core.assetpacks.AssetPackExtractionService"
+157-->[com.google.android.play:core:1.7.2] C:\Users\TIMURMIR\.gradle\caches\transforms-3\b0ba2909247418e9abe3dbc028be4e32\transformed\core-1.7.2\AndroidManifest.xml:16:14-95
+158            android:enabled="false"
+158-->[com.google.android.play:core:1.7.2] C:\Users\TIMURMIR\.gradle\caches\transforms-3\b0ba2909247418e9abe3dbc028be4e32\transformed\core-1.7.2\AndroidManifest.xml:16:96-119
+159            android:exported="true" />
+159-->[com.google.android.play:core:1.7.2] C:\Users\TIMURMIR\.gradle\caches\transforms-3\b0ba2909247418e9abe3dbc028be4e32\transformed\core-1.7.2\AndroidManifest.xml:16:120-143
+160
+161        <activity
+161-->[:panoramafeature] C:\Users\TIMURMIR\myBase\android_dev_1_2022\m19_location\panoramafeature\build\intermediates\metadata_feature_manifest\debug\AndroidManifest.xml:27:9-32:51
+162            android:name="home.howework.panoramafeature.PanoramaActivityF"
+162-->[:panoramafeature] C:\Users\TIMURMIR\myBase\android_dev_1_2022\m19_location\panoramafeature\build\intermediates\metadata_feature_manifest\debug\AndroidManifest.xml:28:13-75
+163            android:exported="true"
+163-->[:panoramafeature] C:\Users\TIMURMIR\myBase\android_dev_1_2022\m19_location\panoramafeature\build\intermediates\metadata_feature_manifest\debug\AndroidManifest.xml:29:13-36
+164            android:launchMode="singleTask"
+164-->[:panoramafeature] C:\Users\TIMURMIR\myBase\android_dev_1_2022\m19_location\panoramafeature\build\intermediates\metadata_feature_manifest\debug\AndroidManifest.xml:30:13-44
+165            android:screenOrientation="portrait"
+165-->[:panoramafeature] C:\Users\TIMURMIR\myBase\android_dev_1_2022\m19_location\panoramafeature\build\intermediates\metadata_feature_manifest\debug\AndroidManifest.xml:31:13-49
+166            android:splitName="panoramafeature" />
+166-->[:panoramafeature] C:\Users\TIMURMIR\myBase\android_dev_1_2022\m19_location\panoramafeature\build\intermediates\metadata_feature_manifest\debug\AndroidManifest.xml:32:13-48
+167    </application>
+168
+169</manifest>

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/card_view_movie"
+    android:layout_width="130dp"
+    android:layout_height="224dp"
+    app:cardCornerRadius="12dp"
+    app:strokeColor="#770C30"
+    app:strokeWidth="2dp">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="130dp"
+        android:layout_height="224dp"
+        android:background="@drawable/gradient4">
+        <ImageView
+            android:id="@+id/mark_delete"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginTop="4dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:src="@drawable/delete"/>
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="130dp"
+            android:layout_height="wrap_content"
+            android:paddingTop="0dp"
+            android:paddingBottom="0dp"
+            android:paddingLeft="6dp"
+            android:text="Координаты места"
+            android:textSize="12sp"
+            android:textColor="#E4E46C"
+
+            app:layout_constraintStart_toStartOf="@+id/place_pic"
+            app:layout_constraintTop_toBottomOf="@+id/place_pic"
+          />
+
+        <TextView
+            android:id="@+id/point_mark"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="6dp"
+            android:paddingTop="0dp"
+            android:paddingBottom="0dp"
+            android:text="Coordinate"
+            android:textSize="10sp"
+            android:textColor="@color/white"
+            app:layout_constraintStart_toStartOf="@+id/title"
+            app:layout_constraintTop_toBottomOf="@+id/title" />
+
+
+        <ImageView
+            android:id="@+id/place_pic"
+            android:layout_width="130dp"
+            android:layout_height="156dp"
+            android:layout_marginTop="1dp"
+            android:contentDescription="TODO"
+            android:scaleType="centerCrop"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@drawable/gradient2" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</com.google.android.material.card.MaterialCardView>

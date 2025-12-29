@@ -1,0 +1,14 @@
+[
+    {
+        "merged": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-mergeDebugResources-45:\\layout-land\\activity_main.xml",
+        "source": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-main-48:\\layout-land\\activity_main.xml"
+    },
+    {
+        "merged": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-mergeDebugResources-45:\\layout-land\\main_fragment.xml",
+        "source": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-main-48:\\layout-land\\main_fragment.xml"
+    },
+    {
+        "merged": "com.example.location.app-mergeDebugResources-45:/layout-land/main_fragment.xml",
+        "source": "com.example.location.app-main-48:/layout-land/main_fragment.xml"
+    }
+]

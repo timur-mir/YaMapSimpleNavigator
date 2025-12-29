@@ -1,0 +1,290 @@
+[
+    {
+        "merged": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-merged_res-46:\\layout_main_fragment.xml.flat",
+        "source": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-main-48:\\layout\\main_fragment.xml"
+    },
+    {
+        "merged": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-merged_res-46:\\mipmap-xhdpi_ic_launcher_foreground.png.flat",
+        "source": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-main-48:\\mipmap-xhdpi\\ic_launcher_foreground.png"
+    },
+    {
+        "merged": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-merged_res-46:\\layout_mark__list.xml.flat",
+        "source": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-main-48:\\layout\\mark__list.xml"
+    },
+    {
+        "merged": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-merged_res-46:\\drawable_compas.png.flat",
+        "source": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-main-48:\\drawable\\compas.png"
+    },
+    {
+        "merged": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-merged_res-46:\\mipmap-xhdpi_ic_launcher_round.png.flat",
+        "source": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-main-48:\\mipmap-xhdpi\\ic_launcher_round.png"
+    },
+    {
+        "merged": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-merged_res-46:\\drawable_user_arrow_alt.png.flat",
+        "source": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-main-48:\\drawable\\user_arrow_alt.png"
+    },
+    {
+        "merged": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-merged_res-46:\\drawable_ic_launcher_background.xml.flat",
+        "source": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-main-48:\\drawable\\ic_launcher_background.xml"
+    },
+    {
+        "merged": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-merged_res-46:\\navigation_small_fragment_graph.xml.flat",
+        "source": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-main-48:\\navigation\\small_fragment_graph.xml"
+    },
+    {
+        "merged": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-merged_res-46:\\drawable_nothing.png.flat",
+        "source": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-main-48:\\drawable\\nothing.png"
+    },
+    {
+        "merged": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-merged_res-46:\\layout-land_main_fragment.xml.flat",
+        "source": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-main-48:\\layout-land\\main_fragment.xml"
+    },
+    {
+        "merged": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-merged_res-46:\\mipmap-xxhdpi_ic_launcher_foreground.png.flat",
+        "source": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-main-48:\\mipmap-xxhdpi\\ic_launcher_foreground.png"
+    },
+    {
+        "merged": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-merged_res-46:\\drawable_back.xml.flat",
+        "source": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-main-48:\\drawable\\back.xml"
+    },
+    {
+        "merged": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-merged_res-46:\\drawable_template.xml.flat",
+        "source": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-main-48:\\drawable\\template.xml"
+    },
+    {
+        "merged": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-merged_res-46:\\navigation_app_nav_graph.xml.flat",
+        "source": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-main-48:\\navigation\\app_nav_graph.xml"
+    },
+    {
+        "merged": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-merged_res-46:\\mipmap-mdpi_ic_launcher_round.png.flat",
+        "source": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-main-48:\\mipmap-mdpi\\ic_launcher_round.png"
+    },
+    {
+        "merged": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-merged_res-46:\\drawable_baseline_send_24.xml.flat",
+        "source": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-main-48:\\drawable\\baseline_send_24.xml"
+    },
+    {
+        "merged": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-merged_res-46:\\mipmap-xxhdpi_ic_launcher_round.png.flat",
+        "source": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-main-48:\\mipmap-xxhdpi\\ic_launcher_round.png"
+    },
+    {
+        "merged": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-merged_res-46:\\drawable_gradient2.xml.flat",
+        "source": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-main-48:\\drawable\\gradient2.xml"
+    },
+    {
+        "merged": "com.example.location.app-merged_res-46:/layout-land_main_fragment.xml.flat",
+        "source": "com.example.location.app-main-48:/layout-land/main_fragment.xml"
+    },
+    {
+        "merged": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-merged_res-46:\\mipmap-mdpi_ic_launcher_foreground.png.flat",
+        "source": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-main-48:\\mipmap-mdpi\\ic_launcher_foreground.png"
+    },
+    {
+        "merged": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-merged_res-46:\\drawable_zoom_out.xml.flat",
+        "source": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-main-48:\\drawable\\zoom_out.xml"
+    },
+    {
+        "merged": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-merged_res-46:\\xml_files.xml.flat",
+        "source": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-main-48:\\xml\\files.xml"
+    },
+    {
+        "merged": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-merged_res-46:\\drawable_red_rounded.xml.flat",
+        "source": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-main-48:\\drawable\\red_rounded.xml"
+    },
+    {
+        "merged": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-merged_res-46:\\drawable_forf.jpg.flat",
+        "source": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-main-48:\\drawable\\forf.jpg"
+    },
+    {
+        "merged": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-merged_res-46:\\drawable_cancel_presentation.xml.flat",
+        "source": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-main-48:\\drawable\\cancel_presentation.xml"
+    },
+    {
+        "merged": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-merged_res-46:\\mipmap-anydpi-v26_ic_launcher.xml.flat",
+        "source": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-main-48:\\mipmap-anydpi-v26\\ic_launcher.xml"
+    },
+    {
+        "merged": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-merged_res-46:\\layout-land_activity_main.xml.flat",
+        "source": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-main-48:\\layout-land\\activity_main.xml"
+    },
+    {
+        "merged": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-merged_res-46:\\drawable_search_result.png.flat",
+        "source": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-main-48:\\drawable\\search_result.png"
+    },
+    {
+        "merged": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-merged_res-46:\\drawable_circle.xml.flat",
+        "source": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-main-48:\\drawable\\circle.xml"
+    },
+    {
+        "merged": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-merged_res-46:\\drawable_baseline_directions_walk_24.xml.flat",
+        "source": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-main-48:\\drawable\\baseline_directions_walk_24.xml"
+    },
+    {
+        "merged": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-merged_res-46:\\drawable_panorama.png.flat",
+        "source": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-main-48:\\drawable\\panorama.png"
+    },
+    {
+        "merged": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-merged_res-46:\\drawable_user_mark.png.flat",
+        "source": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-main-48:\\drawable\\user_mark.png"
+    },
+    {
+        "merged": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-merged_res-46:\\layout_activity_step.xml.flat",
+        "source": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-main-48:\\layout\\activity_step.xml"
+    },
+    {
+        "merged": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-merged_res-46:\\drawable_mic.jpg.flat",
+        "source": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-main-48:\\drawable\\mic.jpg"
+    },
+    {
+        "merged": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-merged_res-46:\\mipmap-xxxhdpi_ic_launcher.png.flat",
+        "source": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-main-48:\\mipmap-xxxhdpi\\ic_launcher.png"
+    },
+    {
+        "merged": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-merged_res-46:\\drawable_user_arrow.png.flat",
+        "source": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-main-48:\\drawable\\user_arrow.png"
+    },
+    {
+        "merged": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-merged_res-46:\\mipmap-xhdpi_ic_launcher.png.flat",
+        "source": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-main-48:\\mipmap-xhdpi\\ic_launcher.png"
+    },
+    {
+        "merged": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-merged_res-46:\\layout_panorama_place_fragment.xml.flat",
+        "source": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-main-48:\\layout\\panorama_place_fragment.xml"
+    },
+    {
+        "merged": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-merged_res-46:\\drawable_delete.png.flat",
+        "source": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-main-48:\\drawable\\delete.png"
+    },
+    {
+        "merged": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-merged_res-46:\\drawable_user_arrow_alt2.png.flat",
+        "source": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-main-48:\\drawable\\user_arrow_alt2.png"
+    },
+    {
+        "merged": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-merged_res-46:\\drawable_zoom_in.xml.flat",
+        "source": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-main-48:\\drawable\\zoom_in.xml"
+    },
+    {
+        "merged": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-merged_res-46:\\layout_info_about_mark.xml.flat",
+        "source": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-main-48:\\layout\\info_about_mark.xml"
+    },
+    {
+        "merged": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-merged_res-46:\\drawable_reset.jpg.flat",
+        "source": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-main-48:\\drawable\\reset.jpg"
+    },
+    {
+        "merged": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-merged_res-46:\\drawable-v24_ic_launcher_foreground.xml.flat",
+        "source": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-main-48:\\drawable-v24\\ic_launcher_foreground.xml"
+    },
+    {
+        "merged": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-merged_res-46:\\drawable_forest_icon.png.flat",
+        "source": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-main-48:\\drawable\\forest_icon.png"
+    },
+    {
+        "merged": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-merged_res-46:\\mipmap-mdpi_ic_launcher.png.flat",
+        "source": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-main-48:\\mipmap-mdpi\\ic_launcher.png"
+    },
+    {
+        "merged": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-merged_res-46:\\drawable_traffic_jams.xml.flat",
+        "source": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-main-48:\\drawable\\traffic_jams.xml"
+    },
+    {
+        "merged": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-merged_res-46:\\drawable_delete2.png.flat",
+        "source": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-main-48:\\drawable\\delete2.png"
+    },
+    {
+        "merged": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-merged_res-46:\\mipmap-hdpi_ic_launcher_round.png.flat",
+        "source": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-main-48:\\mipmap-hdpi\\ic_launcher_round.png"
+    },
+    {
+        "merged": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-merged_res-46:\\xml_data_extraction_rules.xml.flat",
+        "source": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-main-48:\\xml\\data_extraction_rules.xml"
+    },
+    {
+        "merged": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-merged_res-46:\\mipmap-anydpi-v26_ic_launcher_round.xml.flat",
+        "source": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-main-48:\\mipmap-anydpi-v26\\ic_launcher_round.xml"
+    },
+    {
+        "merged": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-merged_res-46:\\layout_photo_file_fragment.xml.flat",
+        "source": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-main-48:\\layout\\photo_file_fragment.xml"
+    },
+    {
+        "merged": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-merged_res-46:\\layout_show_all_marks_fragment.xml.flat",
+        "source": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-main-48:\\layout\\show_all_marks_fragment.xml"
+    },
+    {
+        "merged": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-merged_res-46:\\drawable_geolocation.png.flat",
+        "source": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-main-48:\\drawable\\geolocation.png"
+    },
+    {
+        "merged": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-merged_res-46:\\xml_backup_rules.xml.flat",
+        "source": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-main-48:\\xml\\backup_rules.xml"
+    },
+    {
+        "merged": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-merged_res-46:\\drawable_fon_tekstura2.jpg.flat",
+        "source": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-main-48:\\drawable\\fon_tekstura2.jpg"
+    },
+    {
+        "merged": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-merged_res-46:\\drawable_baseline_format_list_bulleted_24.xml.flat",
+        "source": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-main-48:\\drawable\\baseline_format_list_bulleted_24.xml"
+    },
+    {
+        "merged": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-merged_res-46:\\drawable_car_traffic_congestion.png.flat",
+        "source": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-main-48:\\drawable\\car_traffic_congestion.png"
+    },
+    {
+        "merged": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-merged_res-46:\\drawable_baseline_compass_calibration_24.xml.flat",
+        "source": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-main-48:\\drawable\\baseline_compass_calibration_24.xml"
+    },
+    {
+        "merged": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-merged_res-46:\\layout_activity_main.xml.flat",
+        "source": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-main-48:\\layout\\activity_main.xml"
+    },
+    {
+        "merged": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-merged_res-46:\\mipmap-xxxhdpi_ic_launcher_round.png.flat",
+        "source": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-main-48:\\mipmap-xxxhdpi\\ic_launcher_round.png"
+    },
+    {
+        "merged": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-merged_res-46:\\drawable_gradient4.xml.flat",
+        "source": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-main-48:\\drawable\\gradient4.xml"
+    },
+    {
+        "merged": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-merged_res-46:\\mipmap-hdpi_ic_launcher.png.flat",
+        "source": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-main-48:\\mipmap-hdpi\\ic_launcher.png"
+    },
+    {
+        "merged": "com.example.location.app-merged_res-46:/layout_main_fragment.xml.flat",
+        "source": "com.example.location.app-main-48:/layout/main_fragment.xml"
+    },
+    {
+        "merged": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-merged_res-46:\\mipmap-hdpi_ic_launcher_foreground.png.flat",
+        "source": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-main-48:\\mipmap-hdpi\\ic_launcher_foreground.png"
+    },
+    {
+        "merged": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-merged_res-46:\\mipmap-xxhdpi_ic_launcher.png.flat",
+        "source": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-main-48:\\mipmap-xxhdpi\\ic_launcher.png"
+    },
+    {
+        "merged": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-merged_res-46:\\drawable_baseline_arrow_back_24.xml.flat",
+        "source": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-main-48:\\drawable\\baseline_arrow_back_24.xml"
+    },
+    {
+        "merged": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-merged_res-46:\\drawable_mic2.png.flat",
+        "source": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-main-48:\\drawable\\mic2.png"
+    },
+    {
+        "merged": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-merged_res-46:\\drawable_us_m2.png.flat",
+        "source": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-main-48:\\drawable\\us_m2.png"
+    },
+    {
+        "merged": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-merged_res-46:\\menu_menu_bottom_navigation_main.xml.flat",
+        "source": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-main-48:\\menu\\menu_bottom_navigation_main.xml"
+    },
+    {
+        "merged": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-merged_res-46:\\drawable_route.png.flat",
+        "source": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-main-48:\\drawable\\route.png"
+    },
+    {
+        "merged": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-merged_res-46:\\mipmap-xxxhdpi_ic_launcher_foreground.png.flat",
+        "source": "C:\\Users\\TIMURMIR\\.gradle\\daemon\\8.0\\com.example.location.app-main-48:\\mipmap-xxxhdpi\\ic_launcher_foreground.png"
+    }
+]

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="bottom1">#D83D7CA6</color>
+    <color name="bottom2">#D8B10B43</color>
+    <color name="bottom3">#FC3F1D</color>
+    <color name="ic_launcher_background">#247C7E</color>
+    <color name="white">#FFFFFFFF</color>
+    <string name="addMark">Добавить  маркер</string>
+    <string name="app_name">Location</string>
+    <string name="back">В карты</string>
+    <string name="cancel">Отмена</string>
+    <string name="cancelMarkOnMap">Убрать маркер</string>
+    <string name="indicated">Вы указали на регион со следующими координатами</string>
+    <string name="locationCoordinates">Координаты местоположения</string>
+    <string name="myLocation">Моя локация</string>
+    <string name="networkError">Ошибка сети</string>
+    <string name="notFoundError">Неизвестная ошибка</string>
+    <string name="panorama">Панорама</string>
+    <string name="panorama_look">Посмотреть панораму</string>
+    <string name="remoteError">Ошибка удаленного подключения</string>
+    <string name="sendingLocationCoordinates">Отправка координат местоположения</string>
+    <string name="sendingPhoto">Отправка фото</string>
+    <string name="title_panoramafeature">Module Title</string>
+    <string name="yourCoordinates">Ваши координаты местоположения</string>
+    <style name="Base.Theme.MapKitYandex" parent="Theme.Material3.DayNight.NoActionBar">
+        
+        
+    </style>
+    <style name="Theme.MapKitYandex" parent="Base.Theme.MapKitYandex"/>
+</resources>
