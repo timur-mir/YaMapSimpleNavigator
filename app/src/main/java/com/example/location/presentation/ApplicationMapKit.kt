@@ -24,7 +24,7 @@ class ApplicationMapKit: Application(){
         super.onCreate()
         val appContext: Context = applicationContext()
         MarksDatabaseImpl.initDatabase(this)
-        MapKitFactory.setApiKey("b8ef48ad-5b72-4c3d-8f28-9256d0692cd4")
+        MapKitFactory.setApiKey("****************************")
         MapKitFactory.initialize(this)
         MapKitFactory.getInstance().onStart()
     }
